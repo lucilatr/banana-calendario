@@ -326,8 +326,9 @@ const gr=(a,b)=>`linear-gradient(90deg,var(${a}),var(${b}))`;
 const COLOR={dev:gr('--c-dev-a','--c-dev-b'),art:gr('--c-art-a','--c-art-b'),def:gr('--c-def-a','--c-def-b'),sys:gr('--c-sys-a','--c-sys-b'),mkt:gr('--c-mkt-a','--c-mkt-b'),port:gr('--c-port-a','--c-port-b'),qa:gr('--c-qa-a','--c-qa-b')};
 const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
 const DIFFS=[{es:'Easy',en:'Easy',c:'#86d3a0'},{es:'Medium',en:'Medium',c:'#4faf77'},{es:'Hard',en:'Hard',c:'#2b7d50'}];
-const G_B='linear-gradient(90deg,#1f9d55,#45c279)', G_C='linear-gradient(90deg,#7cb518,#a7d94a)', G_D='linear-gradient(90deg,#0b6e3f,#2a9460)';
-const PHASES=[{k:'assets',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:G_B},{k:'vfx',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:G_C},{k:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:G_D}];
+const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
+const PROD='linear-gradient(90deg,#c4cdd6,#dde3ea)';
+const PHASES=[{k:'assets',cls:'art',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:COLOR.art},{k:'vfx',cls:'def',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
 function applyExpanded(){
@@ -388,9 +389,9 @@ function render(){
   // legend
   $('#legend').innerHTML=[
     ['dev', lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)'],
-    ['', lang==='es'?'Fase B · Generación de assets (look/3D)':'Phase B · Asset generation (look/3D)', G_B],
-    ['', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting', G_C],
-    ['', lang==='es'?'Fase D · Sonido':'Phase D · Sound', G_D],
+    ['art', lang==='es'?'Fase B · Generación de assets (look/3D)':'Phase B · Asset generation (look/3D)'],
+    ['def', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting'],
+    ['snd', lang==='es'?'Fase D · Sonido':'Phase D · Sound'],
     ['sys', lang==='es'?'Sistemas & Pipeline':'Systems & Pipeline'],
     ['mkt', lang==='es'?'Marketing & Comunidad':'Marketing & Community'],
     ['port',lang==='es'?'Porting a Consolas':'Console Porting'],
@@ -398,7 +399,7 @@ function render(){
   ].map(([c,t,col])=>`<span class="k"><span class="sw ${c}" ${col?`style="background:${col}"`:''}></span>${t}</span>`).join('')
    +`<span class="k"><span class="dmd"></span>Milestone</span>`
    +`<span class="k" style="color:var(--todayLine);font-weight:700;">▸ ${lang==='es'?'Clic en una semana = desplegar días + agregar tareas':'Click a week = expand days + add tasks'}</span>`
-   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = dificultades':'Click a level = difficulties'}</span>`;
+   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = fases B/C/D (pueden solaparse)':'Click a level = phases B/C/D (can overlap)'}</span>`;
 
   // months
   let m=`<div class="cell corner">${lang==='es'?'2026 — 2027':'2026 — 2027'}</div>`;
@@ -456,24 +457,21 @@ function render(){
           const [s,e]=curOff(k, dOff(t.aStart), dOff(t.aEnd));
           html+=drawBar(k, dOff(t.aStart), dOff(t.aEnd), COLOR.dev, `${exLbl} · ${fmtRange(offToIso(s),offToIso(e))}`, exLbl);
         }
-        // Fases de producción B/C/D en la ventana de look (ene-feb)
+        // barra resumen de producción (gris, no arrastrable) en la fila principal
         if(t.b){
-          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4, tot=e-o+1, step=tot/3;
-          PHASES.forEach((ph,pi)=>{
-            const ps=Math.round(o+pi*step), pe=Math.round(o+(pi+1)*step)-1, lbl=lang==='es'?ph.es:ph.en;
-            html+=drawBar(`${ph.k}_${t.key}`, ps, Math.max(ps,pe), ph.grad, lbl, lbl);
-          });
+          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4;
+          const pl=lang==='es'?'Producción (desplegá el modo → B/C/D)':'Production (expand mode → B/C/D)';
+          html+=drawBar('prod_'+t.key, o, e, PROD, pl, pl, true);
         }
         html+=lvlNameHtml+`</div>`;
-        // sub-filas de dificultad (ocultas hasta desplegar): estética del vehículo por dificultad
+        // sub-filas: Fases B/C/D (ocultas hasta desplegar) — tiras independientes, pueden solaparse
         if(t.b){
-          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4, tot=e-o+1, step=tot/3;
-          DIFFS.forEach((df,di)=>{
-            const ds=Math.round(o+di*step), de=Math.round(o+(di+1)*step)-1, p=barPx(ds,Math.max(ds,de));
-            const dn=lang==='es'?df.es:df.en;
+          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4;
+          PHASES.forEach(ph=>{
+            const lbl=lang==='es'?ph.es:ph.en;
             html+=`<div class="grid24 row diffrow" data-lvl="${t.key}" style="display:none">`;
-            html+=drawBar(`diff_${t.key}_${di}`, ds, Math.max(ds,de), t.frozen?FROZEN:df.c, lang==='es'?`Estética ${dn} — cambia el aspecto del vehículo`:`${dn} aesthetic — changes the vehicle look`, null, t.frozen);
-            html+=`<div class="name"><span class="dk">${dn}</span></div></div>`;
+            html+=drawBar(`${ph.k}_${t.key}`, o, e, ph.grad, lbl, lbl);
+            html+=`<div class="name"><span class="dk">${lbl}</span></div></div>`;
           });
         }
       });
