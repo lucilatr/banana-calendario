@@ -45,6 +45,14 @@
   .title .chip{display:inline-block;margin-top:8px;margin-right:6px;font-size:12px;font-weight:600;color:#fff;background:var(--c-launch);padding:3px 10px;border-radius:999px;}
   .title .chip.cd{background:var(--c-dev-a);}
   .legend.hidden{display:none;}
+  .filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px;}
+  .filterbar .flabel{font-size:12px;font-weight:700;color:var(--muted);}
+  .fchip{display:inline-flex;align-items:center;gap:5px;cursor:pointer;border:1px solid var(--gridStrong);
+    background:var(--panel);color:var(--text);font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;}
+  .fchip .sw{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  .fchip.on{border-color:var(--c-sys-a);}
+  .fchip.off{opacity:.45;text-decoration:line-through;}
+  .fchip.all{font-weight:700;}
   .controls{display:flex;gap:8px;align-items:center;}
   .btn{cursor:pointer;border:1px solid var(--gridStrong);background:var(--panel);color:var(--text);
     font-size:12px;font-weight:600;padding:7px 12px;border-radius:8px;transition:.15s;}
@@ -222,6 +230,7 @@
   </header>
 
   <div class="legend hidden" id="legend"></div>
+  <div class="filterbar" id="filterbar"></div>
 
   <div class="chart">
     <div class="stickyHead">
@@ -336,12 +345,25 @@ const PROD='linear-gradient(90deg,#7e8796,#aab2bf)';
 const PHASES=[{k:'assets',cls:'art',es:'Pulido de look',en:'Look polish',grad:COLOR.art},{k:'vfx',cls:'def',es:'VFX + Lighting',en:'VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Sonido',en:'Sound',grad:SND}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
+const STAGEDEF=[{k:'exp',es:'Exploración',en:'Exploration',cls:'dev'},{k:'assets',es:'Pulido de look',en:'Look polish',cls:'art'},{k:'vfx',es:'VFX + Lighting',en:'VFX + Lighting',cls:'def'},{k:'snd',es:'Sonido',en:'Sound',cls:'snd'}];
+let visibleStages=new Set(STAGEDEF.map(s=>s.k));
+function renderFilter(){
+  const allOn=visibleStages.size===STAGEDEF.length;
+  let h=`<span class="flabel">${lang==='es'?'Ver etapas:':'Show stages:'}</span>`;
+  STAGEDEF.forEach(s=>{ const on=visibleStages.has(s.k); h+=`<button class="fchip ${on?'on':'off'}" data-stage="${s.k}"><span class="sw ${s.cls}"></span>${on?'👁':'🚫'} ${lang==='es'?s.es:s.en}</button>`; });
+  h+=`<button class="fchip all ${allOn?'on':''}" data-stage="__all">${lang==='es'?'Ver todo':'Show all'}</button>`;
+  const fb=$('#filterbar'); if(fb) fb.innerHTML=h;
+}
 function applyExpanded(){
-  document.querySelectorAll('.diffrow').forEach(r=>{ const on=expandedLv.has(r.dataset.lvl); r.style.display = on?'':'none'; r.classList.toggle('exp-open', on); });
-  document.querySelectorAll('.lvlname').forEach(n=>{ n.classList.toggle('open', expandedLv.has(n.dataset.lvl)); });
-  document.querySelectorAll('.row.lvl[data-lvl]').forEach(r=>{ r.classList.toggle('exp-open', expandedLv.has(r.dataset.lvl)); });
-  // la tira-resumen gris solo se ve con el modo colapsado
-  document.querySelectorAll('[data-key^="sum_"]').forEach(el=>{ const k=el.dataset.key.slice(4); el.style.display = expandedLv.has(k)?'none':''; });
+  const filtered = visibleStages.size !== STAGEDEF.length;
+  document.querySelectorAll('.diffrow').forEach(r=>{
+    const on = filtered ? visibleStages.has(r.dataset.stage) : expandedLv.has(r.dataset.lvl);
+    r.style.display = on?'':'none';
+    r.classList.toggle('exp-open', !filtered && expandedLv.has(r.dataset.lvl));
+  });
+  document.querySelectorAll('.lvlname').forEach(n=>{ n.classList.toggle('open', !filtered && expandedLv.has(n.dataset.lvl)); });
+  document.querySelectorAll('.row.lvl[data-lvl]').forEach(r=>{ r.classList.toggle('exp-open', !filtered && expandedLv.has(r.dataset.lvl)); });
+  document.querySelectorAll('[data-key^="sum_"]').forEach(el=>{ const k=el.dataset.key.slice(4); el.style.display = (filtered||expandedLv.has(k))?'none':''; });
 }
 // ---- persistencia / publicación (GitHub) ----
 const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
@@ -463,8 +485,8 @@ function render(){
         const exLbl=lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)';
         const o=t.b?(t.b[0]-1)*7:0, e=t.b?(t.b[1]-1)*7+4:0;
         const STAGES=[];
-        if(t.aStart) STAGES.push({k:'exp_'+t.key, grad:COLOR.dev, lbl:exLbl, ds:dOff(t.aStart), de:dOff(t.aEnd)});
-        if(t.b) PHASES.forEach(ph=>STAGES.push({k:ph.k+'_'+t.key, grad:ph.grad, lbl:(lang==='es'?ph.es:ph.en), ds:o, de:e}));
+        if(t.aStart) STAGES.push({stage:'exp', k:'exp_'+t.key, grad:COLOR.dev, lbl:exLbl, ds:dOff(t.aStart), de:dOff(t.aEnd)});
+        if(t.b) PHASES.forEach(ph=>STAGES.push({stage:ph.k, k:ph.k+'_'+t.key, grad:ph.grad, lbl:(lang==='es'?ph.es:ph.en), ds:o, de:e}));
         // tira-resumen (toda la extensión del modo), no arrastrable, en la fila principal
         let smin=Infinity, smax=-Infinity;
         STAGES.forEach(st=>{ const [s,e2]=curOff(st.k, st.ds, st.de); smin=Math.min(smin,s); smax=Math.max(smax,e2); });
@@ -475,7 +497,7 @@ function render(){
         html+=lvlNameHtml+`</div>`;
         // sub-filas: las 4 etapas como tiras independientes (ocultas hasta desplegar), pueden solaparse
         STAGES.forEach((st,si)=>{
-          html+=`<div class="grid24 row diffrow${si===STAGES.length-1?' lastsub':''}" data-lvl="${t.key}" style="display:none">`;
+          html+=`<div class="grid24 row diffrow${si===STAGES.length-1?' lastsub':''}" data-lvl="${t.key}" data-stage="${st.stage}" style="display:none">`;
           html+=drawBar(st.k, st.ds, st.de, st.grad, st.lbl, st.lbl);
           html+=`<div class="name"><span class="dk">${st.lbl}</span></div></div>`;
         });
@@ -512,10 +534,16 @@ function render(){
   document.documentElement.lang=lang;
   $('#langBtn').textContent = lang==='es'?'EN':'ES';
 
+  renderFilter();
   applyExpanded();
   updateCountdown();
 }
 
+$('#filterbar').addEventListener('click',(e)=>{ const b=e.target.closest('.fchip'); if(!b) return; const s=b.dataset.stage;
+  if(s==='__all') visibleStages=new Set(STAGEDEF.map(x=>x.k));
+  else { visibleStages.has(s)?visibleStages.delete(s):visibleStages.add(s); if(visibleStages.size===0) visibleStages=new Set(STAGEDEF.map(x=>x.k)); }
+  renderFilter(); applyExpanded();
+});
 $('#refBtn').onclick=()=>{ $('#legend').classList.toggle('hidden'); };
 if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
 $('#weeks').addEventListener('click',(e)=>{ const c=e.target.closest('.cell.wk'); if(!c) return; const w=+c.dataset.w; expandedWk.has(w)?expandedWk.delete(w):expandedWk.add(w); render(); });
