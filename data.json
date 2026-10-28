@@ -1,5 +1,10 @@
 {
   "version": 1,
-  "updated": null,
-  "barOverrides": {}
+  "updated": "2026-10-28T19:45:42.135Z",
+  "barOverrides": {
+    "exp_warf": {
+      "s": "2026-11-16",
+      "e": "2026-11-22"
+    }
+  }
 }
