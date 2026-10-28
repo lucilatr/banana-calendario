@@ -209,6 +209,7 @@
     </div>
     <div class="controls">
       <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
+      <span id="pubStatus" style="display:none;font-size:11px;color:var(--c-dev-a);font-weight:700;align-self:center;white-space:nowrap;"></span>
       <button class="btn" id="refBtn" data-es="📖 Referencias" data-en="📖 Legend">📖 Referencias</button>
       <button class="btn" id="langBtn">EN</button>
       <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
@@ -336,10 +337,12 @@ function applyExpanded(){
 // ---- persistencia / publicación (GitHub) ----
 const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
 const EDITABLE = location.protocol==='file:' || location.search.includes('edit') || location.hash.includes('edit');
-let barOverrides={};
+let barOverrides={}, lastPublished=null;
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
+function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
+function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
 async function loadState(){
-  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; return; } }catch(e){}
+  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
   try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
 }
 async function publish(){
@@ -353,7 +356,7 @@ async function publish(){
   try{
     let sha; const g=await fetch(api+`?ref=${GH.branch}`,{headers:{Authorization:'token '+token}}); if(g.ok) sha=(await g.json()).sha;
     const res=await fetch(api,{method:'PUT',headers:{Authorization:'token '+token,'Accept':'application/vnd.github+json'},body:JSON.stringify({message:'Publicar calendario',content,sha,branch:GH.branch})});
-    if(res.ok){ if(btn){btn.textContent='✅ Publicado'; setTimeout(()=>btn.textContent=old,2500);} }
+    if(res.ok){ if(btn) btn.textContent=old; const t=new Date(); showPubStatus('✅ Publicado '+t.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})+' · visible en ~1 min'); }
     else { const e=await res.json().catch(()=>({})); if(res.status===401) localStorage.removeItem('banana_gh_token'); alert('Error al publicar: '+res.status+' '+(e.message||'')); if(btn) btn.textContent=old; }
   }catch(err){ alert('Error de red al publicar: '+err); if(btn) btn.textContent=old; }
 }
@@ -532,7 +535,7 @@ $('#themeBtn').onclick=()=>{
   $('#themeBtn').dataset.en = d?'☀️ Light':'🌙 Dark';
   $('#themeBtn').textContent = lang==='es'?$('#themeBtn').dataset.es:$('#themeBtn').dataset.en;
 };
-loadState().then(render);
+loadState().then(()=>{ render(); if(EDITABLE && lastPublished) showPubStatus('Última publicación: '+fmtTs(lastPublished)); });
 </script>
 </body>
 </html>
