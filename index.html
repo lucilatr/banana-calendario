@@ -325,9 +325,9 @@ function fmtDate(s){ const a=new Date(s+'T00:00:00'); return `${a.getDate()} ${M
 const gr=(a,b)=>`linear-gradient(90deg,var(${a}),var(${b}))`;
 const COLOR={dev:gr('--c-dev-a','--c-dev-b'),art:gr('--c-art-a','--c-art-b'),def:gr('--c-def-a','--c-def-b'),sys:gr('--c-sys-a','--c-sys-b'),mkt:gr('--c-mkt-a','--c-mkt-b'),port:gr('--c-port-a','--c-port-b'),qa:gr('--c-qa-a','--c-qa-b')};
 const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
-const DIFFS=[{es:'Easy',en:'Easy',c:'#8f86f0'},{es:'Medium',en:'Medium',c:'#6a5fd0'},{es:'Hard',en:'Hard',c:'#463aa6'}];
-const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
-const PHASES=[{k:'assets',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:COLOR.art},{k:'vfx',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
+const DIFFS=[{es:'Easy',en:'Easy',c:'#86d3a0'},{es:'Medium',en:'Medium',c:'#4faf77'},{es:'Hard',en:'Hard',c:'#2b7d50'}];
+const G_B='linear-gradient(90deg,#1f9d55,#45c279)', G_C='linear-gradient(90deg,#7cb518,#a7d94a)', G_D='linear-gradient(90deg,#0b6e3f,#2a9460)';
+const PHASES=[{k:'assets',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:G_B},{k:'vfx',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:G_C},{k:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:G_D}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
 function applyExpanded(){
@@ -388,14 +388,14 @@ function render(){
   // legend
   $('#legend').innerHTML=[
     ['dev', lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)'],
-    ['art', lang==='es'?'Fase B · Generación de assets (look/3D)':'Phase B · Asset generation (look/3D)'],
-    ['def', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting'],
-    ['snd', lang==='es'?'Fase D · Sonido':'Phase D · Sound'],
+    ['', lang==='es'?'Fase B · Generación de assets (look/3D)':'Phase B · Asset generation (look/3D)', G_B],
+    ['', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting', G_C],
+    ['', lang==='es'?'Fase D · Sonido':'Phase D · Sound', G_D],
     ['sys', lang==='es'?'Sistemas & Pipeline':'Systems & Pipeline'],
     ['mkt', lang==='es'?'Marketing & Comunidad':'Marketing & Community'],
     ['port',lang==='es'?'Porting a Consolas':'Console Porting'],
     ['qa',  lang==='es'?'QA & Lanzamiento':'QA & Launch'],
-  ].map(([c,t])=>`<span class="k"><span class="sw ${c}"></span>${t}</span>`).join('')
+  ].map(([c,t,col])=>`<span class="k"><span class="sw ${c}" ${col?`style="background:${col}"`:''}></span>${t}</span>`).join('')
    +`<span class="k"><span class="dmd"></span>Milestone</span>`
    +`<span class="k" style="color:var(--todayLine);font-weight:700;">▸ ${lang==='es'?'Clic en una semana = desplegar días + agregar tareas':'Click a week = expand days + add tasks'}</span>`
    +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = dificultades':'Click a level = difficulties'}</span>`;
