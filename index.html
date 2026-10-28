@@ -334,6 +334,8 @@ let collapsedGrp=new Set();
 function applyExpanded(){
   document.querySelectorAll('.diffrow').forEach(r=>{ r.style.display = expandedLv.has(r.dataset.lvl)?'':'none'; });
   document.querySelectorAll('.lvlname').forEach(n=>{ n.classList.toggle('open', expandedLv.has(n.dataset.lvl)); });
+  // la tira-resumen gris solo se ve con el modo colapsado
+  document.querySelectorAll('[data-key^="sum_"]').forEach(el=>{ const k=el.dataset.key.slice(4); el.style.display = expandedLv.has(k)?'none':''; });
 }
 // ---- persistencia / publicación (GitHub) ----
 const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
