@@ -328,7 +328,7 @@ const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
 const DIFFS=[{es:'Easy',en:'Easy',c:'#86d3a0'},{es:'Medium',en:'Medium',c:'#4faf77'},{es:'Hard',en:'Hard',c:'#2b7d50'}];
 const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
 const PROD='linear-gradient(90deg,#7e8796,#aab2bf)';
-const PHASES=[{k:'assets',cls:'art',es:'Fase B · Pulido de look',en:'Phase B · Look polish',grad:COLOR.art},{k:'vfx',cls:'def',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
+const PHASES=[{k:'assets',cls:'art',es:'Pulido de look',en:'Look polish',grad:COLOR.art},{k:'vfx',cls:'def',es:'VFX + Lighting',en:'VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Sonido',en:'Sound',grad:SND}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
 function applyExpanded(){
@@ -388,10 +388,10 @@ function render(){
   applyGrid();
   // legend
   $('#legend').innerHTML=[
-    ['dev', lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)'],
-    ['art', lang==='es'?'Fase B · Pulido de look':'Phase B · Look polish'],
-    ['def', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting'],
-    ['snd', lang==='es'?'Fase D · Sonido':'Phase D · Sound'],
+    ['dev', lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)'],
+    ['art', lang==='es'?'Pulido de look':'Look polish'],
+    ['def', lang==='es'?'VFX + Lighting':'VFX + Lighting'],
+    ['snd', lang==='es'?'Sonido':'Sound'],
     ['sys', lang==='es'?'Sistemas & Pipeline':'Systems & Pipeline'],
     ['mkt', lang==='es'?'Marketing & Comunidad':'Marketing & Community'],
     ['port',lang==='es'?'Porting a Consolas':'Console Porting'],
@@ -452,7 +452,7 @@ function render(){
         html+=`<div class="grid24 row lvl">`;
         const lvlNameHtml=`<div class="name lvlname" data-lvl="${t.key}" title="${nm}"><span class="caret">▸</span><span class="col"><strong>${nm}</strong></span></div>`;
         // las 4 etapas del modo (A exploración · B assets · C vfx+light · D sonido)
-        const exLbl=lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)';
+        const exLbl=lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)';
         const o=t.b?(t.b[0]-1)*7:0, e=t.b?(t.b[1]-1)*7+4:0;
         const STAGES=[];
         if(t.aStart) STAGES.push({k:'exp_'+t.key, grad:COLOR.dev, lbl:exLbl, ds:dOff(t.aStart), de:dOff(t.aEnd)});
