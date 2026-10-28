@@ -346,7 +346,7 @@ function applyExpanded(){
 // ---- persistencia / publicación (GitHub) ----
 const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
 const EDITABLE = location.protocol==='file:' || location.search.includes('edit') || location.hash.includes('edit');
-let barOverrides={}, lastPublished=null;
+let barOverrides={}, lastPublished=null, undoStack=[], redoStack=[];
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
 function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
@@ -527,9 +527,17 @@ $('#rows').addEventListener('click',(e)=>{
 });
 // drag ANY bar from either end to resize it (snaps to day)
 let drag=null;
-document.addEventListener('mousedown',(e)=>{ const h=e.target.closest('.handle'); if(!h) return; const bar=h.closest('.abar'); if(!bar) return; e.preventDefault(); drag={key:bar.dataset.key,side:h.classList.contains('l')?'l':'r',sOff:+bar.dataset.soff,eOff:+bar.dataset.eoff,el:bar}; document.body.classList.add('dragging'); });
+document.addEventListener('mousedown',(e)=>{ const h=e.target.closest('.handle'); if(!h) return; const bar=h.closest('.abar'); if(!bar) return; e.preventDefault(); drag={key:bar.dataset.key,side:h.classList.contains('l')?'l':'r',sOff:+bar.dataset.soff,eOff:+bar.dataset.eoff,el:bar,before:JSON.stringify(barOverrides)}; document.body.classList.add('dragging'); });
 document.addEventListener('mousemove',(e)=>{ if(!drag) return; const chart=$('.chart'), r=chart.getBoundingClientRect(); const x=e.clientX-r.left+chart.scrollLeft; const off=xToDay(x); if(drag.side==='l') drag.sOff=Math.min(off,drag.eOff); else drag.eOff=Math.max(off,drag.sOff); const p=barPx(drag.sOff,drag.eOff); drag.el.style.left=p.l+'px'; drag.el.style.width=p.w+'px'; drag.el.dataset.soff=drag.sOff; drag.el.dataset.eoff=drag.eOff; const lbl=document.querySelector(`.albl[data-key="${drag.key}"]`); if(lbl) lbl.style.left=dayToX(drag.eOff+1)+'px'; });
-document.addEventListener('mouseup',()=>{ if(!drag) return; barOverrides[drag.key]={s:offToIso(drag.sOff),e:offToIso(drag.eOff)}; saveOverrides(); drag=null; document.body.classList.remove('dragging'); render(); });
+document.addEventListener('mouseup',()=>{ if(!drag) return; barOverrides[drag.key]={s:offToIso(drag.sOff),e:offToIso(drag.eOff)}; const after=JSON.stringify(barOverrides); if(drag.before && after!==drag.before){ undoStack.push(drag.before); if(undoStack.length>100) undoStack.shift(); redoStack.length=0; } saveOverrides(); drag=null; document.body.classList.remove('dragging'); render(); });
+// deshacer / rehacer (Cmd/Ctrl+Z, Cmd/Ctrl+Shift+Z)
+document.addEventListener('keydown',(e)=>{
+  if(!EDITABLE) return;
+  if(!(e.metaKey||e.ctrlKey) || (e.key!=='z'&&e.key!=='Z')) return;
+  e.preventDefault();
+  if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); } }
+  else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); } }
+});
 $('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); };
 $('#themeBtn').onclick=()=>{
   document.body.classList.toggle('dark');
