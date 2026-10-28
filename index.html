@@ -327,7 +327,7 @@ const COLOR={dev:gr('--c-dev-a','--c-dev-b'),art:gr('--c-art-a','--c-art-b'),def
 const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
 const DIFFS=[{es:'Easy',en:'Easy',c:'#86d3a0'},{es:'Medium',en:'Medium',c:'#4faf77'},{es:'Hard',en:'Hard',c:'#2b7d50'}];
 const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
-const PROD='linear-gradient(90deg,#c4cdd6,#dde3ea)';
+const PROD='linear-gradient(90deg,#7e8796,#aab2bf)';
 const PHASES=[{k:'assets',cls:'art',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:COLOR.art},{k:'vfx',cls:'def',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
@@ -399,7 +399,7 @@ function render(){
   ].map(([c,t,col])=>`<span class="k"><span class="sw ${c}" ${col?`style="background:${col}"`:''}></span>${t}</span>`).join('')
    +`<span class="k"><span class="dmd"></span>Milestone</span>`
    +`<span class="k" style="color:var(--todayLine);font-weight:700;">▸ ${lang==='es'?'Clic en una semana = desplegar días + agregar tareas':'Click a week = expand days + add tasks'}</span>`
-   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = fases B/C/D (pueden solaparse)':'Click a level = phases B/C/D (can overlap)'}</span>`;
+   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = etapas A/B/C/D (pueden solaparse)':'Click a level = stages A/B/C/D (can overlap)'}</span>`;
 
   // months
   let m=`<div class="cell corner">${lang==='es'?'2026 — 2027':'2026 — 2027'}</div>`;
@@ -451,29 +451,26 @@ function render(){
         // fila principal del modo de juego (desplegable)
         html+=`<div class="grid24 row lvl">`;
         const lvlNameHtml=`<div class="name lvlname" data-lvl="${t.key}" title="${nm}"><span class="caret">▸</span><span class="col"><strong>${nm}</strong></span></div>`;
-        // barra de exploración (layout, jugabilidad, dinámicas) — fechas día-exactas
-        if(t.aStart){
-          const k='exp_'+t.key, exLbl=lang==='es'?'Exploración: layout, jugabilidad, dinámicas':'Exploration: layout, gameplay, dynamics';
-          const [s,e]=curOff(k, dOff(t.aStart), dOff(t.aEnd));
-          html+=drawBar(k, dOff(t.aStart), dOff(t.aEnd), COLOR.dev, `${exLbl} · ${fmtRange(offToIso(s),offToIso(e))}`, exLbl);
-        }
-        // barra resumen de producción (gris, no arrastrable) en la fila principal
-        if(t.b){
-          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4;
-          const pl=lang==='es'?'Producción (desplegá el modo → B/C/D)':'Production (expand mode → B/C/D)';
-          html+=drawBar('prod_'+t.key, o, e, PROD, pl, pl, true);
+        // las 4 etapas del modo (A exploración · B assets · C vfx+light · D sonido)
+        const exLbl=lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)';
+        const o=t.b?(t.b[0]-1)*7:0, e=t.b?(t.b[1]-1)*7+4:0;
+        const STAGES=[];
+        if(t.aStart) STAGES.push({k:'exp_'+t.key, grad:COLOR.dev, lbl:exLbl, ds:dOff(t.aStart), de:dOff(t.aEnd)});
+        if(t.b) PHASES.forEach(ph=>STAGES.push({k:ph.k+'_'+t.key, grad:ph.grad, lbl:(lang==='es'?ph.es:ph.en), ds:o, de:e}));
+        // tira-resumen (toda la extensión del modo), no arrastrable, en la fila principal
+        let smin=Infinity, smax=-Infinity;
+        STAGES.forEach(st=>{ const [s,e2]=curOff(st.k, st.ds, st.de); smin=Math.min(smin,s); smax=Math.max(smax,e2); });
+        if(STAGES.length){
+          const sl=`${nm} · ${fmtRange(offToIso(smin),offToIso(smax))}`;
+          html+=drawBar('sum_'+t.key, smin, smax, PROD, sl, sl, true);
         }
         html+=lvlNameHtml+`</div>`;
-        // sub-filas: Fases B/C/D (ocultas hasta desplegar) — tiras independientes, pueden solaparse
-        if(t.b){
-          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4;
-          PHASES.forEach(ph=>{
-            const lbl=lang==='es'?ph.es:ph.en;
-            html+=`<div class="grid24 row diffrow" data-lvl="${t.key}" style="display:none">`;
-            html+=drawBar(`${ph.k}_${t.key}`, o, e, ph.grad, lbl, lbl);
-            html+=`<div class="name"><span class="dk">${lbl}</span></div></div>`;
-          });
-        }
+        // sub-filas: las 4 etapas como tiras independientes (ocultas hasta desplegar), pueden solaparse
+        STAGES.forEach(st=>{
+          html+=`<div class="grid24 row diffrow" data-lvl="${t.key}" style="display:none">`;
+          html+=drawBar(st.k, st.ds, st.de, st.grad, st.lbl, st.lbl);
+          html+=`<div class="name"><span class="dk">${st.lbl}</span></div></div>`;
+        });
       });
     } else { // bars — nombre completo a la izquierda, barra estirable
       g.tasks.forEach((t,ti)=>{
