@@ -328,7 +328,7 @@ const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
 const DIFFS=[{es:'Easy',en:'Easy',c:'#86d3a0'},{es:'Medium',en:'Medium',c:'#4faf77'},{es:'Hard',en:'Hard',c:'#2b7d50'}];
 const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
 const PROD='linear-gradient(90deg,#7e8796,#aab2bf)';
-const PHASES=[{k:'assets',cls:'art',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:COLOR.art},{k:'vfx',cls:'def',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
+const PHASES=[{k:'assets',cls:'art',es:'Fase B · Pulido de look',en:'Phase B · Look polish',grad:COLOR.art},{k:'vfx',cls:'def',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
 function applyExpanded(){
@@ -389,7 +389,7 @@ function render(){
   // legend
   $('#legend').innerHTML=[
     ['dev', lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)'],
-    ['art', lang==='es'?'Fase B · Generación de assets (look/3D)':'Phase B · Asset generation (look/3D)'],
+    ['art', lang==='es'?'Fase B · Pulido de look':'Phase B · Look polish'],
     ['def', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting'],
     ['snd', lang==='es'?'Fase D · Sonido':'Phase D · Sound'],
     ['sys', lang==='es'?'Sistemas & Pipeline':'Systems & Pipeline'],
