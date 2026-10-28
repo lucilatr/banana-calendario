@@ -339,7 +339,7 @@ const EDITABLE = location.protocol==='file:' || location.search.includes('edit')
 let barOverrides={};
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
 async function loadState(){
-  try{ const r=await fetch(GH.path,{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; return; } }catch(e){}
+  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; return; } }catch(e){}
   try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
 }
 async function publish(){
