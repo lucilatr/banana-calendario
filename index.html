@@ -137,6 +137,11 @@
   .diffrow{min-height:28px;}
   .diffrow .name{padding-left:30px;font-size:10px;color:var(--muted);}
   .diffrow .name .dk{font-weight:800;color:var(--text);}
+  /* bloque de un modo desplegado: fila pintada + bordes para separar modos */
+  .row.lvl.exp-open, .diffrow.exp-open{background:rgba(43,99,201,.09);}
+  .row.lvl.exp-open .name, .diffrow.exp-open .name{background:linear-gradient(rgba(43,99,201,.09),rgba(43,99,201,.09)), var(--panel);}
+  .row.lvl.exp-open{border-top:2px solid var(--c-sys-a);}
+  .diffrow.lastsub.exp-open{border-bottom:2px solid var(--c-sys-a);}
   /* expandable weeks: click to widen a week and show its 7 days as sub-columns */
   .weeks .cell.wk{cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
   .weeks .cell.wk:hover{background:var(--grid);}
@@ -332,8 +337,9 @@ const PHASES=[{k:'assets',cls:'art',es:'Pulido de look',en:'Look polish',grad:CO
 let expandedLv=new Set();
 let collapsedGrp=new Set();
 function applyExpanded(){
-  document.querySelectorAll('.diffrow').forEach(r=>{ r.style.display = expandedLv.has(r.dataset.lvl)?'':'none'; });
+  document.querySelectorAll('.diffrow').forEach(r=>{ const on=expandedLv.has(r.dataset.lvl); r.style.display = on?'':'none'; r.classList.toggle('exp-open', on); });
   document.querySelectorAll('.lvlname').forEach(n=>{ n.classList.toggle('open', expandedLv.has(n.dataset.lvl)); });
+  document.querySelectorAll('.row.lvl[data-lvl]').forEach(r=>{ r.classList.toggle('exp-open', expandedLv.has(r.dataset.lvl)); });
   // la tira-resumen gris solo se ve con el modo colapsado
   document.querySelectorAll('[data-key^="sum_"]').forEach(el=>{ const k=el.dataset.key.slice(4); el.style.display = expandedLv.has(k)?'none':''; });
 }
@@ -451,7 +457,7 @@ function render(){
         }
         const mech=lang==='es'?(t.mech_es||''):(t.mech_en||'');
         // fila principal del modo de juego (desplegable)
-        html+=`<div class="grid24 row lvl">`;
+        html+=`<div class="grid24 row lvl" data-lvl="${t.key}">`;
         const lvlNameHtml=`<div class="name lvlname" data-lvl="${t.key}" title="${nm}"><span class="caret">▸</span><span class="col"><strong>${nm}</strong></span></div>`;
         // las 4 etapas del modo (A exploración · B assets · C vfx+light · D sonido)
         const exLbl=lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)';
@@ -468,8 +474,8 @@ function render(){
         }
         html+=lvlNameHtml+`</div>`;
         // sub-filas: las 4 etapas como tiras independientes (ocultas hasta desplegar), pueden solaparse
-        STAGES.forEach(st=>{
-          html+=`<div class="grid24 row diffrow" data-lvl="${t.key}" style="display:none">`;
+        STAGES.forEach((st,si)=>{
+          html+=`<div class="grid24 row diffrow${si===STAGES.length-1?' lastsub':''}" data-lvl="${t.key}" style="display:none">`;
           html+=drawBar(st.k, st.ds, st.de, st.grad, st.lbl, st.lbl);
           html+=`<div class="name"><span class="dk">${st.lbl}</span></div></div>`;
         });
