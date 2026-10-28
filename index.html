@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banana Airways — Plan de Producción a Lanzamiento (31 Mar 2027)</title>
+<style>
+  :root{
+    --label-w: 248px;
+    --col-w: 70px;
+    --bg: #ffffff;
+    --panel: #f6f7f9;
+    --grid: #e7e9ee;
+    --gridStrong:#d3d7e0;
+    --text: #1d2330;
+    --muted: #6b7280;
+    --today: rgba(255,196,0,.16);
+    --todayLine:#f0a500;
+    --row-h: 34px;
+    /* workstream accents */
+    --c-dev-a:#0f9d8f;  --c-dev-b:#2bc4b4;
+    --c-art-a:#5b5bd6;  --c-art-b:#8a7bff;
+    --c-mkt-a:#e08900;  --c-mkt-b:#ffb43d;
+    --c-port-a:#d23b5a; --c-port-b:#ff6b84;
+    --c-qa-a:#2e7d32;   --c-qa-b:#5bb85f;
+    --c-sys-a:#2563c9;  --c-sys-b:#4f8bf0;
+    --c-def-a:#c0398f;  --c-def-b:#e06bb0;
+    --c-mile:#1d2330;
+    --c-launch:#f0a500;
+  }
+  body.dark{
+    --bg:#0f1420; --panel:#161c2b; --grid:#232b3d; --gridStrong:#2e3850;
+    --text:#e7ecf5; --muted:#93a0b8; --today:rgba(255,196,0,.10);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; transition:background .25s,color .25s;
+  }
+  .wrap{max-width:100%;margin:0 auto;padding:22px 20px 60px;}
+  header.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px;}
+  .title h1{margin:0 0 4px;font-size:22px;letter-spacing:.2px;}
+  .title .sub{color:var(--muted);font-size:13px;}
+  .title .chip{display:inline-block;margin-top:8px;margin-right:6px;font-size:12px;font-weight:600;color:#fff;background:var(--c-launch);padding:3px 10px;border-radius:999px;}
+  .title .chip.cd{background:var(--c-dev-a);}
+  .legend.hidden{display:none;}
+  .controls{display:flex;gap:8px;align-items:center;}
+  .btn{cursor:pointer;border:1px solid var(--gridStrong);background:var(--panel);color:var(--text);
+    font-size:12px;font-weight:600;padding:7px 12px;border-radius:8px;transition:.15s;}
+  .btn:hover{border-color:var(--c-art-a);}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:4px 0 14px;padding:11px 16px;
+    font-size:12px;color:var(--text);background:var(--panel);border:1px solid var(--grid);border-radius:10px;}
+  .legend .k{display:inline-flex;align-items:center;gap:6px;color:var(--muted);}
+  .legend .sw{width:13px;height:13px;border-radius:4px;display:inline-block;}
+  .sw.dev{background:linear-gradient(90deg,var(--c-dev-a),var(--c-dev-b));}
+  .sw.art{background:linear-gradient(90deg,var(--c-art-a),var(--c-art-b));}
+  .sw.mkt{background:linear-gradient(90deg,var(--c-mkt-a),var(--c-mkt-b));}
+  .sw.port{background:linear-gradient(90deg,var(--c-port-a),var(--c-port-b));}
+  .sw.qa{background:linear-gradient(90deg,var(--c-qa-a),var(--c-qa-b));}
+  .sw.sys{background:linear-gradient(90deg,var(--c-sys-a),var(--c-sys-b));}
+  .sw.def{background:linear-gradient(90deg,var(--c-def-a),var(--c-def-b));}
+  .sw.snd{background:linear-gradient(90deg,#0ea5b7,#49c6d6);}
+  .dmd{width:11px;height:11px;background:var(--c-mile);transform:rotate(45deg);display:inline-block;}
+
+  .chart{border:1px solid var(--grid);border-radius:12px;background:var(--panel);overflow:auto;max-height:80vh;}
+  .grid24{display:grid;grid-template-columns:var(--label-w) repeat(23,var(--col-w));width:max-content;min-width:100%;}
+  /* sticky date header (stays fixed on vertical scroll) + fixed left name column (on horizontal scroll) */
+  .stickyHead{position:sticky;top:0;z-index:20;background:var(--panel);width:max-content;min-width:100%;
+    border-top-left-radius:12px;border-top-right-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.10);}
+  .months .corner,.weeks .corner{position:sticky;left:0;z-index:23;background:var(--panel);}
+  .months .cell{border-left:1px solid var(--grid);padding:8px 6px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);background:var(--panel);}
+  .months .corner{border-left:none;text-align:left;font-weight:700;color:var(--text);letter-spacing:.3px;font-size:12px;}
+  /* week header */
+  .weeks .cell{border-left:1px solid var(--grid);border-top:1px solid var(--grid);padding:5px 2px;text-align:center;font-size:9.5px;color:var(--muted);background:var(--panel);white-space:nowrap;}
+  .weeks .corner{border-left:none;}
+  .weeks .cell.today{background:var(--today);color:var(--todayLine);font-weight:700;}
+
+  .grpTitle{grid-column:1 / -1;padding:7px 0;font-size:11px;font-weight:800;letter-spacing:.8px;
+    color:var(--text);background:var(--grid);border-top:1px solid var(--gridStrong);cursor:pointer;}
+  .grpTitle:hover{background:var(--gridStrong);}
+  .grpTitle .gt{position:sticky;left:0;z-index:6;display:inline-block;padding-left:14px;padding-right:12px;background:var(--grid);}
+  .grpTitle .gcaret{font-size:9px;color:var(--muted);margin-right:3px;}
+  .row{min-height:var(--row-h);border-top:1px solid var(--grid);position:relative;}
+  .row .name{grid-column:1;display:flex;align-items:center;padding:4px 10px 4px 14px;font-size:11.5px;line-height:1.2;
+    position:sticky;left:0;z-index:8;background:var(--panel);border-right:1px solid var(--grid);}
+  .row .name.warn::before{content:"⚠";margin-right:6px;}
+  /* week separators as background */
+  /* vertical column lines (week + day boundaries) drawn as overlays for exact alignment */
+  .vline{position:absolute;top:0;bottom:0;width:1px;background:var(--grid);pointer-events:none;z-index:0;}
+  .vline.day{opacity:.5;}
+  .wkndcol{position:absolute;top:0;bottom:0;background:rgba(128,134,150,.15);pointer-events:none;z-index:0;}
+  .blockedrow{position:absolute;left:var(--label-w);right:0;top:0;bottom:0;background:rgba(128,134,150,.22);pointer-events:none;z-index:1;}
+  .row.lvl.blocked .name{color:var(--muted);}
+  .bar{align-self:center;height:21px;border-radius:8px;display:flex;align-items:center;
+    padding:0 8px;box-shadow:0 1px 2px rgba(0,0,0,.14);margin:5px 2px;z-index:2;overflow:hidden;}
+  /* label inside a wide bar (white, fits) */
+  .inlbl{color:#fff;font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .inlbl.sm{font-size:9.5px;}
+  /* full label beside a narrow bar (dark, never cut) */
+  .outlbl{align-self:center;display:flex;align-items:center;font-size:10.5px;font-weight:500;
+    color:var(--text);white-space:nowrap;z-index:1;pointer-events:none;}
+  .outlbl.r{justify-self:start;padding-left:8px;}
+  .outlbl.l{justify-self:end;padding-right:8px;text-align:right;}
+  .outlbl.sm{font-size:9.5px;}
+  .outlbl .dur{color:var(--muted);font-weight:600;margin-left:7px;font-size:9.5px;}
+  .outlbl .ph{color:var(--muted);font-weight:600;}
+  .bar.dev{background:linear-gradient(90deg,var(--c-dev-a),var(--c-dev-b));}
+  .bar.art{background:linear-gradient(90deg,var(--c-art-a),var(--c-art-b));}
+  .bar.mkt{background:linear-gradient(90deg,var(--c-mkt-a),var(--c-mkt-b));}
+  .bar.port{background:linear-gradient(90deg,var(--c-port-a),var(--c-port-b));}
+  .bar.qa{background:linear-gradient(90deg,var(--c-qa-a),var(--c-qa-b));}
+  .bar.sys{background:linear-gradient(90deg,var(--c-sys-a),var(--c-sys-b));}
+  .bar.def{background:linear-gradient(90deg,var(--c-def-a),var(--c-def-b));}
+  .bar.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1px dashed var(--gridStrong);}
+  /* level rows: 3 steps (A layout+jugabilidad · Lock+def · B look&impl) */
+  .row.lvl{min-height:38px;}
+  .row.lvl .name{flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;padding-top:5px;padding-bottom:5px;}
+  .row.lvl .name strong{font-size:11.5px;}
+  .row.lvl .name .mech{font-size:9px;color:var(--muted);line-height:1.1;}
+  /* day-precise absolute bars (10px/day) + beside labels */
+  .abar{position:absolute;top:50%;transform:translateY(-50%);height:19px;border-radius:7px;box-shadow:0 1px 2px rgba(0,0,0,.16);z-index:2;}
+  .albl{position:absolute;top:50%;transform:translateY(-50%);font-size:9.5px;font-weight:500;color:var(--text);white-space:nowrap;z-index:1;pointer-events:none;padding-left:7px;opacity:0;transition:opacity .12s;}
+  .albl .ph{color:var(--muted);font-weight:600;}
+  .abar:hover + .albl{opacity:1;}
+  /* resize handles on Fase A (green) bars */
+  .handle{position:absolute;top:0;bottom:0;width:11px;cursor:ew-resize;z-index:4;}
+  .handle.l{left:-3px;} .handle.r{right:-3px;}
+  .handle::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:11px;border-radius:2px;background:rgba(255,255,255,.92);box-shadow:0 0 0 1px rgba(0,0,0,.2);}
+  body.dragging{user-select:none;cursor:ew-resize;}
+  /* expandable level name (caret) + difficulty sub-rows */
+  .row.lvl .name.lvlname{flex-direction:row;align-items:center;justify-content:flex-start;gap:5px;cursor:pointer;}
+  .lvlname .caret{color:var(--muted);font-size:9px;display:inline-block;transition:transform .15s;flex:none;}
+  .lvlname.open .caret{transform:rotate(90deg);}
+  .lvlname .col{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .diffrow{min-height:28px;}
+  .diffrow .name{padding-left:30px;font-size:10px;color:var(--muted);}
+  .diffrow .name .dk{font-weight:800;color:var(--text);}
+  /* expandable weeks: click to widen a week and show its 7 days as sub-columns */
+  .weeks .cell.wk{cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+  .weeks .cell.wk:hover{background:var(--grid);}
+  .weeks .cell.wk.exp{padding:0;background:rgba(43,99,201,.07);justify-content:flex-start;}
+  .wnum{font-size:8px;font-weight:800;color:var(--c-sys-a);letter-spacing:.3px;}
+  .wdate{font-size:9.5px;}
+  .cell.wk.exp .wnum{width:100%;text-align:center;padding:3px 0;border-bottom:1px solid var(--grid);}
+  .daygrid{display:grid;grid-template-columns:repeat(7,1fr);width:100%;}
+  .daycell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 0;
+    border-left:1px solid var(--grid);font-size:7.5px;color:var(--muted);line-height:1;}
+  .daycell:first-child{border-left:none;}
+  .daycell b{font-size:10px;color:var(--text);font-weight:700;}
+  .daycell.wknd{background:rgba(128,134,150,.16);}
+  .daycell.hol{background:rgba(240,165,0,.16);}
+  .daycell.hol b{color:var(--c-launch);}
+  .daycell.todayd{background:rgba(240,165,0,.24);}
+  .daycell.todayd b{color:var(--todayLine);}
+  /* current day highlighted inside an expanded week */
+  .todaycol{position:absolute;top:0;bottom:0;pointer-events:none;z-index:1;background:rgba(240,165,0,.16);
+    border-left:2px solid var(--todayLine);border-right:1px solid var(--todayLine);}
+  /* colored block for an expanded week across all rows, with day separators */
+  .weekband{position:absolute;top:0;bottom:0;pointer-events:none;z-index:0;
+    background-color:rgba(43,99,201,.05);border-left:2px solid var(--c-sys-a);border-right:1px solid var(--gridStrong);}
+  /* milestones: diamond icon with number on top, text below, all aligned */
+  .mrow{min-height:104px;}
+  .mrow .name{align-items:center;font-weight:800;letter-spacing:.4px;}
+  .mrow::after{content:"";position:absolute;left:var(--label-w);right:0;top:22px;height:2px;background:var(--grid);z-index:0;}
+  .mile{position:absolute;top:11px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:3;}
+  .mile .d{width:22px;height:22px;transform:rotate(45deg);border-radius:5px;background:var(--c-mile);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.3);border:2px solid var(--panel);}
+  .mile .d span{transform:rotate(-45deg);color:#fff;font-size:9.5px;font-weight:800;line-height:1;}
+  .mile.launch .d{width:27px;height:27px;background:var(--c-launch);}
+  .mile.launch .d span{font-size:13px;}
+  .mile .t{margin-top:9px;text-align:center;font-size:10.5px;font-weight:400;color:var(--text);line-height:1.2;max-width:96px;}
+  .mile .t.oneline{max-width:none;}
+  .mile .t .mt{display:block;white-space:normal;}
+  .mile .t.oneline .mt{white-space:nowrap;}
+  .mile .t .ms{display:block;white-space:nowrap;font-weight:400;color:var(--muted);font-size:10px;margin-top:1px;}
+  .mile.launch .t .mt{color:var(--c-launch);}
+  /* milestones muy cercanos: texto ABAJO del número, anclado al borde del punto */
+  .mile.edge .t{position:absolute;top:31px;margin-top:0;max-width:78px;}
+  .mile.edge .t .mt{white-space:normal;}
+  .mile.edge.side-l .t{right:11px;text-align:right;}
+  .mile.edge.side-r .t{left:11px;text-align:left;}
+  /* today vertical band across the whole chart */
+  #rows{position:relative;}
+  .todayband{position:absolute;top:0;bottom:0;width:var(--col-w);background:var(--today);
+    border-left:2px solid var(--todayLine);pointer-events:none;z-index:1;}
+
+  .notes{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
+  .card{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;background:var(--panel);}
+  .card h3{margin:0 0 8px;font-size:13px;}
+  .card.urgent{border-color:var(--c-port-a);}
+  .card.urgent h3{color:var(--c-port-a);}
+  .card.risk{border-color:var(--c-mkt-a);}
+  .card.risk h3{color:var(--c-mkt-a);}
+  .card ul{margin:0;padding-left:18px;}
+  .card li{font-size:12px;line-height:1.5;margin-bottom:5px;color:var(--text);}
+  .foot{margin-top:22px;font-size:11px;color:var(--muted);line-height:1.5;}
+  .hideEN [data-en]{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="title">
+      <h1 data-es="Banana Airways" data-en="Banana Airways">Banana Airways</h1>
+      <div class="sub" data-es="Proyección octubre 2026 al 31 de marzo de 2027" data-en="Projection October 2026 to March 31, 2027">Proyección octubre 2026 al 31 de marzo de 2027</div>
+      <span class="chip" data-es="🚀 Lanzamiento 31 de marzo de 2027" data-en="🚀 Launch March 31, 2027">🚀 Lanzamiento 31 de marzo de 2027</span>
+      <span class="chip cd" id="countdown"></span>
+    </div>
+    <div class="controls">
+      <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
+      <button class="btn" id="refBtn" data-es="📖 Referencias" data-en="📖 Legend">📖 Referencias</button>
+      <button class="btn" id="langBtn">EN</button>
+      <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
+    </div>
+  </header>
+
+  <div class="legend hidden" id="legend"></div>
+
+  <div class="chart">
+    <div class="stickyHead">
+      <div class="grid24 months" id="months"></div>
+      <div class="grid24 weeks" id="weeks"></div>
+    </div>
+    <div id="rows"></div>
+  </div>
+
+  <div class="notes" id="notes"></div>
+
+  <div class="foot" data-es="Preview interno — no publicado. Fechas y supuestos derivados de la reunión y de prácticas estándar de producción de videojuegos (dev programs y certificación de consolas). Ajustable." data-en="Internal preview — not published. Dates and assumptions derived from the meeting and standard game-production practice (dev programs & console certification). Adjustable.">Preview interno — no publicado.</div>
+</div>
+
+<script>
+const WEEKS_ES=['27 Oct','2 Nov','9 Nov','16 Nov','23 Nov','30 Nov','7 Dic','14 Dic','21 Dic','28 Dic','4 Ene','11 Ene','18 Ene','25 Ene','1 Feb','8 Feb','15 Feb','22 Feb','1 Mar','8 Mar','15 Mar','22 Mar','29 Mar'];
+const WEEKS_EN=['Oct 27','Nov 2','Nov 9','Nov 16','Nov 23','Nov 30','Dec 7','Dec 14','Dec 21','Dec 28','Jan 4','Jan 11','Jan 18','Jan 25','Feb 1','Feb 8','Feb 15','Feb 22','Mar 1','Mar 8','Mar 15','Mar 22','Mar 29'];
+const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['FEB','FEB',4],['MAR','MAR',5]];
+const TODAY_WEEK=1;
+
+// kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
+const GROUPS=[
+ {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
+   {d:'2026-11-20', oneline:true, es:'Submit trailer', en:'Submit trailer', sub_es:'20 de noviembre', sub_en:'November 20'},
+   {d:'2026-12-21', es:'Layouts + jugabilidad lockeada (todos)', en:'Layouts + gameplay locked (all)'},
+   {d:'2027-01-08', side:'l', es:'Devkits recibidos', en:'Devkits received'},
+   {d:'2027-01-11', side:'r', es:'Porting kickoff', en:'Porting kickoff'},
+   {d:'2027-01-29', oneline:true, es:'Content complete / Freeze', en:'Content complete / Freeze'},
+   {d:'2027-02-26', oneline:true, es:'Code freeze / RC', en:'Code freeze / RC'},
+   {d:'2027-03-10', es:'Cert consolas (envío)', en:'Console cert (submit)'},
+   {d:'2027-03-31', oneline:true, es:'LANZAMIENTO · 31 Mar', en:'LAUNCH · Mar 31', launch:true},
+ ]},
+ // Barra principal = exploración de dinámicas y espacio de juego (fechas día-exactas) · Fase B (look) en ene-feb · desplegable → 3 dificultades
+ {kind:'levels', es:'MODOS DE JUEGO', en:'GAME MODES', tasks:[
+   {key:'space', es:'Space Explorer', en:'Space Explorer', mech_es:'espacio · gravedad lunar', mech_en:'space · lunar gravity', aStart:'2026-10-26', aEnd:'2026-11-03', b:[11,13]},
+   {key:'sub', es:'Submarine', en:'Submarine', mech_es:'flotación + inundación (impide caminar)', mech_en:'floatation + flooding (blocks walking)', aStart:'2026-11-04', aEnd:'2026-11-13', b:[12,14]},
+   {key:'warf', es:'Warfighter', en:'Warfighter', aStart:'2026-11-16', aEnd:'2026-11-20', b:[13,15]},
+   {key:'spa', es:'Celebrity Spa Ultra Lux', en:'Celebrity Spa Ultra Lux', aStart:'2026-11-23', aEnd:'2026-11-27', b:[14,16]},
+   {key:'rescue', es:'War Rescue', en:'War Rescue', aStart:'2026-11-30', aEnd:'2026-12-04', b:[15,17]},
+   {key:'baby', es:'Baby Delivery', en:'Baby Delivery', aStart:'2026-12-07', aEnd:'2026-12-11', b:[16,18]},
+   {key:'ark', es:'Banana Noah’s Ark', en:'Banana Noah’s Ark', mech_es:'estilo arca de Noé', mech_en:'Noah’s Ark style', aStart:'2026-12-14', aEnd:'2026-12-18', b:[16,18]},
+   {key:'radio', blocked:true, es:'Radioactive Low Cost', en:'Radioactive Low Cost'},
+ ]},
+ {kind:'bars', es:'SISTEMAS & PIPELINE', en:'SYSTEMS & PIPELINE', cls:'sys', tasks:[
+   {sw:3,ew:10, es:'Sistema de cosméticos (categorías + moneda)', en:'Cosmetics system (categories + currency)'},
+ ]},
+ {es:'PORTING A CONSOLAS', en:'CONSOLE PORTING', cls:'port', tasks:[
+   {sw:2,ew:3,  warn:true, es:'CONTACTAR / alta: ID@Xbox · PS Partners · Nintendo Dev', en:'CONTACT / register: ID@Xbox · PS Partners · Nintendo Dev'},
+   {sw:3,ew:6,  es:'Aprobación + solicitud de devkits (Xbox/PS/Switch)', en:'Approval + devkit request (Xbox/PS/Switch)'},
+   {sw:9,ew:11, es:'Recepción y setup de devkits', en:'Devkit receipt & setup'},
+   {sw:12,ew:18,es:'Porting Xbox Series X|S', en:'Porting Xbox Series X|S'},
+   {sw:12,ew:18,es:'Porting PlayStation 5', en:'Porting PlayStation 5'},
+   {sw:12,ew:18,es:'Porting Nintendo Switch', en:'Porting Nintendo Switch'},
+   {sw:15,ew:19,es:'Cumplimiento TRC/XR/Lotcheck + ratings (ESRB/PEGI/IARC)', en:'TRC/XR/Lotcheck compliance + ratings (ESRB/PEGI/IARC)'},
+   {sw:20,ew:22,es:'Certificación consolas (envío + buffer re-envío)', en:'Console certification (submit + resubmit buffer)'},
+ ]},
+ {kind:'bars', es:'MARKETING & COMUNIDAD', en:'MARKETING & COMMUNITY', cls:'mkt', tasks:[
+   {sw:1,ew:4,  es:'Producción nuevo trailer (70s · reveal 31 Mar · cliffhanger)', en:'New trailer (70s · reveal Mar 31 · cliffhanger)'},
+   {sw:6,ew:8,  es:'Evento diciembre · IGN Game Trailers (exposición)', en:'December event · IGN Game Trailers (exposure)'},
+   {sw:19,ew:23,es:'Campaña de lanzamiento + launch trailer', en:'Launch campaign + launch trailer'},
+ ]},
+ {es:'QA & LANZAMIENTO', en:'QA & LAUNCH', cls:'qa', tasks:[
+   {sw:19,ew:22,es:'QA — 4 semanas · todas las plataformas', en:'QA — 4 weeks · all platforms'},
+   {sw:22,ew:23,es:'Gold master + preparación de stores', en:'Gold master + store prep'},
+   {sw:23,ew:23,es:'🚀 Lanzamiento 31 Mar (Steam + consolas)', en:'🚀 Launch Mar 31 (Steam + consoles)'},
+ ]},
+];
+
+const NOTES=[
+ {cls:'urgent', es:['ACCIÓN URGENTE (próximas 1-2 semanas)','Dar de alta al estudio en los 3 programas: ID@Xbox, PlayStation Partners y Nintendo Developer Portal.','Solicitar devkits apenas haya aprobación — los tiempos de alta + envío de hardware son de semanas.','Si los devkits no se piden en noviembre, NO llegan para arrancar el porting la 2ª semana de enero.','Atajo posible: Xbox permite usar una consola retail en "Modo Dev" como kit temprano mientras llega el oficial.'],
+  en:['URGENT ACTION (next 1-2 weeks)','Register the studio in all 3 programs: ID@Xbox, PlayStation Partners and Nintendo Developer Portal.','Request devkits as soon as approved — registration + hardware shipping takes weeks.','If devkits aren\'t requested in November, they won\'t arrive to start porting in the 2nd week of January.','Possible shortcut: Xbox allows a retail console in "Dev Mode" as an early kit while the official one ships.']},
+ {cls:'risk', es:['RIESGO ALTO — Certificación de consolas','El lanzamiento simultáneo PC + consolas el 31 Mar depende de pasar la cert de cada plataforma a tiempo.','La ventana de cert (8-28 Mar) es ajustada; cada plataforma puede pedir re-envío.','Plan B: lanzar en Steam el 31 Mar y consolas poco después si alguna cert se atrasa.'],
+  en:['HIGH RISK — Console certification','A simultaneous PC + console launch on Mar 31 depends on passing each platform\'s cert in time.','The cert window (Mar 8-28) is tight; each platform may request a resubmission.','Plan B: launch on Steam Mar 31 and consoles shortly after if any cert slips.']},
+ {cls:'', es:['PUBLISHER','Si se concreta un publisher, el bloque de porting pasaría a estar a cargo del publisher y eso cambiaría esa parte del cronograma.'],
+  en:['PUBLISHER','If a publisher is secured, the porting block would be handled by the publisher, which would change that part of the schedule.']},
+ {cls:'', es:['MODELO DE PRODUCCIÓN DE NIVELES','EXPLORACIÓN DE DINÁMICAS Y ESPACIO DE JUEGO — barra principal de cada modo, con fechas exactas: Space 26 Oct–3 Nov · Submarine 4–13 Nov · luego uno por semana (16–20, 23–27 Nov · 30 Nov–4 Dic · 7–11 Dic · 14–18 Dic).','DIFICULTADES — clic en un nivel para desplegar Easy / Medium / Hard: en cada una cambia la estética de la nave/vehículo (fechas tentativas dentro de la ventana de look; ajustables).','PRODUCCIÓN (ene-feb), nivel por nivel — Fase B: generación de assets (look/3D) · Fase C: VFX + Lighting · Fase D: Sonido (puede ir en paralelo).','Dinámicas propias: Space = gravedad lunar · Submarine = flotación + inundación que impide caminar.','OJO trailer (20 Nov): necesita un pase de look temprano de Space y Submarine para el cliffhanger.'],
+  en:['LEVEL PRODUCTION MODEL','DYNAMICS & GAME-SPACE EXPLORATION — each mode\'s main bar, exact dates: Space Oct 26–Nov 3 · Submarine Nov 4–13 · then one per week (16–20, 23–27 Nov · Nov 30–Dec 4 · Dec 7–11 · Dec 14–18).','DIFFICULTIES — click a level to expand Easy / Medium / Hard: each changes the vehicle aesthetic (tentative dates inside the look window; adjustable).','PRODUCTION (Jan-Feb), level by level — Phase B: asset generation (look/3D) · Phase C: VFX + Lighting · Phase D: Sound (can run in parallel).','Distinct dynamics: Space = lunar gravity · Submarine = floatation + flooding that blocks walking.','Trailer note (Nov 20): needs an early look pass of Space & Submarine for the cliffhanger.']},
+ {cls:'', es:['SUPUESTOS DEL PLAN','Lanzamiento fijado: 31 de marzo de 2027 (compromiso global del trailer).','4 semanas de QA previas al lanzamiento (1-28 Mar).','Porting arranca la 2ª semana de enero (11 Ene).','Capacidad reducida en feriados de fin de año (21 Dic - 3 Ene): usado como buffer.'],
+  en:['PLAN ASSUMPTIONS','Launch locked: March 31, 2027 (global commitment from the trailer).','4 weeks of QA before launch (Mar 1-28).','Porting starts the 2nd week of January (Jan 11).','Reduced capacity over year-end holidays (Dec 21 - Jan 3): used as buffer.']},
+];
+
+let lang='es';
+const $=(s)=>document.querySelector(s);
+const col=(w)=>`${w+1}`; // week w -> grid column index
+
+// ---- day computation for expandable weeks ----
+const DOW={es:['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'], en:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']};
+const MO3={es:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'], en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']};
+const START=new Date(2026,9,26); // lunes 26 Oct 2026
+const HOLIDAYS={'2026-12-25':{es:'Navidad',en:'Christmas'}, '2027-01-01':{es:'Año Nuevo',en:'New Year'}};
+const iso=(d)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function weekDays(w){ const a=[]; const b=new Date(START); b.setDate(b.getDate()+(w-1)*7); for(let i=0;i<7;i++){ const d=new Date(b); d.setDate(d.getDate()+i); a.push(d);} return a; }
+// ---- day-precise positioning with per-week horizontal expansion ----
+const LABELW=248, COLW=70, DAYW=40; const EXPW=7*DAYW; // expanded week width
+let expandedWk=new Set();
+const dOff=(iso)=>Math.round((new Date(iso+'T00:00:00')-START)/86400000);
+const TODAY_ISO='2026-10-27'; const TODAY_OFF=dOff(TODAY_ISO);
+function weekWidth(w){ return expandedWk.has(w)?EXPW:COLW; }
+function gridTemplate(){ let s='var(--label-w)'; for(let w=1;w<=23;w++) s+= expandedWk.has(w)?` ${EXPW}px`:' var(--col-w)'; return s; }
+function weekStartX(w){ let x=LABELW; for(let i=1;i<w;i++) x+=weekWidth(i); return x; }
+function dayToX(o){ const w=Math.floor(o/7)+1, din=o-(w-1)*7; return weekStartX(w)+(weekWidth(w)/7)*din; }
+function barPx(o,eIncl){ const l=dayToX(o); return {l, w:dayToX(eIncl+1)-l}; }
+function applyGrid(){ let st=document.getElementById('gstyle'); if(!st){ st=document.createElement('style'); st.id='gstyle'; document.head.appendChild(st); } st.textContent=`.grid24{grid-template-columns:${gridTemplate()};}`; }
+function fmtRange(s,e){ const a=new Date(s+'T00:00:00'),b=new Date(e+'T00:00:00'); return `${a.getDate()} ${MO3[lang][a.getMonth()]} – ${b.getDate()} ${MO3[lang][b.getMonth()]}`; }
+function fmtDate(s){ const a=new Date(s+'T00:00:00'); return `${a.getDate()} ${MO3[lang][a.getMonth()]}`; }
+const gr=(a,b)=>`linear-gradient(90deg,var(${a}),var(${b}))`;
+const COLOR={dev:gr('--c-dev-a','--c-dev-b'),art:gr('--c-art-a','--c-art-b'),def:gr('--c-def-a','--c-def-b'),sys:gr('--c-sys-a','--c-sys-b'),mkt:gr('--c-mkt-a','--c-mkt-b'),port:gr('--c-port-a','--c-port-b'),qa:gr('--c-qa-a','--c-qa-b')};
+const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
+const DIFFS=[{es:'Easy',en:'Easy',c:'#8f86f0'},{es:'Medium',en:'Medium',c:'#6a5fd0'},{es:'Hard',en:'Hard',c:'#463aa6'}];
+const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
+const PHASES=[{k:'assets',es:'Fase B · Generación de assets (look/3D)',en:'Phase B · Asset generation (look/3D)',grad:COLOR.art},{k:'vfx',es:'Fase C · VFX + Lighting',en:'Phase C · VFX + Lighting',grad:COLOR.def},{k:'snd',es:'Fase D · Sonido',en:'Phase D · Sound',grad:SND}];
+let expandedLv=new Set();
+let collapsedGrp=new Set();
+function applyExpanded(){
+  document.querySelectorAll('.diffrow').forEach(r=>{ r.style.display = expandedLv.has(r.dataset.lvl)?'':'none'; });
+  document.querySelectorAll('.lvlname').forEach(n=>{ n.classList.toggle('open', expandedLv.has(n.dataset.lvl)); });
+}
+// ---- persistencia / publicación (GitHub) ----
+const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
+const EDITABLE = location.protocol==='file:' || location.search.includes('edit') || location.hash.includes('edit');
+let barOverrides={};
+function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
+async function loadState(){
+  try{ const r=await fetch(GH.path,{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; return; } }catch(e){}
+  try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
+}
+async function publish(){
+  let token=localStorage.getItem('banana_gh_token');
+  if(!token){ token=prompt('Pegá tu token de GitHub (con permiso de repo). Solo queda en este navegador:'); if(!token) return; localStorage.setItem('banana_gh_token',token); }
+  const btn=$('#pubBtn'), old=btn?btn.textContent:'';
+  if(btn) btn.textContent='Publicando…';
+  const state={version:1, updated:new Date().toISOString(), barOverrides};
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(state,null,2))));
+  const api=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
+  try{
+    let sha; const g=await fetch(api+`?ref=${GH.branch}`,{headers:{Authorization:'token '+token}}); if(g.ok) sha=(await g.json()).sha;
+    const res=await fetch(api,{method:'PUT',headers:{Authorization:'token '+token,'Accept':'application/vnd.github+json'},body:JSON.stringify({message:'Publicar calendario',content,sha,branch:GH.branch})});
+    if(res.ok){ if(btn){btn.textContent='✅ Publicado'; setTimeout(()=>btn.textContent=old,2500);} }
+    else { const e=await res.json().catch(()=>({})); if(res.status===401) localStorage.removeItem('banana_gh_token'); alert('Error al publicar: '+res.status+' '+(e.message||'')); if(btn) btn.textContent=old; }
+  }catch(err){ alert('Error de red al publicar: '+err); if(btn) btn.textContent=old; }
+}
+function curOff(key,defS,defE){ const o=barOverrides[key]; return o?[dOff(o.s),dOff(o.e)]:[defS,defE]; }
+function offToIso(off){ const d=new Date(START); d.setDate(d.getDate()+Math.max(0,Math.min(160,off))); return iso(d); }
+function xToDay(x){ x-=LABELW; if(x<0)x=0; for(let w=1;w<=23;w++){ const ww=weekWidth(w); if(x<ww){ return (w-1)*7+Math.max(0,Math.min(6,Math.floor(x/(ww/7)))); } x-=ww; } return 160; }
+// draw a stretchable bar (abar) with both-end handles; optional hover label to the right
+function drawBar(key,defS,defE,grad,title,labelHtml,noDrag){
+  noDrag = noDrag || !EDITABLE;
+  const [s,e]=curOff(key,defS,defE), p=barPx(s,e);
+  const handles = noDrag?'':`<div class="handle l"></div><div class="handle r"></div>`;
+  let h=`<div class="abar ${noDrag?'':'drag'}" data-key="${key}" data-soff="${s}" data-eoff="${e}" style="left:${p.l}px;width:${p.w}px;background:${grad}" title="${title}">${handles}</div>`;
+  if(labelHtml) h+=`<div class="albl" data-key="${key}" style="left:${dayToX(e+1)}px">${labelHtml}</div>`;
+  return h;
+}
+
+function updateCountdown(){
+  const el=$('#countdown'); if(!el) return;
+  const target=new Date(2026,10,13); target.setHours(0,0,0,0); // 13 Nov 2026 (1 sem antes del submit)
+  const now=new Date(); now.setHours(0,0,0,0);
+  const days=Math.round((target-now)/86400000);
+  if(days>1) el.textContent = lang==='es'?`⏳ Faltan ${days} días para el trailer listo (1 sem antes del submit · 13 Nov)`:`⏳ ${days} days to trailer ready (1 wk before submit · Nov 13)`;
+  else if(days===1) el.textContent = lang==='es'?'⏳ Falta 1 día para el trailer listo (13 Nov)':'⏳ 1 day to trailer ready (Nov 13)';
+  else if(days===0) el.textContent = lang==='es'?'⏳ Trailer listo HOY (13 Nov)':'⏳ Trailer ready TODAY (Nov 13)';
+  else el.textContent = lang==='es'?'Trailer: submit 20 Nov':'Trailer: submit Nov 20';
+}
+function render(){
+  applyGrid();
+  // legend
+  $('#legend').innerHTML=[
+    ['dev', lang==='es'?'Fase A · Exploración (layout · jugabilidad · dinámicas)':'Phase A · Exploration (layout · gameplay · dynamics)'],
+    ['art', lang==='es'?'Fase B · Generación de assets (look/3D)':'Phase B · Asset generation (look/3D)'],
+    ['def', lang==='es'?'Fase C · VFX + Lighting':'Phase C · VFX + Lighting'],
+    ['snd', lang==='es'?'Fase D · Sonido':'Phase D · Sound'],
+    ['sys', lang==='es'?'Sistemas & Pipeline':'Systems & Pipeline'],
+    ['mkt', lang==='es'?'Marketing & Comunidad':'Marketing & Community'],
+    ['port',lang==='es'?'Porting a Consolas':'Console Porting'],
+    ['qa',  lang==='es'?'QA & Lanzamiento':'QA & Launch'],
+  ].map(([c,t])=>`<span class="k"><span class="sw ${c}"></span>${t}</span>`).join('')
+   +`<span class="k"><span class="dmd"></span>Milestone</span>`
+   +`<span class="k" style="color:var(--todayLine);font-weight:700;">▸ ${lang==='es'?'Clic en una semana = desplegar días + agregar tareas':'Click a week = expand days + add tasks'}</span>`
+   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = dificultades':'Click a level = difficulties'}</span>`;
+
+  // months
+  let m=`<div class="cell corner">${lang==='es'?'2026 — 2027':'2026 — 2027'}</div>`;
+  MONTHS.forEach(([es,en,span])=>{ m+=`<div class="cell" style="grid-column:span ${span}">${lang==='es'?es:en} ${es==='OCT'||es==='NOV'||es==='DIC'?'’26':'’27'}</div>`; });
+  $('#months').innerHTML=m;
+
+  // weeks (clickable → expand to show days)
+  const W= lang==='es'?WEEKS_ES:WEEKS_EN;
+  let wk=`<div class="cell corner"></div>`;
+  const SW='W';
+  W.forEach((d,i)=>{
+    const w=i+1;
+    if(expandedWk.has(w)){
+      let inner='';
+      weekDays(w).forEach(dd=>{ const jd=dd.getDay(), we=(jd===0||jd===6), ho=HOLIDAYS[iso(dd)], tod=iso(dd)===TODAY_ISO;
+        inner+=`<div class="daycell ${tod?'todayd':(ho?'hol':(we?'wknd':''))}"><span>${DOW[lang][(jd+6)%7]}</span><b>${dd.getDate()}</b></div>`; });
+      wk+=`<div class="cell wk exp" data-w="${w}"><div class="wnum">${SW}${w}</div><div class="daygrid">${inner}</div></div>`;
+    } else {
+      const td=w===TODAY_WEEK?'today':'';
+      wk+=`<div class="cell wk ${td}" data-w="${w}"><span class="wnum">${SW}${w}</span><span class="wdate">${d}</span></div>`;
+    }
+  });
+  $('#weeks').innerHTML=wk;
+
+  // rows
+  let html='';
+  GROUPS.forEach((g,gi)=>{
+    const collapsed=collapsedGrp.has(gi);
+    html+=`<div class="grid24"><div class="grpTitle" data-grp="${gi}"><span class="gt"><span class="gcaret">${collapsed?'▸':'▾'}</span>${lang==='es'?g.es:g.en}</span></div></div>`;
+    if(collapsed) return;
+    if(g.kind==='mile'){
+      html+=`<div class="grid24 row mrow">`;
+      g.tasks.forEach((t,idx)=>{
+        const o=dOff(t.d), cx=(dayToX(o)+dayToX(o+1))/2;
+        const sideCls=t.side?`edge side-${t.side}`:'';
+        const main=lang==='es'?t.es:t.en, sub=lang==='es'?(t.sub_es||''):(t.sub_en||'');
+        const tInner=`<span class="mt">${main}</span>${sub?`<span class="ms">${sub}</span>`:''}`;
+        html+=`<div class="mile ${t.launch?'launch':''} ${sideCls}" style="left:${cx}px" title="${main}${sub?' · '+sub:''}"><div class="d"><span>${t.launch?'🚀':idx+1}</span></div><div class="t ${t.oneline?'oneline':''}">${tInner}</div></div>`;
+      });
+      html+=`<div class="name">${lang==='es'?g.es:g.en}</div></div>`;
+    } else if(g.kind==='levels'){
+      g.tasks.forEach(t=>{
+        const nm=lang==='es'?t.es:t.en;
+        if(t.blocked){
+          html+=`<div class="grid24 row lvl blocked"><div class="blockedrow"></div><div class="name" title="${nm}"><strong>${nm}</strong></div></div>`;
+          return;
+        }
+        const mech=lang==='es'?(t.mech_es||''):(t.mech_en||'');
+        // fila principal del modo de juego (desplegable)
+        html+=`<div class="grid24 row lvl">`;
+        const lvlNameHtml=`<div class="name lvlname" data-lvl="${t.key}" title="${nm}"><span class="caret">▸</span><span class="col"><strong>${nm}</strong></span></div>`;
+        // barra de exploración (layout, jugabilidad, dinámicas) — fechas día-exactas
+        if(t.aStart){
+          const k='exp_'+t.key, exLbl=lang==='es'?'Exploración: layout, jugabilidad, dinámicas':'Exploration: layout, gameplay, dynamics';
+          const [s,e]=curOff(k, dOff(t.aStart), dOff(t.aEnd));
+          html+=drawBar(k, dOff(t.aStart), dOff(t.aEnd), COLOR.dev, `${exLbl} · ${fmtRange(offToIso(s),offToIso(e))}`, exLbl);
+        }
+        // Fases de producción B/C/D en la ventana de look (ene-feb)
+        if(t.b){
+          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4, tot=e-o+1, step=tot/3;
+          PHASES.forEach((ph,pi)=>{
+            const ps=Math.round(o+pi*step), pe=Math.round(o+(pi+1)*step)-1, lbl=lang==='es'?ph.es:ph.en;
+            html+=drawBar(`${ph.k}_${t.key}`, ps, Math.max(ps,pe), ph.grad, lbl, lbl);
+          });
+        }
+        html+=lvlNameHtml+`</div>`;
+        // sub-filas de dificultad (ocultas hasta desplegar): estética del vehículo por dificultad
+        if(t.b){
+          const o=(t.b[0]-1)*7, e=(t.b[1]-1)*7+4, tot=e-o+1, step=tot/3;
+          DIFFS.forEach((df,di)=>{
+            const ds=Math.round(o+di*step), de=Math.round(o+(di+1)*step)-1, p=barPx(ds,Math.max(ds,de));
+            const dn=lang==='es'?df.es:df.en;
+            html+=`<div class="grid24 row diffrow" data-lvl="${t.key}" style="display:none">`;
+            html+=drawBar(`diff_${t.key}_${di}`, ds, Math.max(ds,de), t.frozen?FROZEN:df.c, lang==='es'?`Estética ${dn} — cambia el aspecto del vehículo`:`${dn} aesthetic — changes the vehicle look`, null, t.frozen);
+            html+=`<div class="name"><span class="dk">${dn}</span></div></div>`;
+          });
+        }
+      });
+    } else { // bars — nombre completo a la izquierda, barra estirable
+      g.tasks.forEach((t,ti)=>{
+        const label = lang==='es'?t.es:t.en;
+        html+=`<div class="grid24 row">`+drawBar(`${gi}_${ti}`, (t.sw-1)*7, (t.ew-1)*7+6, COLOR[t.cls||g.cls], label, null)+`<div class="name ${t.warn?'warn':''}" title="${label}">${label}</div></div>`;
+      });
+    }
+  });
+  // colored block for expanded weeks (subtle)
+  expandedWk.forEach(w=>{ html+=`<div class="weekband" style="left:${weekStartX(w)}px;width:${weekWidth(w)}px"></div>`; });
+  // weekend gray columns (Sat+Sun) in expanded weeks
+  let vx=LABELW;
+  for(let w=1;w<=23;w++){ if(expandedWk.has(w)){ const dw=weekWidth(w)/7; html+=`<div class="wkndcol" style="left:${vx+5*dw}px;width:${2*dw}px"></div>`; } vx+=weekWidth(w); }
+  // vertical lines: week boundaries always, day boundaries inside expanded weeks
+  vx=LABELW;
+  for(let w=1;w<=23;w++){ html+=`<div class="vline" style="left:${vx}px"></div>`; if(expandedWk.has(w)){ const dw=weekWidth(w)/7; for(let d=1;d<7;d++) html+=`<div class="vline day" style="left:${vx+d*dw}px"></div>`; } vx+=weekWidth(w); }
+  html+=`<div class="vline" style="left:${vx}px"></div>`;
+  // today: if its week is expanded, highlight just today's day column; else the whole week
+  if(expandedWk.has(TODAY_WEEK)){ html+=`<div class="todaycol" style="left:${dayToX(TODAY_OFF)}px;width:${weekWidth(TODAY_WEEK)/7}px"></div>`; }
+  else { html+=`<div class="todayband" style="left:${weekStartX(TODAY_WEEK)}px;width:${weekWidth(TODAY_WEEK)}px"></div>`; }
+  $('#rows').innerHTML=html;
+
+  // notes
+  $('#notes').innerHTML=NOTES.map(n=>{
+    const arr=lang==='es'?n.es:n.en;
+    return `<div class="card ${n.cls}"><h3>${arr[0]}</h3><ul>${arr.slice(1).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  }).join('');
+
+  // swap static [data-es]/[data-en]
+  document.querySelectorAll('[data-es]').forEach(el=>{ el.textContent = lang==='es'?el.dataset.es:el.dataset.en; });
+  document.documentElement.lang=lang;
+  $('#langBtn').textContent = lang==='es'?'EN':'ES';
+
+  applyExpanded();
+  updateCountdown();
+}
+
+$('#refBtn').onclick=()=>{ $('#legend').classList.toggle('hidden'); };
+if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
+$('#weeks').addEventListener('click',(e)=>{ const c=e.target.closest('.cell.wk'); if(!c) return; const w=+c.dataset.w; expandedWk.has(w)?expandedWk.delete(w):expandedWk.add(w); render(); });
+$('#rows').addEventListener('click',(e)=>{
+  const gt=e.target.closest('.grpTitle');
+  if(gt){ const gi=+gt.dataset.grp; collapsedGrp.has(gi)?collapsedGrp.delete(gi):collapsedGrp.add(gi); render(); return; }
+  const n=e.target.closest('.lvlname');
+  if(n){ const k=n.dataset.lvl; expandedLv.has(k)?expandedLv.delete(k):expandedLv.add(k); applyExpanded(); }
+});
+// drag ANY bar from either end to resize it (snaps to day)
+let drag=null;
+document.addEventListener('mousedown',(e)=>{ const h=e.target.closest('.handle'); if(!h) return; const bar=h.closest('.abar'); if(!bar) return; e.preventDefault(); drag={key:bar.dataset.key,side:h.classList.contains('l')?'l':'r',sOff:+bar.dataset.soff,eOff:+bar.dataset.eoff,el:bar}; document.body.classList.add('dragging'); });
+document.addEventListener('mousemove',(e)=>{ if(!drag) return; const chart=$('.chart'), r=chart.getBoundingClientRect(); const x=e.clientX-r.left+chart.scrollLeft; const off=xToDay(x); if(drag.side==='l') drag.sOff=Math.min(off,drag.eOff); else drag.eOff=Math.max(off,drag.sOff); const p=barPx(drag.sOff,drag.eOff); drag.el.style.left=p.l+'px'; drag.el.style.width=p.w+'px'; drag.el.dataset.soff=drag.sOff; drag.el.dataset.eoff=drag.eOff; const lbl=document.querySelector(`.albl[data-key="${drag.key}"]`); if(lbl) lbl.style.left=dayToX(drag.eOff+1)+'px'; });
+document.addEventListener('mouseup',()=>{ if(!drag) return; barOverrides[drag.key]={s:offToIso(drag.sOff),e:offToIso(drag.eOff)}; saveOverrides(); drag=null; document.body.classList.remove('dragging'); render(); });
+$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); };
+$('#themeBtn').onclick=()=>{
+  document.body.classList.toggle('dark');
+  const d=document.body.classList.contains('dark');
+  $('#themeBtn').dataset.es = d?'☀️ Claro':'🌙 Oscuro';
+  $('#themeBtn').dataset.en = d?'☀️ Light':'🌙 Dark';
+  $('#themeBtn').textContent = lang==='es'?$('#themeBtn').dataset.es:$('#themeBtn').dataset.en;
+};
+loadState().then(render);
+</script>
+</body>
+</html>
