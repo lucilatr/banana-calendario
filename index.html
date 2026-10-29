@@ -97,7 +97,7 @@
   .row .name.warn::before{content:"⚠";margin-right:6px;}
   /* week separators as background */
   /* vertical column lines (week + day boundaries) drawn as overlays for exact alignment */
-  .vline{position:absolute;top:0;bottom:0;width:1px;background:var(--grid);pointer-events:none;z-index:0;}
+  .vline{position:absolute;top:0;bottom:0;width:1px;background:var(--gridStrong);pointer-events:none;z-index:1;}
   .vline.day{opacity:.5;}
   .wkndcol{position:absolute;top:0;bottom:0;background:rgba(128,134,150,.15);pointer-events:none;z-index:0;}
   .blockedrow{position:absolute;left:var(--label-w);right:0;top:0;bottom:0;background:rgba(128,134,150,.22);pointer-events:none;z-index:1;}
@@ -157,7 +157,7 @@
   /* fila del modo colapsada a 0 cuando está desplegado (sin espacio arriba de la 1ª fase) */
   .row.lvl.spanning{min-height:0;}
   .row.lvl.spanning .nphase{padding:0;height:0;overflow:hidden;}
-  .name.twocol .nphase .dk{font-size:10px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .name.twocol .nphase .dk{font-size:10px;font-weight:400;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   /* bloque de un modo desplegado: fila pintada + bordes para separar modos */
   .row.lvl.exp-open, .diffrow.exp-open{background:rgba(43,99,201,.09);}
   .row.lvl.exp-open .name, .diffrow.exp-open .name{background:linear-gradient(rgba(43,99,201,.09),rgba(43,99,201,.09)), var(--panel);}
