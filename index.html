@@ -12,6 +12,7 @@
     --panel: #f6f7f9;
     --grid: #e7e9ee;
     --gridStrong:#d3d7e0;
+    --sep:#2b3240;
     --text: #1d2330;
     --muted: #6b7280;
     --today: rgba(255,196,0,.16);
@@ -30,7 +31,7 @@
   }
   body.dark{
     --bg:#0f1420; --panel:#161c2b; --grid:#232b3d; --gridStrong:#2e3850;
-    --text:#e7ecf5; --muted:#93a0b8; --today:rgba(255,196,0,.10);
+    --text:#e7ecf5; --muted:#93a0b8; --today:rgba(255,196,0,.10); --sep:#aeb6c4;
   }
   *{box-sizing:border-box;}
   body{
@@ -145,11 +146,22 @@
   .diffrow{min-height:28px;}
   .diffrow .name{padding-left:30px;font-size:10px;color:var(--muted);}
   .diffrow .name .dk{font-weight:800;color:var(--text);}
+  /* nombre del modo en 2 sub-columnas: modo | fase */
+  .row.lvl .name.twocol, .diffrow .name.twocol{padding:0;flex-direction:row;align-items:stretch;gap:0;}
+  .name.twocol .nmode{width:124px;flex:none;display:flex;align-items:center;justify-content:center;text-align:center;gap:4px;padding:5px 8px;border-right:1px solid var(--gridStrong);box-sizing:border-box;overflow:hidden;}
+  .name.twocol .nmode strong{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .name.twocol .nphase{flex:1;display:flex;align-items:center;justify-content:flex-start;padding:5px 8px;min-width:0;}
+  /* nombre del modo abarcando (vertical) todo el bloque, centrado */
+  .name.twocol .nmode.nm-span{position:absolute;top:0;left:0;z-index:9;overflow:hidden;
+    background:linear-gradient(rgba(43,99,201,.09),rgba(43,99,201,.09)), var(--panel);}
+  /* fila del modo colapsada a 0 cuando está desplegado (sin espacio arriba de la 1ª fase) */
+  .row.lvl.spanning{min-height:0;}
+  .row.lvl.spanning .nphase{padding:0;height:0;overflow:hidden;}
+  .name.twocol .nphase .dk{font-size:10px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   /* bloque de un modo desplegado: fila pintada + bordes para separar modos */
   .row.lvl.exp-open, .diffrow.exp-open{background:rgba(43,99,201,.09);}
   .row.lvl.exp-open .name, .diffrow.exp-open .name{background:linear-gradient(rgba(43,99,201,.09),rgba(43,99,201,.09)), var(--panel);}
-  .row.lvl.exp-open{border-top:2px solid var(--c-sys-a);}
-  .diffrow.lastsub.exp-open{border-bottom:2px solid var(--c-sys-a);}
+  .modeline{position:absolute;left:0;right:0;height:1px;background:var(--sep);z-index:13;pointer-events:none;}
   /* expandable weeks: click to widen a week and show its 7 days as sub-columns */
   .weeks .cell.wk{cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
   .weeks .cell.wk:hover{background:var(--grid);}
@@ -364,6 +376,30 @@ function applyExpanded(){
   document.querySelectorAll('.lvlname').forEach(n=>{ n.classList.toggle('open', !filtered && expandedLv.has(n.dataset.lvl)); });
   document.querySelectorAll('.row.lvl[data-lvl]').forEach(r=>{ r.classList.toggle('exp-open', !filtered && expandedLv.has(r.dataset.lvl)); });
   document.querySelectorAll('[data-key^="sum_"]').forEach(el=>{ const k=el.dataset.key.slice(4); el.style.display = (filtered||expandedLv.has(k))?'none':''; });
+  layoutModeNames();
+}
+function layoutModeNames(){
+  const rowsEl=$('#rows');
+  rowsEl.querySelectorAll('.modeline').forEach(e=>e.remove());
+  const blocks=[];
+  // pasada 1: aplicar colapso/estado (esto cambia las alturas)
+  document.querySelectorAll('.row.lvl[data-lvl]').forEach(main=>{
+    const nm=main.querySelector('.nmode'); if(!nm) return;
+    const nameCell=main.querySelector('.name');
+    const key=main.dataset.lvl;
+    const phases=[...document.querySelectorAll('.diffrow[data-lvl]')].filter(p=>p.dataset.lvl===key && p.style.display!=='none');
+    if(phases.length){ main.classList.add('spanning'); nm.classList.add('nm-span'); if(nameCell) nameCell.style.zIndex='12'; blocks.push({main,nm,phases}); }
+    else { main.classList.remove('spanning'); nm.classList.remove('nm-span'); nm.style.height=''; if(nameCell) nameCell.style.zIndex=''; }
+  });
+  // pasada 2: medir ya colapsado y fijar alto del nombre + líneas divisorias
+  blocks.forEach(({main,nm,phases})=>{
+    const top=main.offsetTop;
+    let bottom=top+main.offsetHeight;
+    phases.forEach(p=>{ const b=p.offsetTop+p.offsetHeight; if(b>bottom) bottom=b; });
+    nm.style.height=(bottom-top)+'px';
+    const lt=document.createElement('div'); lt.className='modeline'; lt.style.top=top+'px'; rowsEl.appendChild(lt);
+    const lb=document.createElement('div'); lb.className='modeline'; lb.style.top=(bottom-1)+'px'; rowsEl.appendChild(lb);
+  });
 }
 // ---- persistencia / publicación (GitHub) ----
 const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
@@ -474,13 +510,13 @@ function render(){
       g.tasks.forEach(t=>{
         const nm=lang==='es'?t.es:t.en;
         if(t.blocked){
-          html+=`<div class="grid24 row lvl blocked"><div class="blockedrow"></div><div class="name" title="${nm}"><strong>${nm}</strong></div></div>`;
+          html+=`<div class="grid24 row lvl blocked"><div class="blockedrow"></div><div class="name twocol" title="${nm}"><span class="nmode"><strong>${nm}</strong></span><span class="nphase"></span></div></div>`;
           return;
         }
         const mech=lang==='es'?(t.mech_es||''):(t.mech_en||'');
         // fila principal del modo de juego (desplegable)
         html+=`<div class="grid24 row lvl" data-lvl="${t.key}">`;
-        const lvlNameHtml=`<div class="name lvlname" data-lvl="${t.key}" title="${nm}"><span class="caret">▸</span><span class="col"><strong>${nm}</strong></span></div>`;
+        const lvlNameHtml=`<div class="name lvlname twocol" data-lvl="${t.key}" title="${nm}"><span class="nmode"><span class="caret">▸</span><strong>${nm}</strong></span><span class="nphase"></span></div>`;
         // las 4 etapas del modo (A exploración · B assets · C vfx+light · D sonido)
         const exLbl=lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)';
         const o=t.b?(t.b[0]-1)*7:0, e=t.b?(t.b[1]-1)*7+4:0;
@@ -499,7 +535,7 @@ function render(){
         STAGES.forEach((st,si)=>{
           html+=`<div class="grid24 row diffrow${si===STAGES.length-1?' lastsub':''}" data-lvl="${t.key}" data-stage="${st.stage}" style="display:none">`;
           html+=drawBar(st.k, st.ds, st.de, st.grad, st.lbl, st.lbl);
-          html+=`<div class="name"><span class="dk">${st.lbl}</span></div></div>`;
+          html+=`<div class="name twocol"><span class="nmode"></span><span class="nphase"><span class="dk">${st.lbl}</span></span></div></div>`;
         });
       });
     } else { // bars — nombre completo a la izquierda, barra estirable
@@ -574,6 +610,8 @@ $('#themeBtn').onclick=()=>{
   $('#themeBtn').dataset.en = d?'☀️ Light':'🌙 Dark';
   $('#themeBtn').textContent = lang==='es'?$('#themeBtn').dataset.es:$('#themeBtn').dataset.en;
 };
+// (prueba) arrancar con todos los modos desplegados en sus 4 fases
+GROUPS.forEach(g=>{ if(g.kind==='levels') g.tasks.forEach(t=>{ if(!t.blocked) expandedLv.add(t.key); }); });
 loadState().then(()=>{ render(); if(EDITABLE && lastPublished) showPubStatus('Última publicación: '+fmtTs(lastPublished)); });
 </script>
 </body>
