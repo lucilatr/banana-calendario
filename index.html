@@ -261,43 +261,44 @@
 const WEEKS_ES=['27 Oct','2 Nov','9 Nov','16 Nov','23 Nov','30 Nov','7 Dic','14 Dic','21 Dic','28 Dic','4 Ene','11 Ene','18 Ene','25 Ene','1 Feb','8 Feb','15 Feb','22 Feb','1 Mar','8 Mar','15 Mar','22 Mar','29 Mar'];
 const WEEKS_EN=['Oct 27','Nov 2','Nov 9','Nov 16','Nov 23','Nov 30','Dec 7','Dec 14','Dec 21','Dec 28','Jan 4','Jan 11','Jan 18','Jan 25','Feb 1','Feb 8','Feb 15','Feb 22','Mar 1','Mar 8','Mar 15','Mar 22','Mar 29'];
 const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['FEB','FEB',4],['MAR','MAR',5]];
-const TODAY_WEEK=1;
+const TODAY_WEEK=2;
 
 // kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
-   {d:'2026-11-20', oneline:true, es:'Submit trailer', en:'Submit trailer', sub_es:'20 de noviembre', sub_en:'November 20'},
-   {d:'2026-12-21', es:'Layouts + jugabilidad lockeada (todos)', en:'Layouts + gameplay locked (all)'},
-   {d:'2027-01-08', side:'l', es:'Devkits recibidos', en:'Devkits received'},
-   {d:'2027-01-11', side:'r', es:'Porting kickoff', en:'Porting kickoff'},
-   {d:'2027-01-29', oneline:true, es:'Content complete / Freeze', en:'Content complete / Freeze'},
-   {d:'2027-02-26', oneline:true, es:'Code freeze / RC', en:'Code freeze / RC'},
-   {d:'2027-03-10', es:'Cert consolas (envío)', en:'Console cert (submit)'},
+   {d:'2026-11-12', side:'l', es:'Playtest 1 · Layouts (formulario)', en:'Playtest 1 · Layouts (sign-ups)'},
+   {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
+   {d:'2026-12-02', es:'Playtest 2 · post-mejoras', en:'Playtest 2 · post-improvements'},
+   {d:'2026-12-18', side:'l', es:'4 modos a 2.5 h (variaciones)', en:'4 modes at 2.5 h (variations)'},
+   {d:'2026-12-22', side:'r', es:'Decisión plan Ene–Mar', en:'Decide Jan–Mar plan'},
    {d:'2027-03-31', oneline:true, es:'LANZAMIENTO · 31 Mar', en:'LAUNCH · Mar 31', launch:true},
  ]},
  // Barra principal = exploración de dinámicas y espacio de juego (fechas día-exactas) · Fase B (look) en ene-feb · desplegable → 3 dificultades
- {kind:'levels', es:'MODOS DE JUEGO', en:'GAME MODES', tasks:[
-   {key:'space', es:'Space Explorer', en:'Space Explorer', mech_es:'espacio · gravedad lunar', mech_en:'space · lunar gravity', aStart:'2026-10-26', aEnd:'2026-11-03', b:[11,13]},
-   {key:'sub', es:'Submarine', en:'Submarine', mech_es:'flotación + inundación (impide caminar)', mech_en:'floatation + flooding (blocks walking)', aStart:'2026-11-04', aEnd:'2026-11-13', b:[12,14]},
-   {key:'warf', es:'Warfighter', en:'Warfighter', aStart:'2026-11-16', aEnd:'2026-11-20', b:[13,15]},
-   {key:'spa', es:'Celebrity Spa Ultra Lux', en:'Celebrity Spa Ultra Lux', aStart:'2026-11-23', aEnd:'2026-11-27', b:[14,16]},
-   {key:'rescue', es:'War Rescue', en:'War Rescue', aStart:'2026-11-30', aEnd:'2026-12-04', b:[15,17]},
-   {key:'baby', es:'Baby Delivery', en:'Baby Delivery', aStart:'2026-12-07', aEnd:'2026-12-11', b:[16,18]},
-   {key:'ark', es:'Banana Noah’s Ark', en:'Banana Noah’s Ark', mech_es:'estilo arca de Noé', mech_en:'Noah’s Ark style', aStart:'2026-12-14', aEnd:'2026-12-18', b:[16,18]},
-   {key:'radio', blocked:true, es:'Radioactive Low Cost', en:'Radioactive Low Cost'},
+ // 4 modos prioritarios trabajados EN PARALELO (mismas ventanas): Nov-Dic = sprint de layout/jugabilidad/variaciones hasta 2.5 h · look/vfx/sonido tentativo Ene-Feb (se confirma en diciembre)
+ {kind:'levels', es:'MODOS PRIORITARIOS · 31 Mar (en paralelo)', en:'PRIORITY MODES · Mar 31 (parallel)', tasks:[
+   {key:'radio', es:'Radioactive Low Cost', en:'Radioactive Low Cost', mech_es:'base lista · sumar variaciones a 2.5 h', mech_en:'base ready · add variations to 2.5 h', aStart:'2026-11-03', aEnd:'2026-12-18', b:[11,17]},
+   {key:'space', es:'Space Explorer', en:'Space Explorer', mech_es:'espacio · gravedad lunar', mech_en:'space · lunar gravity', aStart:'2026-11-03', aEnd:'2026-12-18', b:[11,17]},
+   {key:'sub', es:'Submarine', en:'Submarine', mech_es:'flotación + inundación (impide caminar)', mech_en:'floatation + flooding (blocks walking)', aStart:'2026-11-03', aEnd:'2026-12-18', b:[11,17]},
+   {key:'spa', es:'Celebrity Spa Ultra Lux', en:'Celebrity Spa Ultra Lux', mech_es:'avión de lujo', mech_en:'luxury jet', aStart:'2026-11-03', aEnd:'2026-12-18', b:[11,17]},
+ ]},
+ // Niveles restantes: se mantienen pero SIN tiempos de desarrollo — se decide en diciembre si se desarrollan
+ {kind:'levels', es:'SEGUNDO CHUNK · a definir (post-diciembre)', en:'SECOND BATCH · TBD (post-December)', tasks:[
+   {key:'warf', blocked:true, es:'Warfighter', en:'Warfighter'},
+   {key:'rescue', blocked:true, es:'War Rescue', en:'War Rescue'},
+   {key:'baby', blocked:true, es:'Baby Delivery', en:'Baby Delivery'},
+   {key:'ark', blocked:true, es:'Banana Noah’s Ark', en:'Banana Noah’s Ark'},
  ]},
  {kind:'bars', es:'SISTEMAS & PIPELINE', en:'SYSTEMS & PIPELINE', cls:'sys', tasks:[
    {sw:3,ew:10, es:'Sistema de cosméticos (categorías + moneda)', en:'Cosmetics system (categories + currency)'},
  ]},
- {es:'PORTING A CONSOLAS', en:'CONSOLE PORTING', cls:'port', tasks:[
-   {sw:2,ew:3,  warn:true, es:'CONTACTAR / alta: ID@Xbox · PS Partners · Nintendo Dev', en:'CONTACT / register: ID@Xbox · PS Partners · Nintendo Dev'},
-   {sw:3,ew:6,  es:'Aprobación + solicitud de devkits (Xbox/PS/Switch)', en:'Approval + devkit request (Xbox/PS/Switch)'},
-   {sw:9,ew:11, es:'Recepción y setup de devkits', en:'Devkit receipt & setup'},
-   {sw:12,ew:18,es:'Porting Xbox Series X|S', en:'Porting Xbox Series X|S'},
-   {sw:12,ew:18,es:'Porting PlayStation 5', en:'Porting PlayStation 5'},
-   {sw:12,ew:18,es:'Porting Nintendo Switch', en:'Porting Nintendo Switch'},
-   {sw:15,ew:19,es:'Cumplimiento TRC/XR/Lotcheck + ratings (ESRB/PEGI/IARC)', en:'TRC/XR/Lotcheck compliance + ratings (ESRB/PEGI/IARC)'},
-   {sw:20,ew:22,es:'Certificación consolas (envío + buffer re-envío)', en:'Console certification (submit + resubmit buffer)'},
+ // Porting EN PAUSA — se decide después (sin tiempos). Se mantiene el desglose como pendiente.
+ {es:'PORTING A CONSOLAS · a determinar', en:'CONSOLE PORTING · TBD', cls:'port', tasks:[
+   {pending:true, es:'A DEFINIR tras diciembre — sin tiempos de desarrollo', en:'TBD after December — no dev time'},
+   {pending:true, es:'Alta en programas: ID@Xbox · PS Partners · Nintendo Dev', en:'Program registration: ID@Xbox · PS Partners · Nintendo Dev'},
+   {pending:true, es:'Solicitud + recepción de devkits (Xbox/PS/Switch)', en:'Devkit request + receipt (Xbox/PS/Switch)'},
+   {pending:true, es:'Porting Xbox Series X|S · PlayStation 5 · Nintendo Switch', en:'Porting Xbox Series X|S · PlayStation 5 · Nintendo Switch'},
+   {pending:true, es:'Cumplimiento TRC/XR/Lotcheck + ratings (ESRB/PEGI/IARC)', en:'TRC/XR/Lotcheck compliance + ratings (ESRB/PEGI/IARC)'},
+   {pending:true, es:'Certificación consolas (envío + buffer re-envío)', en:'Console certification (submit + resubmit buffer)'},
  ]},
  {kind:'bars', es:'MARKETING & COMUNIDAD', en:'MARKETING & COMMUNITY', cls:'mkt', tasks:[
    {sw:1,ew:4,  es:'Producción nuevo trailer (70s · reveal 31 Mar · cliffhanger)', en:'New trailer (70s · reveal Mar 31 · cliffhanger)'},
@@ -312,14 +313,14 @@ const GROUPS=[
 ];
 
 const NOTES=[
- {cls:'urgent', es:['ACCIÓN URGENTE (próximas 1-2 semanas)','Dar de alta al estudio en los 3 programas: ID@Xbox, PlayStation Partners y Nintendo Developer Portal.','Solicitar devkits apenas haya aprobación — los tiempos de alta + envío de hardware son de semanas.','Si los devkits no se piden en noviembre, NO llegan para arrancar el porting la 2ª semana de enero.','Atajo posible: Xbox permite usar una consola retail en "Modo Dev" como kit temprano mientras llega el oficial.'],
-  en:['URGENT ACTION (next 1-2 weeks)','Register the studio in all 3 programs: ID@Xbox, PlayStation Partners and Nintendo Developer Portal.','Request devkits as soon as approved — registration + hardware shipping takes weeks.','If devkits aren\'t requested in November, they won\'t arrive to start porting in the 2nd week of January.','Possible shortcut: Xbox allows a retail console in "Dev Mode" as an early kit while the official one ships.']},
- {cls:'risk', es:['RIESGO ALTO — Certificación de consolas','El lanzamiento simultáneo PC + consolas el 31 Mar depende de pasar la cert de cada plataforma a tiempo.','La ventana de cert (8-28 Mar) es ajustada; cada plataforma puede pedir re-envío.','Plan B: lanzar en Steam el 31 Mar y consolas poco después si alguna cert se atrasa.'],
-  en:['HIGH RISK — Console certification','A simultaneous PC + console launch on Mar 31 depends on passing each platform\'s cert in time.','The cert window (Mar 8-28) is tight; each platform may request a resubmission.','Plan B: launch on Steam Mar 31 and consoles shortly after if any cert slips.']},
- {cls:'', es:['PUBLISHER','Si se concreta un publisher, el bloque de porting pasaría a estar a cargo del publisher y eso cambiaría esa parte del cronograma.'],
-  en:['PUBLISHER','If a publisher is secured, the porting block would be handled by the publisher, which would change that part of the schedule.']},
- {cls:'', es:['SUPUESTOS DEL PLAN','Lanzamiento fijado: 31 de marzo de 2027 (compromiso global del trailer).','4 semanas de QA previas al lanzamiento (1-28 Mar).','Porting arranca la 2ª semana de enero (11 Ene).','Capacidad reducida en feriados de fin de año (21 Dic - 3 Ene): usado como buffer.'],
-  en:['PLAN ASSUMPTIONS','Launch locked: March 31, 2027 (global commitment from the trailer).','4 weeks of QA before launch (Mar 1-28).','Porting starts the 2nd week of January (Jan 11).','Reduced capacity over year-end holidays (Dec 21 - Jan 3): used as buffer.']},
+ {cls:'urgent', es:['PRÓXIMOS PASOS (ciclo de testeos)','Playtest 1 la semana que viene con los inscriptos del formulario: se prueban los layouts como están y se recoge feedback.','Con ese feedback → brainstorm de mejoras a desarrollar.','Las mejoras se implementan en las 2 semanas siguientes → Playtest 2.','Nivel OK → crear variaciones y llevar cada modo a 2.5 h de juego. Meta: 4 modos listos antes de fin de año.'],
+  en:['NEXT STEPS (testing cycle)','Playtest 1 next week with the people who signed up via the form: test layouts as-is and gather feedback.','From that feedback → brainstorm of improvements to build.','Improvements implemented over the next 2 weeks → Playtest 2.','Level OK → create variations and bring each mode to 2.5 h of play. Goal: 4 modes ready before year-end.']},
+ {cls:'risk', es:['DECISIÓN DE DICIEMBRE','Objetivo a 31 Mar: 4 modos prioritarios (Radioactive, Space, Submarine, Celebrity Spa Ultra Lux) trabajados en paralelo.','En diciembre se define el plan de enero-febrero-marzo: pulir estos 4 modos o sumar niveles del segundo chunk.','El segundo chunk (Warfighter, War Rescue, Baby Delivery, Noah\'s Ark) queda en espera, sin tiempos asignados.'],
+  en:['DECEMBER DECISION','Target for Mar 31: 4 priority modes (Radioactive, Space, Submarine, Celebrity Spa Ultra Lux) worked in parallel.','December sets the Jan-Feb-Mar plan: polish these 4 modes or add levels from the second batch.','The second batch (Warfighter, War Rescue, Baby Delivery, Noah\'s Ark) is on hold, with no time assigned.']},
+ {cls:'', es:['PORTING A CONSOLAS (en pausa)','El porteo a consolas no arranca por ahora — se decide más adelante. El desglose queda como pendiente, sin tiempos.','Si se concreta un publisher, el bloque de porting pasaría a estar a su cargo y cambiaría esa parte del cronograma.'],
+  en:['CONSOLE PORTING (on hold)','Console porting is not starting for now — to be decided later. The breakdown stays as pending, with no times.','If a publisher is secured, the porting block would be handled by them, changing that part of the schedule.']},
+ {cls:'', es:['SUPUESTOS DEL PLAN','Lanzamiento fijado: 31 de marzo de 2027 (compromiso global del trailer).','4 modos prioritarios trabajados en paralelo, no en secuencia.','Ciclo de playtests con inscriptos del formulario, con desarrollo entre cada ronda.','4 semanas de QA previas al lanzamiento (1-28 Mar).'],
+  en:['PLAN ASSUMPTIONS','Launch locked: March 31, 2027 (global commitment from the trailer).','4 priority modes worked in parallel, not in sequence.','Playtest cycle with form sign-ups, with development between rounds.','4 weeks of QA before launch (Mar 1-28).']},
 ];
 
 let lang='es';
@@ -337,7 +338,7 @@ function weekDays(w){ const a=[]; const b=new Date(START); b.setDate(b.getDate()
 const LABELW=248, COLW=70, DAYW=40; const EXPW=7*DAYW; // expanded week width
 let expandedWk=new Set();
 const dOff=(iso)=>Math.round((new Date(iso+'T00:00:00')-START)/86400000);
-const TODAY_ISO='2026-10-27'; const TODAY_OFF=dOff(TODAY_ISO);
+const TODAY_ISO='2026-11-03'; const TODAY_OFF=dOff(TODAY_ISO);
 function weekWidth(w){ return expandedWk.has(w)?EXPW:COLW; }
 function gridTemplate(){ let s='var(--label-w)'; for(let w=1;w<=23;w++) s+= expandedWk.has(w)?` ${EXPW}px`:' var(--col-w)'; return s; }
 function weekStartX(w){ let x=LABELW; for(let i=1;i<w;i++) x+=weekWidth(i); return x; }
@@ -539,6 +540,9 @@ function render(){
     } else { // bars — nombre completo a la izquierda, barra estirable
       g.tasks.forEach((t,ti)=>{
         const label = lang==='es'?t.es:t.en;
+        if(t.pending){ // fila sin barra (pendiente, sin tiempo de desarrollo)
+          html+=`<div class="grid24 row"><div class="name" style="color:var(--muted)" title="${label}">⏸ ${label}</div></div>`; return;
+        }
         html+=`<div class="grid24 row">`+drawBar(`${gi}_${ti}`, (t.sw-1)*7, (t.ew-1)*7+6, COLOR[t.cls||g.cls], label, null)+`<div class="name ${t.warn?'warn':''}" title="${label}">${label}</div></div>`;
       });
     }
