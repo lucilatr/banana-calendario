@@ -6,7 +6,7 @@
 <title>Banana Airways — Plan de Producción a Lanzamiento (31 Mar 2027)</title>
 <style>
   :root{
-    --label-w: 296px;
+    --label-w: 248px;
     --col-w: 70px;
     --bg: #ffffff;
     --panel: #f6f7f9;
@@ -129,8 +129,7 @@
   .row.lvl .name strong{font-size:11.5px;}
   .row.lvl .name .mech{font-size:9px;color:var(--muted);line-height:1.1;}
   /* day-precise absolute bars (10px/day) + beside labels */
-  .abar{position:absolute;top:50%;transform:translateY(-50%);height:19px;border-radius:7px;box-shadow:0 1px 2px rgba(0,0,0,.16);z-index:2;display:flex;align-items:center;justify-content:center;}
-  .abtxt{color:#fff;font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;padding:0 7px;text-shadow:0 1px 1px rgba(0,0,0,.18);}
+  .abar{position:absolute;top:50%;transform:translateY(-50%);height:19px;border-radius:7px;box-shadow:0 1px 2px rgba(0,0,0,.16);z-index:2;}
   .albl{position:absolute;top:50%;transform:translateY(-50%);font-size:9.5px;font-weight:500;color:var(--text);white-space:nowrap;z-index:1;pointer-events:none;padding-left:7px;opacity:0;transition:opacity .12s;}
   .albl .ph{color:var(--muted);font-weight:600;}
   .abar:hover + .albl{opacity:1;}
@@ -149,7 +148,7 @@
   .diffrow .name .dk{font-weight:800;color:var(--text);}
   /* nombre del modo en 2 sub-columnas: modo | fase */
   .row.lvl .name.twocol, .diffrow .name.twocol{padding:0;flex-direction:row;align-items:stretch;gap:0;}
-  .name.twocol .nmode{width:172px;flex:none;display:flex;align-items:center;justify-content:center;text-align:center;gap:4px;padding:5px 8px;border-right:1px solid var(--gridStrong);box-sizing:border-box;overflow:hidden;}
+  .name.twocol .nmode{width:124px;flex:none;display:flex;align-items:center;justify-content:center;text-align:center;gap:4px;padding:5px 8px;border-right:1px solid var(--gridStrong);box-sizing:border-box;overflow:hidden;}
   .name.twocol .nmode strong{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .name.twocol .nphase{flex:1;display:flex;align-items:center;justify-content:flex-start;padding:5px 8px;min-width:0;}
   /* nombre del modo abarcando (vertical) todo el bloque, centrado */
@@ -193,17 +192,6 @@
   .mile{position:absolute;top:11px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:3;}
   .mile .d{width:22px;height:22px;transform:rotate(45deg);border-radius:5px;background:var(--c-mile);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.3);border:2px solid var(--panel);}
   .mile .d span{transform:rotate(-45deg);color:#fff;font-size:9.5px;font-weight:800;line-height:1;}
-  .mile.event .d{background:var(--c-art-a);}
-  .mile.event .t .mt{color:var(--c-art-a);font-weight:600;}
-  /* tooltip con diseño (participantes de un milestone) — aparece al hover */
-  .mile .d{cursor:help;}
-  .mile .mtip{display:none;position:absolute;left:50%;top:-6px;transform:translate(-50%,-100%);
-    background:#2b3240;color:#fff;font-size:10.5px;font-weight:600;white-space:nowrap;line-height:1.3;
-    padding:6px 10px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.32);z-index:60;pointer-events:none;}
-  .mile .mtip::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
-    border:5px solid transparent;border-top-color:#2b3240;}
-  .mile .mtip .tl{display:block;color:#ffd37a;font-size:9.5px;font-weight:700;letter-spacing:.3px;margin-bottom:2px;text-transform:uppercase;}
-  .mile:hover .mtip{display:block;}
   .mile.launch .d{width:27px;height:27px;background:var(--c-launch);}
   .mile.launch .d span{font-size:13px;}
   .mile .t{margin-top:9px;text-align:center;font-size:10.5px;font-weight:400;color:var(--text);line-height:1.2;max-width:96px;}
@@ -232,33 +220,23 @@
   .card ul{margin:0;padding-left:18px;}
   .card li{font-size:12px;line-height:1.5;margin-bottom:5px;color:var(--text);}
   .foot{margin-top:22px;font-size:11px;color:var(--muted);line-height:1.5;}
-  /* modal de reuniones */
-  .mmodal{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.45);padding:40px 16px;overflow:auto;}
-  .mmodal.hidden{display:none;}
-  .mmodal .mpanel{background:var(--bg);color:var(--text);border:1px solid var(--grid);border-radius:14px;max-width:660px;width:100%;box-shadow:0 14px 44px rgba(0,0,0,.4);overflow:hidden;}
-  .mmodal .mhead{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--grid);background:var(--panel);}
-  .mmodal .mhead h2{margin:0;font-size:16px;letter-spacing:.2px;}
-  .mmodal .mclose{cursor:pointer;border:1px solid var(--gridStrong);background:var(--bg);color:var(--text);font-size:14px;width:30px;height:30px;border-radius:8px;line-height:1;}
-  .mmodal .mbody{padding:6px 20px 20px;max-height:72vh;overflow:auto;}
-  .mdate{font-size:12px;font-weight:800;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;}
-  .mcard{border:1px solid var(--grid);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--panel);}
-  .mcard .mctop{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer;}
-  .mcard .mctop:hover{background:var(--grid);}
-  .mcard .mtime{font-weight:800;font-size:13px;color:#fff;background:var(--c-sys-a);padding:3px 9px;border-radius:7px;white-space:nowrap;}
-  .mcard .mtitle{font-weight:700;font-size:13px;flex:1;line-height:1.3;}
-  .mcard .mcaret{color:var(--muted);font-size:11px;transition:transform .15s;}
-  .mcard.open .mcaret{transform:rotate(90deg);}
-  .mcard .mdetail{display:none;padding:4px 16px 16px;border-top:1px solid var(--grid);}
-  .mcard.open .mdetail{display:block;}
-  .matt{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px;}
-  .matt .pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--grid);color:var(--text);}
-  .matt .pill.req{background:var(--c-dev-a);color:#fff;}
-  .matt .attlbl{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--muted);width:100%;letter-spacing:.4px;margin:8px 0 1px;}
-  .magenda{margin:10px 0 0;padding:0;list-style:none;}
-  .magenda>li{font-size:12.5px;font-weight:600;margin:9px 0 3px;padding-left:16px;position:relative;line-height:1.35;}
-  .magenda>li::before{content:"▸";position:absolute;left:0;color:var(--c-art-a);font-weight:700;}
-  .magenda .sub{margin:3px 0 0 2px;padding-left:16px;list-style:disc;}
-  .magenda .sub li{font-size:11.5px;font-weight:400;color:var(--muted);margin:2px 0;line-height:1.35;}
+  /* modal checklist de tomas/capturas */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;z-index:100;padding:40px 20px;}
+  .modalbox{background:var(--bg);color:var(--text);border:1px solid var(--grid);border-radius:14px;max-width:640px;width:100%;max-height:85vh;overflow:auto;box-shadow:0 12px 44px rgba(0,0,0,.35);}
+  .modalhead{position:sticky;top:0;background:var(--panel);display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--grid);}
+  .modalhead strong{font-size:15px;flex:1;}
+  .modalprog{font-size:12px;color:var(--c-dev-a);font-weight:700;white-space:nowrap;}
+  #shotsClose{cursor:pointer;border:1px solid var(--gridStrong);background:var(--panel);color:var(--text);border-radius:8px;padding:4px 10px;font-weight:700;}
+  .modalbody{padding:10px 18px 20px;}
+  .shotcat{font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--muted);margin:16px 0 6px;}
+  .shotitem{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--grid);}
+  .shotitem input[type=checkbox]{margin-top:2px;width:16px;height:16px;cursor:pointer;flex:none;accent-color:var(--c-dev-a);}
+  .shotitem .txt{flex:1;font-size:13px;line-height:1.3;}
+  .shotitem.done .txt{text-decoration:line-through;color:var(--muted);}
+  .shotitem a.txt{color:var(--c-sys-a);}
+  .shotitem .lk{cursor:pointer;font-size:14px;opacity:.55;flex:none;}
+  .shotitem .lk.has{opacity:1;}
+  .shotitem .lk:hover{opacity:1;}
   .hideEN [data-en]{display:none;}
 </style>
 </head>
@@ -274,7 +252,8 @@
     <div class="controls">
       <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
       <span id="pubStatus" style="display:none;font-size:11px;color:var(--c-dev-a);font-weight:700;align-self:center;white-space:nowrap;"></span>
-      <button class="btn" id="meetBtn" data-es="🗓️ Reuniones" data-en="🗓️ Meetings">🗓️ Reuniones</button>
+      <button class="btn" id="shotsBtn" data-es="📸 Tomas trailer" data-en="📸 Trailer shots">📸 Tomas trailer</button>
+      <button class="btn" id="refBtn" data-es="📖 Referencias" data-en="📖 Legend">📖 Referencias</button>
       <button class="btn" id="langBtn">EN</button>
       <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
     </div>
@@ -293,122 +272,79 @@
 
   <div class="notes" id="notes"></div>
 
-  <div id="meetModal" class="mmodal hidden">
-    <div class="mpanel">
-      <div class="mhead"><h2 data-es="🗓️ Reuniones de Banana" data-en="🗓️ Banana meetings">🗓️ Reuniones de Banana</h2><button class="mclose" aria-label="Cerrar">✕</button></div>
-      <div class="mbody" id="meetBody"></div>
+  <div class="foot" data-es="Preview interno — no publicado. Fechas y supuestos derivados de la reunión y de prácticas estándar de producción de videojuegos (dev programs y certificación de consolas). Ajustable." data-en="Internal preview — not published. Dates and assumptions derived from the meeting and standard game-production practice (dev programs & console certification). Adjustable.">Preview interno — no publicado.</div>
+
+  <div class="modal" id="shotsModal" style="display:none">
+    <div class="modalbox">
+      <div class="modalhead"><strong data-es="📸 Tomas / Capturas para trailer" data-en="📸 Trailer shots / captures">📸 Tomas / Capturas para trailer</strong><span class="modalprog" id="shotsProg"></span><button id="shotsClose">✕</button></div>
+      <div class="modalbody" id="shotsBody"></div>
     </div>
   </div>
-
-  <div class="foot" data-es="Preview interno — no publicado. Fechas y supuestos derivados de la reunión y de prácticas estándar de producción de videojuegos (dev programs y certificación de consolas). Ajustable." data-en="Internal preview — not published. Dates and assumptions derived from the meeting and standard game-production practice (dev programs & console certification). Adjustable.">Preview interno — no publicado.</div>
 </div>
 
 <script>
 const WEEKS_ES=['27 Oct','2 Nov','9 Nov','16 Nov','23 Nov','30 Nov','7 Dic','14 Dic','21 Dic','28 Dic','4 Ene','11 Ene','18 Ene','25 Ene','1 Feb','8 Feb','15 Feb','22 Feb','1 Mar','8 Mar','15 Mar','22 Mar','29 Mar'];
 const WEEKS_EN=['Oct 27','Nov 2','Nov 9','Nov 16','Nov 23','Nov 30','Dec 7','Dec 14','Dec 21','Dec 28','Jan 4','Jan 11','Jan 18','Jan 25','Feb 1','Feb 8','Feb 15','Feb 22','Mar 1','Mar 8','Mar 15','Mar 22','Mar 29'];
 const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['FEB','FEB',4],['MAR','MAR',5]];
-// TODAY_WEEK y TODAY_ISO se definen dinámicamente (fecha real) más abajo, junto a dOff/START
+const TODAY_WEEK=1;
 
 // kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
-   {d:'2026-11-12', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 1 día', sub_en:'Thu Nov 12 · 1 day'},
-   {d:'2026-11-16', icon:'💡', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'lun 16 Nov', sub_en:'Mon Nov 16', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
-   {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
-   {d:'2026-11-30', icon:'👥', side:'l', es:'Playtest 2 · comunidad', en:'Playtest 2 · community', sub_es:'lun 30 Nov', sub_en:'Mon Nov 30'},
-   {d:'2026-12-02', icon:'💡', side:'r', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'mié 2 Dic', sub_en:'Wed Dec 2', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
-   {d:'2026-12-18', side:'l', es:'4 modos a 2 h 50 (variaciones)', en:'4 modes at 2 h 50 (variations)'},
-   {d:'2026-12-22', side:'r', es:'Decisión plan Ene–Mar', en:'Decide Jan–Mar plan'},
-   {d:'2027-03-31', oneline:true, es:'LANZAMIENTO · 31 Mar', en:'LAUNCH · Mar 31', sub_es:'Steam', sub_en:'Steam', launch:true},
+   {d:'2026-11-20', oneline:true, es:'Submit trailer', en:'Submit trailer', sub_es:'20 de noviembre', sub_en:'November 20'},
+   {d:'2026-12-21', es:'Layouts + jugabilidad lockeada (todos)', en:'Layouts + gameplay locked (all)'},
+   {d:'2027-01-08', side:'l', es:'Devkits recibidos', en:'Devkits received'},
+   {d:'2027-01-11', side:'r', es:'Porting kickoff', en:'Porting kickoff'},
+   {d:'2027-01-29', oneline:true, es:'Content complete / Freeze', en:'Content complete / Freeze'},
+   {d:'2027-02-26', oneline:true, es:'Code freeze / RC', en:'Code freeze / RC'},
+   {d:'2027-03-10', es:'Cert consolas (envío)', en:'Console cert (submit)'},
+   {d:'2027-03-31', oneline:true, es:'LANZAMIENTO · 31 Mar', en:'LAUNCH · Mar 31', launch:true},
  ]},
  // Barra principal = exploración de dinámicas y espacio de juego (fechas día-exactas) · Fase B (look) en ene-feb · desplegable → 3 dificultades
- // 4 modos prioritarios trabajados EN PARALELO (mismas ventanas): Nov-Dic = sprint de layout/jugabilidad/variaciones hasta 2 h 50 · look/vfx/sonido tentativo Ene-Feb (se confirma en diciembre)
- {kind:'levels', es:'MODOS PRIORITARIOS · 31 Mar (en paralelo)', en:'PRIORITY MODES · Mar 31 (parallel)', tasks:[
-   {key:'radio', es:'Radioactive Low Cost', en:'Radioactive Low Cost', mech_es:'avión actual (base) · variaciones a 2 h 50', mech_en:'current plane (base) · variations to 2 h 50', aStart:'2026-11-02', aEnd:'2026-11-13', ph:[[4,5],[6,8]]},
-   {key:'space', es:'Space Explorer', en:'Space Explorer', mech_es:'antigravedad · rebotes · esquivar asteroides', mech_en:'anti-gravity · bouncing · dodge asteroids', aStart:'2026-11-02', aEnd:'2026-11-13', ph:[[4,5],[6,8]]},
-   {key:'sub', es:'Submarine', en:'Submarine', mech_es:'agua · escotilla · escuba/salvavidas', mech_en:'water · hatch · scuba/lifejackets', aStart:'2026-11-02', aEnd:'2026-11-13', ph:[[4,5],[6,8]]},
-   {key:'spa', es:'Avión de Lujo', en:'Luxury Jet', mech_es:'jumbo 2 pisos · VIP (base de Valen)', mech_en:'2-story jumbo · VIP (Valen\'s base)', aStart:'2026-11-02', aEnd:'2026-11-13', ph:[[4,5],[6,8]]},
+ {kind:'levels', es:'MODOS DE JUEGO', en:'GAME MODES', tasks:[
+   {key:'space', es:'Space Explorer', en:'Space Explorer', mech_es:'espacio · gravedad lunar', mech_en:'space · lunar gravity', aStart:'2026-10-26', aEnd:'2026-11-03', b:[11,13]},
+   {key:'sub', es:'Submarine', en:'Submarine', mech_es:'flotación + inundación (impide caminar)', mech_en:'floatation + flooding (blocks walking)', aStart:'2026-11-04', aEnd:'2026-11-13', b:[12,14]},
+   {key:'warf', es:'Warfighter', en:'Warfighter', aStart:'2026-11-16', aEnd:'2026-11-20', b:[13,15]},
+   {key:'spa', es:'Celebrity Spa Ultra Lux', en:'Celebrity Spa Ultra Lux', aStart:'2026-11-23', aEnd:'2026-11-27', b:[14,16]},
+   {key:'rescue', es:'War Rescue', en:'War Rescue', aStart:'2026-11-30', aEnd:'2026-12-04', b:[15,17]},
+   {key:'baby', es:'Baby Delivery', en:'Baby Delivery', aStart:'2026-12-07', aEnd:'2026-12-11', b:[16,18]},
+   {key:'ark', es:'Banana Noah’s Ark', en:'Banana Noah’s Ark', mech_es:'estilo arca de Noé', mech_en:'Noah’s Ark style', aStart:'2026-12-14', aEnd:'2026-12-18', b:[16,18]},
+   {key:'radio', blocked:true, es:'Radioactive Low Cost', en:'Radioactive Low Cost'},
  ]},
- // Niveles restantes: se mantienen pero SIN tiempos de desarrollo — se decide en diciembre si se desarrollan
- {kind:'levels', es:'SEGUNDO CHUNK · a definir (post-diciembre)', en:'SECOND BATCH · TBD (post-December)', tasks:[
-   {key:'warf', blocked:true, es:'Warfighter', en:'Warfighter'},
-   {key:'rescue', blocked:true, es:'War Rescue', en:'War Rescue'},
-   {key:'baby', blocked:true, es:'Baby Delivery', en:'Baby Delivery'},
-   {key:'ark', blocked:true, es:'Banana Noah’s Ark', en:'Banana Noah’s Ark'},
+ {kind:'bars', es:'SISTEMAS & PIPELINE', en:'SYSTEMS & PIPELINE', cls:'sys', tasks:[
+   {sw:3,ew:10, es:'Sistema de cosméticos (categorías + moneda)', en:'Cosmetics system (categories + currency)'},
  ]},
- {kind:'bars', collapsed:true, es:'SISTEMAS & PIPELINE', en:'SYSTEMS & PIPELINE', cls:'sys', tasks:[
-   {sw:1,ew:1,  es:'3 workflows técnicos sólidos (Álvarez Thomas): niveles · imágenes · cosméticos', en:'3 technical workflows solid (Álvarez Thomas): levels · images · cosmetics'},
-   {sw:1,ew:12, es:'Workflow: generación de niveles (farm, no consume tu PC)', en:'Workflow: level generation (farm, offloads your PC)'},
-   {sw:1,ew:12, es:'Workflow: generación de imágenes (estética Banana · AI→Blender)', en:'Workflow: image generation (Banana look · AI→Blender)'},
-   {sw:3,ew:10, es:'Sistema de cosméticos (categorías + moneda) + workflow de generación', en:'Cosmetics system (categories + currency) + generation workflow'},
+ {es:'PORTING A CONSOLAS', en:'CONSOLE PORTING', cls:'port', tasks:[
+   {sw:2,ew:3,  warn:true, es:'CONTACTAR / alta: ID@Xbox · PS Partners · Nintendo Dev', en:'CONTACT / register: ID@Xbox · PS Partners · Nintendo Dev'},
+   {sw:3,ew:6,  es:'Aprobación + solicitud de devkits (Xbox/PS/Switch)', en:'Approval + devkit request (Xbox/PS/Switch)'},
+   {sw:9,ew:11, es:'Recepción y setup de devkits', en:'Devkit receipt & setup'},
+   {sw:12,ew:18,es:'Porting Xbox Series X|S', en:'Porting Xbox Series X|S'},
+   {sw:12,ew:18,es:'Porting PlayStation 5', en:'Porting PlayStation 5'},
+   {sw:12,ew:18,es:'Porting Nintendo Switch', en:'Porting Nintendo Switch'},
+   {sw:15,ew:19,es:'Cumplimiento TRC/XR/Lotcheck + ratings (ESRB/PEGI/IARC)', en:'TRC/XR/Lotcheck compliance + ratings (ESRB/PEGI/IARC)'},
+   {sw:20,ew:22,es:'Certificación consolas (envío + buffer re-envío)', en:'Console certification (submit + resubmit buffer)'},
  ]},
- // Porting EN PAUSA — se decide después (sin tiempos). Se mantiene el desglose como pendiente.
- {collapsed:true, es:'PORTING A CONSOLAS · a determinar', en:'CONSOLE PORTING · TBD', cls:'port', tasks:[
-   {pending:true, es:'A DEFINIR tras diciembre — sin tiempos de desarrollo', en:'TBD after December — no dev time'},
-   {pending:true, es:'Alta en programas: ID@Xbox · PS Partners · Nintendo Dev', en:'Program registration: ID@Xbox · PS Partners · Nintendo Dev'},
-   {pending:true, es:'Solicitud + recepción de devkits (Xbox/PS/Switch)', en:'Devkit request + receipt (Xbox/PS/Switch)'},
-   {pending:true, es:'Porting Xbox Series X|S · PlayStation 5 · Nintendo Switch', en:'Porting Xbox Series X|S · PlayStation 5 · Nintendo Switch'},
-   {pending:true, es:'Cumplimiento TRC/XR/Lotcheck + ratings (ESRB/PEGI/IARC)', en:'TRC/XR/Lotcheck compliance + ratings (ESRB/PEGI/IARC)'},
-   {pending:true, es:'Certificación consolas (envío + buffer re-envío)', en:'Console certification (submit + resubmit buffer)'},
- ]},
- {kind:'bars', collapsed:true, es:'MARKETING & COMUNIDAD', en:'MARKETING & COMMUNITY', cls:'mkt', tasks:[
-   {sw:1,ew:8,  es:'Formulario de feedback semanal (preguntas nuevas c/sem · foco cosméticos)', en:'Weekly feedback form (new questions each wk · cosmetics focus)'},
-   {sw:1,ew:12, es:'Comunidad Discord "Space Madness Dev": 71 → meta 150-200 playtesters', en:'Discord community "Space Madness Dev": 71 → goal 150-200 playtesters'},
+ {kind:'bars', es:'MARKETING & COMUNIDAD', en:'MARKETING & COMMUNITY', cls:'mkt', tasks:[
    {sw:1,ew:4,  es:'Producción nuevo trailer (70s · reveal 31 Mar · cliffhanger)', en:'New trailer (70s · reveal Mar 31 · cliffhanger)'},
    {sw:6,ew:8,  es:'Evento diciembre · IGN Game Trailers (exposición)', en:'December event · IGN Game Trailers (exposure)'},
    {sw:19,ew:23,es:'Campaña de lanzamiento + launch trailer', en:'Launch campaign + launch trailer'},
  ]},
- {collapsed:true, es:'QA & LANZAMIENTO · Steam', en:'QA & LAUNCH · Steam', cls:'qa', tasks:[
-   {sw:19,ew:22,es:'QA — 4 semanas · Steam', en:'QA — 4 weeks · Steam'},
-   {sw:22,ew:23,es:'Gold master + preparación de store (Steam)', en:'Gold master + store prep (Steam)'},
-   {sw:23,ew:23,es:'🚀 Lanzamiento 31 Mar · Steam', en:'🚀 Launch Mar 31 · Steam'},
-   {pending:true, es:'Consolas: QA + lanzamiento — a definir (sin tiempos)', en:'Consoles: QA + launch — TBD (no dates)'},
+ {es:'QA & LANZAMIENTO', en:'QA & LAUNCH', cls:'qa', tasks:[
+   {sw:19,ew:22,es:'QA — 4 semanas · todas las plataformas', en:'QA — 4 weeks · all platforms'},
+   {sw:22,ew:23,es:'Gold master + preparación de stores', en:'Gold master + store prep'},
+   {sw:23,ew:23,es:'🚀 Lanzamiento 31 Mar (Steam + consolas)', en:'🚀 Launch Mar 31 (Steam + consoles)'},
  ]},
 ];
 
 const NOTES=[
- {cls:'urgent', es:['CICLO DE TESTEO (el proceso)','Layout: bases jugables de los 4 modos en paralelo (lun 2 → vie 13 Nov).','👥 Playtest 1 con comunidad: 1 día (jue 12 Nov) para recopilar feedback.','💡 Regroup + brainstorm (lun 16 Nov): qué mecánicas desarrollar según el feedback.','Implementación: 2 semanas de mecánicas (16–29 Nov) → 👥 Playtest 2 (lun 30 Nov).','Variantes: 💡 2º regroup + brainstorm (mié 2 Dic) → ajustes del 2º playtest + variaciones hasta 2 h 50 por modo. Premisa: testear → incluir lo que funciona → re-testear → mantener vivo.'],
-  en:['TESTING CYCLE (the process)','Layout: the 4 modes\' playable bases in parallel (Mon Nov 2 → Fri Nov 13).','👥 Playtest 1 with community: 1 day (Thu Nov 12) to gather feedback.','💡 Regroup + brainstorm (Mon Nov 16): which mechanics to build based on feedback.','Implementation: 2 weeks of mechanics (Nov 16–29) → 👥 Playtest 2 (Mon Nov 30).','Variants: 💡 2nd regroup + brainstorm (Wed Dec 2) → 2nd-playtest fixes + variations up to 2 h 50 per mode. Premise: test → include what works → re-test → keep it alive.']},
- {cls:'', es:['MECÁNICAS CLAVE (de la reunión)','Cada nivel con principio–desarrollo–fin (ej. la nave despega/aterriza; a los pasajeros se los sirve recién tras despegar).','Nave: antigravedad, rebotes y giro + esquivar asteroides/escombros que rompen motores y vidrio.','Submarino: llenado de agua, escotilla, bajar nadando, fondo marino, tubo/escuba y salvavidas.','Reusar catástrofes existentes (incendio, motor roto) antes de crear nuevas.','Servir algo distinto en cada modo (no solo bananas: café, soda) — muy pedido por la comunidad.'],
-  en:['KEY MECHANICS (from the meeting)','Every level with beginning–development–end (e.g. the ship takes off/lands; passengers are served only after takeoff).','Ship: anti-gravity, bouncing and spin + dodge asteroids/debris that break engines and glass.','Submarine: water filling, hatch, swim down, sea floor, breathing tube/scuba and lifejackets.','Reuse existing catastrophes (fire, broken engine) before building new ones.','Serve something different in each mode (not just bananas: coffee, soda) — highly requested by the community.']},
- {cls:'risk', es:['META DE JUEGO + DECISIÓN DE DICIEMBRE','El demo hoy promedia ~50 min; meta: elevar a 2 h 50 por modo (con 2-3 modos más, 7-8 h totales).','Todo esto antes de fin de año. En diciembre se define el plan de ene-feb-mar: pulir estos 4 modos o sumar niveles del segundo chunk.','El segundo chunk (Warfighter, War Rescue, Baby Delivery, Noah\'s Ark) queda en espera, sin tiempos asignados.'],
-  en:['GAMEPLAY GOAL + DECEMBER DECISION','The demo today averages ~50 min; goal: raise to 2 h 50 per mode (with 2-3 more modes, 7-8 h total).','All of this before year-end. December sets the Jan-Feb-Mar plan: polish these 4 modes or add second-batch levels.','The second batch (Warfighter, War Rescue, Baby Delivery, Noah\'s Ark) is on hold, with no time assigned.']},
- {cls:'', es:['COMUNIDAD, EQUIPO Y WORKFLOWS','Formulario de feedback con preguntas nuevas cada semana; esta semana foco en cosméticos (se saca "mamadera", se mantiene "More Piloting Options").','Discord "Space Madness Dev": 71 inscriptos al playtest, meta 150-200.','3 workflows técnicos a dejar sólidos esta semana en Álvarez Thomas: generación de niveles, de imágenes (estética Banana, AI→Blender) y de cosméticos.','Eri con mentoría (Lauti/Carlini) como objetivo secundario, sin frenar la prioridad del proyecto.'],
-  en:['COMMUNITY, TEAM & WORKFLOWS','Feedback form with new questions each week; this week focus on cosmetics (drop "baby bottle", keep "More Piloting Options").','Discord "Space Madness Dev": 71 playtest sign-ups, goal 150-200.','3 technical workflows to make solid this week at Álvarez Thomas: level generation, image generation (Banana look, AI→Blender) and cosmetics.','Eri mentored (Lauti/Carlini) as a secondary goal, without slowing the project\'s priority.']},
- {cls:'', es:['PORTING A CONSOLAS (en pausa)','El porteo a consolas no arranca por ahora — se decide más adelante. El desglose queda como pendiente, sin tiempos.','Si se concreta un publisher, el bloque de porting pasaría a estar a su cargo y cambiaría esa parte del cronograma.'],
-  en:['CONSOLE PORTING (on hold)','Console porting is not starting for now — to be decided later. The breakdown stays as pending, with no times.','If a publisher is secured, the porting block would be handled by them, changing that part of the schedule.']},
-];
-
-// Reuniones (agenda por fecha): temática + horario, asistentes (imprescindibles/opcionales) y temas a debatir
-const MEETINGS=[
- {date:'2026-11-04', dlabel_es:'Miércoles 4 de noviembre', dlabel_en:'Wednesday, November 4', items:[
-   {time:'11:00', es:'Sync', en:'Sync',
-    req:['Fernando Maldonado','Jorge Tereso','Federico Carlini','Valentín Frare','Germán Heller'], opt:[],
-    agenda_es:[
-      {t:'Encuesta de la semana — definir qué vamos a preguntar', sub:['Ítem recurrente de los lunes (esta semana cae miércoles): la encuesta cambia todas las semanas.','Foco en cosméticos: reemplazar los que menos gustan / no fueron elegidos, dejar los que gustan y sumar algunos nuevos.','(De la reunión) sacar "mamadera" y mantener "More Piloting Options"; esta semana preguntar solo cosméticos.']},
-      {t:'Contar el plan de la reunión de las 16:00', sub:[]},
-      {t:'Workflows — repasar estado (ver detalle abajo)', sub:['WORKFLOW FUNCIONANDO, por cada uno anotar:','Compu — cuál es (AnyDesk)','Repo desde donde la compu clonó: niveles · cosméticos · imágenes','URL pública para usar el autómata']},
-    ],
-    agenda_en:[
-      {t:'Weekly survey — decide what we will ask', sub:['Recurring Monday item (this week it falls on Wednesday): the survey changes every week.','Focus on cosmetics: replace the least-liked / not-chosen ones, keep the liked ones and add some new ones.','(From the meeting) drop "baby bottle" and keep "More Piloting Options"; this week ask only about cosmetics.']},
-      {t:'Preview the plan for the 16:00 meeting', sub:[]},
-      {t:'Workflows — review status (detail below)', sub:['WORKFLOW RUNNING, for each one note:','Computer — which one (AnyDesk)','Repo the computer cloned from: levels · cosmetics · images','Public URL to use the automaton']},
-    ]},
-   {time:'16:00', es:'Revisión ingame: nave esfera · submarino · avión Luxury', en:'In-game review: sphere ship · submarine · Luxury jet',
-    req:['Lautaro Schpizza','Valentín Frare','Federico Carlini','Germán Heller'], opt:['Jorge Tereso','Fernando Maldonado'],
-    agenda_es:[
-      {t:'Ver los 3 niveles ingame (nave esfera, submarino, avión Luxury)', sub:[]},
-      {t:'Jugabilidad de esquivar asteroides', sub:['Charlarla al ver la nave ingame.','En el espacio se va a pedir que la nave pueda moverse para esquivar asteroides — se define en esta reunión.']},
-      {t:'Plan de diseño común de los modos', sub:['Inicio y fin: despegue y aterrizaje.','Los pasajeros piden cosas (recién tras despegar).','Mismos desastres naturales por el momento.']},
-      {t:'Tema abierto a pensar: ¿servir otras cosas en cada modo?', sub:['No solo bananas (café, soda…) — queda abierto.']},
-    ],
-    agenda_en:[
-      {t:'See the 3 levels in-game (sphere ship, submarine, Luxury jet)', sub:[]},
-      {t:'Dodge-asteroids gameplay', sub:['Discuss it while seeing the ship in-game.','In space we will ask that the ship can move to dodge asteroids — decided in this meeting.']},
-      {t:'Shared mode design plan', sub:['Beginning and end: takeoff and landing.','Passengers request things (only after takeoff).','Same natural disasters for now.']},
-      {t:'Open topic to think about: serve different things in each mode?', sub:['Not just bananas (coffee, soda…) — left open.']},
-    ]},
- ]},
+ {cls:'urgent', es:['ACCIÓN URGENTE (próximas 1-2 semanas)','Dar de alta al estudio en los 3 programas: ID@Xbox, PlayStation Partners y Nintendo Developer Portal.','Solicitar devkits apenas haya aprobación — los tiempos de alta + envío de hardware son de semanas.','Si los devkits no se piden en noviembre, NO llegan para arrancar el porting la 2ª semana de enero.','Atajo posible: Xbox permite usar una consola retail en "Modo Dev" como kit temprano mientras llega el oficial.'],
+  en:['URGENT ACTION (next 1-2 weeks)','Register the studio in all 3 programs: ID@Xbox, PlayStation Partners and Nintendo Developer Portal.','Request devkits as soon as approved — registration + hardware shipping takes weeks.','If devkits aren\'t requested in November, they won\'t arrive to start porting in the 2nd week of January.','Possible shortcut: Xbox allows a retail console in "Dev Mode" as an early kit while the official one ships.']},
+ {cls:'risk', es:['RIESGO ALTO — Certificación de consolas','El lanzamiento simultáneo PC + consolas el 31 Mar depende de pasar la cert de cada plataforma a tiempo.','La ventana de cert (8-28 Mar) es ajustada; cada plataforma puede pedir re-envío.','Plan B: lanzar en Steam el 31 Mar y consolas poco después si alguna cert se atrasa.'],
+  en:['HIGH RISK — Console certification','A simultaneous PC + console launch on Mar 31 depends on passing each platform\'s cert in time.','The cert window (Mar 8-28) is tight; each platform may request a resubmission.','Plan B: launch on Steam Mar 31 and consoles shortly after if any cert slips.']},
+ {cls:'', es:['PUBLISHER','Si se concreta un publisher, el bloque de porting pasaría a estar a cargo del publisher y eso cambiaría esa parte del cronograma.'],
+  en:['PUBLISHER','If a publisher is secured, the porting block would be handled by the publisher, which would change that part of the schedule.']},
+ {cls:'', es:['SUPUESTOS DEL PLAN','Lanzamiento fijado: 31 de marzo de 2027 (compromiso global del trailer).','4 semanas de QA previas al lanzamiento (1-28 Mar).','Porting arranca la 2ª semana de enero (11 Ene).','Capacidad reducida en feriados de fin de año (21 Dic - 3 Ene): usado como buffer.'],
+  en:['PLAN ASSUMPTIONS','Launch locked: March 31, 2027 (global commitment from the trailer).','4 weeks of QA before launch (Mar 1-28).','Porting starts the 2nd week of January (Jan 11).','Reduced capacity over year-end holidays (Dec 21 - Jan 3): used as buffer.']},
 ];
 
 let lang='es';
@@ -423,12 +359,10 @@ const HOLIDAYS={'2026-12-25':{es:'Navidad',en:'Christmas'}, '2027-01-01':{es:'A�
 const iso=(d)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function weekDays(w){ const a=[]; const b=new Date(START); b.setDate(b.getDate()+(w-1)*7); for(let i=0;i<7;i++){ const d=new Date(b); d.setDate(d.getDate()+i); a.push(d);} return a; }
 // ---- day-precise positioning with per-week horizontal expansion ----
-// LABELW y COLW se leen del CSS para que las franjas (fin de semana, hoy, líneas) nunca se desfasen de la grilla
-const _rs=getComputedStyle(document.documentElement);
-const LABELW=parseInt(_rs.getPropertyValue('--label-w'))||248, COLW=parseInt(_rs.getPropertyValue('--col-w'))||70, DAYW=40; const EXPW=7*DAYW; // expanded week width
+const LABELW=248, COLW=70, DAYW=40; const EXPW=7*DAYW; // expanded week width
 let expandedWk=new Set();
 const dOff=(iso)=>Math.round((new Date(iso+'T00:00:00')-START)/86400000);
-const TODAY_ISO=iso(new Date()); const TODAY_OFF=dOff(TODAY_ISO); const TODAY_WEEK=Math.max(1,Math.min(23,Math.floor(TODAY_OFF/7)+1));
+const TODAY_ISO='2026-10-27'; const TODAY_OFF=dOff(TODAY_ISO);
 function weekWidth(w){ return expandedWk.has(w)?EXPW:COLW; }
 function gridTemplate(){ let s='var(--label-w)'; for(let w=1;w<=23;w++) s+= expandedWk.has(w)?` ${EXPW}px`:' var(--col-w)'; return s; }
 function weekStartX(w){ let x=LABELW; for(let i=1;i<w;i++) x+=weekWidth(i); return x; }
@@ -443,10 +377,10 @@ const FROZEN='linear-gradient(90deg,#9aa1ad,#b8bec9)';
 const DIFFS=[{es:'Easy',en:'Easy',c:'#86d3a0'},{es:'Medium',en:'Medium',c:'#4faf77'},{es:'Hard',en:'Hard',c:'#2b7d50'}];
 const SND='linear-gradient(90deg,#0ea5b7,#49c6d6)';
 const PROD='linear-gradient(90deg,#7e8796,#aab2bf)';
-const PHASES=[{k:'vfx',cls:'def',es:'Implementación (mecánicas + feedback)',en:'Implementation (mechanics + feedback)',grad:COLOR.def},{k:'snd',cls:'snd',es:'Variantes (ajustes 2º playtest + 2 h 50)',en:'Variants (2nd-playtest fixes + 2 h 50)',grad:SND}];
+const PHASES=[{k:'assets',cls:'art',es:'Pulido de look',en:'Look polish',grad:COLOR.art},{k:'vfx',cls:'def',es:'VFX + Lighting',en:'VFX + Lighting',grad:COLOR.def},{k:'snd',cls:'snd',es:'Sonido',en:'Sound',grad:SND}];
 let expandedLv=new Set();
 let collapsedGrp=new Set();
-const STAGEDEF=[{k:'exp',es:'Layout',en:'Layout',cls:'dev'},{k:'vfx',es:'Implementación',en:'Implementation',cls:'def'},{k:'snd',es:'Variantes',en:'Variants',cls:'snd'}];
+const STAGEDEF=[{k:'exp',es:'Exploración',en:'Exploration',cls:'dev'},{k:'assets',es:'Pulido de look',en:'Look polish',cls:'art'},{k:'vfx',es:'VFX + Lighting',en:'VFX + Lighting',cls:'def'},{k:'snd',es:'Sonido',en:'Sound',cls:'snd'}];
 let visibleStages=new Set(STAGEDEF.map(s=>s.k));
 function renderFilter(){
   const allOn=visibleStages.size===STAGEDEF.length;
@@ -481,14 +415,13 @@ function layoutModeNames(){
     else { main.classList.remove('spanning'); nm.classList.remove('nm-span'); nm.style.height=''; if(nameCell) nameCell.style.zIndex=''; }
   });
   // pasada 2: medir ya colapsado y fijar alto del nombre + líneas divisorias
-  const fullW=weekStartX(24); // ancho total (LABELW + todas las semanas) para que las líneas no se corten en el viewport
   blocks.forEach(({main,nm,phases})=>{
     const top=main.offsetTop;
     let bottom=top+main.offsetHeight;
     phases.forEach(p=>{ const b=p.offsetTop+p.offsetHeight; if(b>bottom) bottom=b; });
     nm.style.height=(bottom-top)+'px';
-    const lt=document.createElement('div'); lt.className='modeline'; lt.style.top=top+'px'; lt.style.width=fullW+'px'; rowsEl.appendChild(lt);
-    const lb=document.createElement('div'); lb.className='modeline'; lb.style.top=(bottom-1)+'px'; lb.style.width=fullW+'px'; rowsEl.appendChild(lb);
+    const lt=document.createElement('div'); lt.className='modeline'; lt.style.top=top+'px'; rowsEl.appendChild(lt);
+    const lb=document.createElement('div'); lb.className='modeline'; lb.style.top=(bottom-1)+'px'; rowsEl.appendChild(lb);
   });
 }
 // ---- persistencia / publicación (GitHub) ----
@@ -496,18 +429,38 @@ const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.
 const EDITABLE = location.protocol==='file:' || location.search.includes('edit') || location.hash.includes('edit');
 let barOverrides={}, lastPublished=null, undoStack=[], redoStack=[];
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
+// ---- checklist de tomas/capturas para el trailer ----
+let shotState={};
+function saveShots(){ try{ localStorage.setItem('banana_shots',JSON.stringify(shotState)); }catch(e){} }
+const SHOTS=[
+  {cat:'AVIÓN ACTUAL', items:['Pilotaje: palanca','Botones para activar cosas: alarmas, carteles, cinturones, máscaras','Cartel "Everything is OK"','Limpiaparabrisas limpian a quien esté parado ahí','Máscaras de gas','Skins','Diferentes niveles (diferentes aviones)','Agarrar y tirar a los pasajeros']},
+  {cat:'SUBMARINO', items:['Jugador nadando con scuba','Submarino que se llena de agua','Pasillo y un jugador viene en un botecito adentro del submarino inundado']},
+  {cat:'NAVE ESPACIAL', items:['Flotación en el espacio con una cafetera']},
+];
+function renderShots(){
+  let done=0,total=0,h='';
+  SHOTS.forEach((c,ci)=>{ h+=`<div class="shotcat">${c.cat}</div>`;
+    c.items.forEach((it,ii)=>{ const id='s_'+ci+'_'+ii, st=shotState[id]||{}; total++; if(st.done)done++;
+      const txt = st.link?`<a class="txt" href="${st.link}" target="_blank" rel="noopener">${it}</a>`:`<span class="txt">${it}</span>`;
+      h+=`<div class="shotitem ${st.done?'done':''}"><input type="checkbox" data-id="${id}" ${st.done?'checked':''} ${EDITABLE?'':'disabled'}>`+txt+(EDITABLE?`<span class="lk ${st.link?'has':''}" data-link="${id}" title="Agregar/editar link">🔗</span>`:'')+`</div>`;
+    });
+  });
+  const b=$('#shotsBody'); if(b) b.innerHTML=h;
+  const p=$('#shotsProg'); if(p) p.textContent=done+'/'+total+(lang==='es'?' hechas':' done');
+}
 function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
 async function loadState(){
-  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
+  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; shotState=(d&&d.shots)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
   try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
+  try{ shotState=JSON.parse(localStorage.getItem('banana_shots')||'{}'); }catch(e){}
 }
 async function publish(){
   let token=localStorage.getItem('banana_gh_token');
   if(!token){ token=prompt('Pegá tu token de GitHub (con permiso de repo). Solo queda en este navegador:'); if(!token) return; localStorage.setItem('banana_gh_token',token); }
   const btn=$('#pubBtn'), old=btn?btn.textContent:'';
   if(btn) btn.textContent='Publicando…';
-  const state={version:1, updated:new Date().toISOString(), barOverrides};
+  const state={version:1, updated:new Date().toISOString(), barOverrides, shots:shotState};
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(state,null,2))));
   const api=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
   try{
@@ -517,16 +470,23 @@ async function publish(){
     else { const e=await res.json().catch(()=>({})); if(res.status===401) localStorage.removeItem('banana_gh_token'); alert('Error al publicar: '+res.status+' '+(e.message||'')); if(btn) btn.textContent=old; }
   }catch(err){ alert('Error de red al publicar: '+err); if(btn) btn.textContent=old; }
 }
+let pubTimer=null;
+function scheduleAutoPublish(){
+  if(!EDITABLE) return;
+  if(!localStorage.getItem('banana_gh_token')){ showPubStatus(lang==='es'?'Apretá “Publicar” una vez (falta token)':'Click “Publish” once (token needed)'); return; }
+  clearTimeout(pubTimer);
+  showPubStatus(lang==='es'?'✍️ Guardando…':'✍️ Saving…');
+  pubTimer=setTimeout(publish, 3000);
+}
 function curOff(key,defS,defE){ const o=barOverrides[key]; return o?[dOff(o.s),dOff(o.e)]:[defS,defE]; }
 function offToIso(off){ const d=new Date(START); d.setDate(d.getDate()+Math.max(0,Math.min(160,off))); return iso(d); }
 function xToDay(x){ x-=LABELW; if(x<0)x=0; for(let w=1;w<=23;w++){ const ww=weekWidth(w); if(x<ww){ return (w-1)*7+Math.max(0,Math.min(6,Math.floor(x/(ww/7)))); } x-=ww; } return 160; }
 // draw a stretchable bar (abar) with both-end handles; optional hover label to the right
-function drawBar(key,defS,defE,grad,title,labelHtml,noDrag,inlbl){
+function drawBar(key,defS,defE,grad,title,labelHtml,noDrag){
   noDrag = noDrag || !EDITABLE;
   const [s,e]=curOff(key,defS,defE), p=barPx(s,e);
   const handles = noDrag?'':`<div class="handle l"></div><div class="handle r"></div>`;
-  const inner = inlbl?`<span class="abtxt">${inlbl}</span>`:'';
-  let h=`<div class="abar ${noDrag?'':'drag'}" data-key="${key}" data-soff="${s}" data-eoff="${e}" style="left:${p.l}px;width:${p.w}px;background:${grad}" title="${title}">${handles}${inner}</div>`;
+  let h=`<div class="abar ${noDrag?'':'drag'}" data-key="${key}" data-soff="${s}" data-eoff="${e}" style="left:${p.l}px;width:${p.w}px;background:${grad}" title="${title}">${handles}</div>`;
   if(labelHtml) h+=`<div class="albl" data-key="${key}" style="left:${dayToX(e+1)}px">${labelHtml}</div>`;
   return h;
 }
@@ -545,9 +505,10 @@ function render(){
   applyGrid();
   // legend
   $('#legend').innerHTML=[
-    ['dev', lang==='es'?'Layout (base jugable)':'Layout (playable base)'],
-    ['def', lang==='es'?'Implementación (mecánicas + feedback)':'Implementation (mechanics + feedback)'],
-    ['snd', lang==='es'?'Variantes (ajustes 2º playtest + 2 h 50)':'Variants (2nd-playtest fixes + 2 h 50)'],
+    ['dev', lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)'],
+    ['art', lang==='es'?'Pulido de look':'Look polish'],
+    ['def', lang==='es'?'VFX + Lighting':'VFX + Lighting'],
+    ['snd', lang==='es'?'Sonido':'Sound'],
     ['sys', lang==='es'?'Sistemas & Pipeline':'Systems & Pipeline'],
     ['mkt', lang==='es'?'Marketing & Comunidad':'Marketing & Community'],
     ['port',lang==='es'?'Porting a Consolas':'Console Porting'],
@@ -555,7 +516,7 @@ function render(){
   ].map(([c,t,col])=>`<span class="k"><span class="sw ${c}" ${col?`style="background:${col}"`:''}></span>${t}</span>`).join('')
    +`<span class="k"><span class="dmd"></span>Milestone</span>`
    +`<span class="k" style="color:var(--todayLine);font-weight:700;">▸ ${lang==='es'?'Clic en una semana = desplegar días + agregar tareas':'Click a week = expand days + add tasks'}</span>`
-   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Ciclo: Layout → 👥Playtest → Implementación → Variantes (playtests = eventos)':'Cycle: Layout → 👥Playtest → Implementation → Variants (playtests = events)'}</span>`;
+   +`<span class="k" style="color:var(--c-art-a);font-weight:700;">▸ ${lang==='es'?'Clic en un nivel = etapas A/B/C/D (pueden solaparse)':'Click a level = stages A/B/C/D (can overlap)'}</span>`;
 
   // months
   let m=`<div class="cell corner">${lang==='es'?'2026 — 2027':'2026 — 2027'}</div>`;
@@ -588,16 +549,12 @@ function render(){
     if(collapsed) return;
     if(g.kind==='mile'){
       html+=`<div class="grid24 row mrow">`;
-      let mnum=0;
       g.tasks.forEach((t,idx)=>{
         const o=dOff(t.d), cx=(dayToX(o)+dayToX(o+1))/2;
         const sideCls=t.side?`edge side-${t.side}`:'';
         const main=lang==='es'?t.es:t.en, sub=lang==='es'?(t.sub_es||''):(t.sub_en||'');
-        const tip=lang==='es'?(t.tip_es||''):(t.tip_en||'');
         const tInner=`<span class="mt">${main}</span>${sub?`<span class="ms">${sub}</span>`:''}`;
-        const badge = t.launch?'🚀':(t.icon?t.icon:(++mnum)); // playtests (icon) = eventos; el resto numerado
-        const tipHtml = tip?`<div class="mtip"><span class="tl">${lang==='es'?'Participan':'Participants'}</span>${tip}</div>`:'';
-        html+=`<div class="mile ${t.launch?'launch':''} ${t.icon?'event':''} ${sideCls}" style="left:${cx}px" title="${main}${sub?' · '+sub:''}${tip?' — '+(lang==='es'?'Participan: ':'Participants: ')+tip:''}"><div class="d"><span>${badge}</span></div><div class="t ${t.oneline?'oneline':''}">${tInner}</div>${tipHtml}</div>`;
+        html+=`<div class="mile ${t.launch?'launch':''} ${sideCls}" style="left:${cx}px" title="${main}${sub?' · '+sub:''}"><div class="d"><span>${t.launch?'🚀':idx+1}</span></div><div class="t ${t.oneline?'oneline':''}">${tInner}</div></div>`;
       });
       html+=`<div class="name">${lang==='es'?g.es:g.en}</div></div>`;
     } else if(g.kind==='levels'){
@@ -611,12 +568,12 @@ function render(){
         // fila principal del modo de juego (desplegable)
         html+=`<div class="grid24 row lvl" data-lvl="${t.key}">`;
         const lvlNameHtml=`<div class="name lvlname twocol" data-lvl="${t.key}" title="${nm}"><span class="nmode"><span class="caret">▸</span><strong>${nm}</strong></span><span class="nphase"></span></div>`;
-        // las 4 etapas del loop de testeo (A layout · B playtest · C implementación · D variantes)
-        const exLbl=lang==='es'?'Layout (base jugable)':'Layout (playable base)';
+        // las 4 etapas del modo (A exploración · B assets · C vfx+light · D sonido)
+        const exLbl=lang==='es'?'Exploración (layout · jugabilidad · dinámicas)':'Exploration (layout · gameplay · dynamics)';
+        const o=t.b?(t.b[0]-1)*7:0, e=t.b?(t.b[1]-1)*7+4:0;
         const STAGES=[];
         if(t.aStart) STAGES.push({stage:'exp', k:'exp_'+t.key, grad:COLOR.dev, lbl:exLbl, ds:dOff(t.aStart), de:dOff(t.aEnd)});
-        // t.ph = [[sW,eW],...] ventana (en semanas) por cada fase de PHASES → permite cascadeo
-        if(t.ph) t.ph.forEach((win,i)=>{ const ph=PHASES[i]; if(!ph||!win) return; STAGES.push({stage:ph.k, k:ph.k+'_'+t.key, grad:ph.grad, lbl:(lang==='es'?ph.es:ph.en), ds:(win[0]-1)*7, de:(win[1]-1)*7+4}); });
+        if(t.b) PHASES.forEach(ph=>STAGES.push({stage:ph.k, k:ph.k+'_'+t.key, grad:ph.grad, lbl:(lang==='es'?ph.es:ph.en), ds:o, de:e}));
         // tira-resumen (toda la extensión del modo), no arrastrable, en la fila principal
         let smin=Infinity, smax=-Infinity;
         STAGES.forEach(st=>{ const [s,e2]=curOff(st.k, st.ds, st.de); smin=Math.min(smin,s); smax=Math.max(smax,e2); });
@@ -628,16 +585,13 @@ function render(){
         // sub-filas: las 4 etapas como tiras independientes (ocultas hasta desplegar), pueden solaparse
         STAGES.forEach((st,si)=>{
           html+=`<div class="grid24 row diffrow${si===STAGES.length-1?' lastsub':''}" data-lvl="${t.key}" data-stage="${st.stage}" style="display:none">`;
-          html+=drawBar(st.k, st.ds, st.de, st.grad, st.lbl, '', undefined, st.lbl); // nombre completo de la etapa, centrado en la barra
+          html+=drawBar(st.k, st.ds, st.de, st.grad, st.lbl, st.lbl);
           html+=`<div class="name twocol"><span class="nmode"></span><span class="nphase"><span class="dk">${st.lbl}</span></span></div></div>`;
         });
       });
     } else { // bars — nombre completo a la izquierda, barra estirable
       g.tasks.forEach((t,ti)=>{
         const label = lang==='es'?t.es:t.en;
-        if(t.pending){ // fila sin barra (pendiente, sin tiempo de desarrollo)
-          html+=`<div class="grid24 row"><div class="name" style="color:var(--muted)" title="${label}">⏸ ${label}</div></div>`; return;
-        }
         html+=`<div class="grid24 row">`+drawBar(`${gi}_${ti}`, (t.sw-1)*7, (t.ew-1)*7+6, COLOR[t.cls||g.cls], label, null)+`<div class="name ${t.warn?'warn':''}" title="${label}">${label}</div></div>`;
       });
     }
@@ -677,32 +631,16 @@ $('#filterbar').addEventListener('click',(e)=>{ const b=e.target.closest('.fchip
   else { visibleStages.has(s)?visibleStages.delete(s):visibleStages.add(s); if(visibleStages.size===0) visibleStages=new Set(STAGEDEF.map(x=>x.k)); }
   renderFilter(); applyExpanded();
 });
-function renderMeetings(){
-  const body=$('#meetBody'); if(!body) return;
-  const optLbl=lang==='es'?'Opcionales (no imprescindible)':'Optional (not required)';
-  let h='';
-  MEETINGS.forEach(d=>{
-    h+=`<div class="mdate">${lang==='es'?d.dlabel_es:d.dlabel_en}</div>`;
-    d.items.forEach((m,mi)=>{
-      const title=lang==='es'?m.es:m.en, agenda=lang==='es'?m.agenda_es:m.agenda_en;
-      const hasOpt=m.opt&&m.opt.length;
-      const reqLbl=hasOpt?(lang==='es'?'Imprescindibles':'Required'):(lang==='es'?'Asisten':'Attendees');
-      let att=`<div class="matt">`;
-      if(m.req&&m.req.length){ att+=`<span class="attlbl">${reqLbl}</span>`+m.req.map(p=>`<span class="pill req">${p}</span>`).join(''); }
-      if(m.opt&&m.opt.length){ att+=`<span class="attlbl">${optLbl}</span>`+m.opt.map(p=>`<span class="pill">${p}</span>`).join(''); }
-      att+=`</div>`;
-      const ag=`<ul class="magenda">`+agenda.map(it=>`<li>${it.t}${it.sub&&it.sub.length?`<ul class="sub">`+it.sub.map(s=>`<li>${s}</li>`).join('')+`</ul>`:''}</li>`).join('')+`</ul>`;
-      h+=`<div class="mcard"><div class="mctop"><span class="mtime">${m.time}</span><span class="mtitle">${title}</span><span class="mcaret">▸</span></div><div class="mdetail">${att}${ag}</div></div>`;
-    });
-  });
-  body.innerHTML=h;
-}
-$('#meetBtn').onclick=()=>{ renderMeetings(); $('#meetModal').classList.remove('hidden'); };
-$('#meetModal').addEventListener('click',(e)=>{
-  if(e.target.id==='meetModal' || e.target.closest('.mclose')){ $('#meetModal').classList.add('hidden'); return; }
-  const top=e.target.closest('.mctop'); if(top) top.parentElement.classList.toggle('open');
+$('#refBtn').onclick=()=>{ $('#legend').classList.toggle('hidden'); };
+$('#shotsBtn').onclick=()=>{ renderShots(); $('#shotsModal').style.display='flex'; };
+$('#shotsClose').onclick=()=>{ $('#shotsModal').style.display='none'; };
+$('#shotsModal').addEventListener('click',(e)=>{
+  if(e.target.id==='shotsModal'){ $('#shotsModal').style.display='none'; return; }
+  const cb=e.target.closest('input[type=checkbox]');
+  if(cb){ if(!EDITABLE) return; const id=cb.dataset.id; shotState[id]=shotState[id]||{}; shotState[id].done=cb.checked; saveShots(); renderShots(); scheduleAutoPublish(); return; }
+  const lk=e.target.closest('.lk');
+  if(lk){ const id=lk.dataset.link, cur=(shotState[id]&&shotState[id].link)||''; const url=prompt(lang==='es'?'Link de la captura (URL):':'Capture link (URL):', cur); if(url!==null){ shotState[id]=shotState[id]||{}; shotState[id].link=url.trim(); saveShots(); renderShots(); scheduleAutoPublish(); } return; }
 });
-document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') $('#meetModal').classList.add('hidden'); });
 if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
 $('#weeks').addEventListener('click',(e)=>{ const c=e.target.closest('.cell.wk'); if(!c) return; const w=+c.dataset.w; expandedWk.has(w)?expandedWk.delete(w):expandedWk.add(w); render(); });
 $('#rows').addEventListener('click',(e)=>{
@@ -715,16 +653,16 @@ $('#rows').addEventListener('click',(e)=>{
 let drag=null;
 document.addEventListener('mousedown',(e)=>{ const h=e.target.closest('.handle'); if(!h) return; const bar=h.closest('.abar'); if(!bar) return; e.preventDefault(); drag={key:bar.dataset.key,side:h.classList.contains('l')?'l':'r',sOff:+bar.dataset.soff,eOff:+bar.dataset.eoff,el:bar,before:JSON.stringify(barOverrides)}; document.body.classList.add('dragging'); });
 document.addEventListener('mousemove',(e)=>{ if(!drag) return; const chart=$('.chart'), r=chart.getBoundingClientRect(); const x=e.clientX-r.left+chart.scrollLeft; const off=xToDay(x); if(drag.side==='l') drag.sOff=Math.min(off,drag.eOff); else drag.eOff=Math.max(off,drag.sOff); const p=barPx(drag.sOff,drag.eOff); drag.el.style.left=p.l+'px'; drag.el.style.width=p.w+'px'; drag.el.dataset.soff=drag.sOff; drag.el.dataset.eoff=drag.eOff; const lbl=document.querySelector(`.albl[data-key="${drag.key}"]`); if(lbl) lbl.style.left=dayToX(drag.eOff+1)+'px'; });
-document.addEventListener('mouseup',()=>{ if(!drag) return; barOverrides[drag.key]={s:offToIso(drag.sOff),e:offToIso(drag.eOff)}; const after=JSON.stringify(barOverrides); if(drag.before && after!==drag.before){ undoStack.push(drag.before); if(undoStack.length>100) undoStack.shift(); redoStack.length=0; } saveOverrides(); drag=null; document.body.classList.remove('dragging'); render(); });
+document.addEventListener('mouseup',()=>{ if(!drag) return; barOverrides[drag.key]={s:offToIso(drag.sOff),e:offToIso(drag.eOff)}; const after=JSON.stringify(barOverrides); const changed = drag.before && after!==drag.before; if(changed){ undoStack.push(drag.before); if(undoStack.length>100) undoStack.shift(); redoStack.length=0; } saveOverrides(); drag=null; document.body.classList.remove('dragging'); render(); if(changed) scheduleAutoPublish(); });
 // deshacer / rehacer (Cmd/Ctrl+Z, Cmd/Ctrl+Shift+Z)
 document.addEventListener('keydown',(e)=>{
   if(!EDITABLE) return;
   if(!(e.metaKey||e.ctrlKey) || (e.key!=='z'&&e.key!=='Z')) return;
   e.preventDefault();
-  if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); } }
-  else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); } }
+  if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); scheduleAutoPublish(); } }
+  else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); scheduleAutoPublish(); } }
 });
-$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); };
+$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); };
 $('#themeBtn').onclick=()=>{
   document.body.classList.toggle('dark');
   const d=document.body.classList.contains('dark');
@@ -734,17 +672,6 @@ $('#themeBtn').onclick=()=>{
 };
 // (prueba) arrancar con todos los modos desplegados en sus 4 fases
 GROUPS.forEach(g=>{ if(g.kind==='levels') g.tasks.forEach(t=>{ if(!t.blocked) expandedLv.add(t.key); }); });
-// por defecto, desplegar (mostrar días) las semanas con milestones o tareas de modos — se pueden colapsar con un clic
-const wkOf=(iso)=>Math.floor(dOff(iso)/7)+1;
-GROUPS.forEach(g=>{
-  if(g.kind==='mile') g.tasks.forEach(t=>{ if(t.d) expandedWk.add(wkOf(t.d)); });
-  if(g.kind==='levels') g.tasks.forEach(t=>{
-    if(t.aStart){ for(let w=wkOf(t.aStart); w<=wkOf(t.aEnd); w++) expandedWk.add(w); }
-    if(t.ph) t.ph.forEach(win=>{ for(let w=win[0]; w<=win[1]; w++) expandedWk.add(w); });
-  });
-});
-// grupos colapsados por defecto (se abren con un clic)
-GROUPS.forEach((g,gi)=>{ if(g.collapsed) collapsedGrp.add(gi); });
 loadState().then(()=>{ render(); if(EDITABLE && lastPublished) showPubStatus('Última publicación: '+fmtTs(lastPublished)); });
 </script>
 </body>
