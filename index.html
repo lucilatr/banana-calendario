@@ -250,6 +250,53 @@
   .shotitem .lk{cursor:pointer;font-size:14px;opacity:.55;flex:none;}
   .shotitem .lk.has{opacity:1;}
   .shotitem .lk:hover{opacity:1;}
+  /* ===== layout con menú lateral ===== */
+  .layout{display:flex;align-items:stretch;min-height:100vh;}
+  .sidebar{flex:none;width:212px;background:var(--panel);border-right:1px solid var(--grid);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .18s;z-index:40;}
+  .sidebar.collapsed{width:54px;}
+  .sbbrand{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:15px 12px;border-bottom:1px solid var(--grid);}
+  .sbtitle{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;}
+  .sidebar.collapsed .sbtitle{display:none;}
+  .sbToggle{cursor:pointer;border:1px solid var(--gridStrong);background:var(--bg);color:var(--text);border-radius:8px;width:28px;height:26px;flex:none;}
+  .sbnav{display:flex;flex-direction:column;gap:3px;padding:10px 8px;flex:1;}
+  .sbitem{display:flex;align-items:center;gap:11px;padding:10px;border:none;background:transparent;color:var(--text);border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;text-align:left;white-space:nowrap;overflow:hidden;}
+  .sbitem .ic{font-size:16px;flex:none;width:18px;text-align:center;}
+  .sbitem:hover{background:var(--grid);}
+  .sbitem.active{background:var(--c-dev-a);color:#fff;}
+  .sidebar.collapsed .sbitem .lb{display:none;}
+  .sbfoot{display:flex;flex-wrap:wrap;gap:6px;padding:10px;border-top:1px solid var(--grid);}
+  .sidebar.collapsed .sbfoot{flex-direction:column;align-items:stretch;}
+  .main{flex:1;min-width:0;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .view .wrap{max-width:100%;}
+  .vhead{padding:20px 24px 2px;}
+  .vhead h1{margin:0;font-size:20px;}
+  .tr-countdown{margin:12px 24px;padding:16px 18px;border:1px solid var(--grid);border-radius:12px;background:var(--panel);font-size:17px;font-weight:800;color:var(--c-dev-a);}
+  .tr-slice{margin:0 24px 16px;}
+  .trslbl{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--muted);margin:0 0 8px;}
+  .trdays{display:flex;flex-wrap:wrap;gap:6px;}
+  .trday{min-width:46px;text-align:center;border:1px solid var(--grid);border-radius:8px;padding:6px 4px;font-size:9px;color:var(--muted);background:var(--bg);}
+  .trday b{display:block;font-size:13px;color:var(--text);}
+  .trday.wknd{background:rgba(128,134,150,.14);}
+  .trday.today{border-color:var(--todayLine);background:rgba(240,165,0,.16);}
+  .trday.today b{color:var(--todayLine);}
+  .trday.submit{border-color:var(--c-port-a);background:rgba(210,59,90,.14);}
+  .trday.submit b{color:var(--c-port-a);}
+  .tr-shots{margin:8px 24px 36px;}
+  .collapser{display:flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--gridStrong);background:var(--panel);color:var(--text);border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;width:100%;text-align:left;}
+  .collapser .cv{transition:transform .15s;display:inline-block;}
+  .collapser.closed .cv{transform:rotate(-90deg);}
+  .collapsebody.hiddenc{display:none;}
+  #view-meetings .mbody,#view-trailer .mbody{max-height:none;padding:8px 0 8px;}
+  .wf{padding:8px 24px 36px;max-width:780px;}
+  .wfrow{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel);}
+  .wfrow h3{margin:0 0 8px;font-size:13px;letter-spacing:.3px;}
+  .wf a{color:var(--c-sys-a);word-break:break-all;}
+  .wfmac{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gridStrong);border-radius:8px;padding:6px 10px;margin:3px 7px 3px 0;font-size:14px;font-weight:700;background:var(--bg);}
+  .wfmac small{font-weight:400;color:var(--muted);}
+  .wf .muted{color:var(--muted);font-size:12px;line-height:1.5;}
+  .wfbtn{display:inline-block;background:var(--c-dev-a);color:#fff;font-weight:700;padding:9px 14px;border-radius:9px;text-decoration:none;font-size:13px;}
   .mdate{font-size:12px;font-weight:800;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;}
   .mcard{border:1px solid var(--grid);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--panel);}
   .mcard .mctop{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer;}
@@ -273,21 +320,41 @@
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="layout" id="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sbbrand"><span class="sbtitle">Banana Airways</span><button class="sbToggle" id="sbToggle" title="Colapsar/expandir">⟨</button></div>
+    <nav class="sbnav">
+      <button class="sbitem" data-view="trailer"><span class="ic">🎬</span><span class="lb">Trailer</span></button>
+      <button class="sbitem active" data-view="calendar"><span class="ic">📅</span><span class="lb">Calendar</span></button>
+      <button class="sbitem" data-view="meetings"><span class="ic">🗓️</span><span class="lb" data-es="Reuniones" data-en="Meetings">Reuniones</span></button>
+      <button class="sbitem" data-view="workflows"><span class="ic">⚙️</span><span class="lb">Workflows</span></button>
+    </nav>
+    <div class="sbfoot">
+      <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
+      <span id="pubStatus" style="display:none;font-size:11px;color:var(--c-dev-a);font-weight:700;"></span>
+      <button class="btn" id="langBtn">EN</button>
+      <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
+    </div>
+  </aside>
+  <main class="main">
+
+    <section class="view" id="view-trailer">
+      <div class="vhead"><h1 data-es="🎬 Trailer" data-en="🎬 Trailer">🎬 Trailer</h1></div>
+      <div class="tr-countdown" id="trCountdown"></div>
+      <div class="tr-slice" id="trSlice"></div>
+      <div class="tr-shots">
+        <button class="collapser closed" id="shotsCollapse"><span class="cv">▾</span> <span data-es="Lista de tomas para trailer" data-en="Trailer shots list">Lista de tomas para trailer</span></button>
+        <div class="mbody collapsebody hiddenc" id="shotsBody"></div>
+      </div>
+    </section>
+
+    <section class="view active" id="view-calendar">
+      <div class="wrap">
   <header class="top">
     <div class="title">
       <h1 data-es="Banana Airways" data-en="Banana Airways">Banana Airways</h1>
       <div class="sub" data-es="Proyección octubre 2026 al 31 de marzo de 2027" data-en="Projection October 2026 to March 31, 2027">Proyección octubre 2026 al 31 de marzo de 2027</div>
       <span class="chip" data-es="🚀 Lanzamiento 31 de marzo de 2027" data-en="🚀 Launch March 31, 2027">🚀 Lanzamiento 31 de marzo de 2027</span>
-      <span class="chip cd" id="countdown"></span>
-    </div>
-    <div class="controls">
-      <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
-      <span id="pubStatus" style="display:none;font-size:11px;color:var(--c-dev-a);font-weight:700;align-self:center;white-space:nowrap;"></span>
-      <button class="btn" id="meetBtn" data-es="🗓️ Reuniones" data-en="🗓️ Meetings">🗓️ Reuniones</button>
-      <button class="btn" id="shotsBtn" data-es="📸 Tomas trailer" data-en="📸 Trailer shots">📸 Tomas trailer</button>
-      <button class="btn" id="langBtn">EN</button>
-      <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
     </div>
   </header>
 
@@ -303,22 +370,21 @@
   </div>
 
   <div class="notes" id="notes"></div>
-
-  <div id="meetModal" class="mmodal hidden">
-    <div class="mpanel">
-      <div class="mhead"><h2 data-es="🗓️ Reuniones de Banana" data-en="🗓️ Banana meetings">🗓️ Reuniones de Banana</h2><button class="mclose" aria-label="Cerrar">✕</button></div>
-      <div class="mbody" id="meetBody"></div>
-    </div>
-  </div>
-
-  <div id="shotsModal" class="mmodal hidden">
-    <div class="mpanel">
-      <div class="mhead"><h2 data-es="📸 Tomas / Capturas para trailer" data-en="📸 Trailer shots / captures">📸 Tomas / Capturas para trailer</h2><button class="mclose" aria-label="Cerrar">✕</button></div>
-      <div class="mbody" id="shotsBody"></div>
-    </div>
-  </div>
-
   <div class="foot" data-es="Preview interno — no publicado. Fechas y supuestos derivados de la reunión y de prácticas estándar de producción de videojuegos (dev programs y certificación de consolas). Ajustable." data-en="Internal preview — not published. Dates and assumptions derived from the meeting and standard game-production practice (dev programs & console certification). Adjustable.">Preview interno — no publicado.</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-meetings">
+      <div class="vhead"><h1 data-es="🗓️ Reuniones" data-en="🗓️ Meetings">🗓️ Reuniones</h1></div>
+      <div class="mbody" id="meetBody"></div>
+    </section>
+
+    <section class="view" id="view-workflows">
+      <div class="vhead"><h1>⚙️ Workflows</h1></div>
+      <div class="wf" id="wfBody"></div>
+    </section>
+
+  </main>
 </div>
 
 <script>
@@ -736,20 +802,66 @@ function renderMeetings(){
   });
   body.innerHTML=h;
 }
-$('#shotsBtn').onclick=()=>{ renderShots(); $('#shotsModal').classList.remove('hidden'); };
-$('#shotsModal').addEventListener('click',(e)=>{
-  if(e.target.id==='shotsModal' || e.target.closest('.mclose')){ $('#shotsModal').classList.add('hidden'); return; }
+// ===== navegación de vistas (menú lateral) =====
+function renderWorkflows(){
+  const b=$('#wfBody'); if(!b) return;
+  const url='https://pub-1fd1ac33889d4659b8b9205ef2b41f91.r2.dev/comandas.html#inv=inv8ada1f1217e5d1a7ec75';
+  b.innerHTML=`
+    <div class="wfrow">
+      <h3>${lang==='es'?'Acceso — URL pública para correr los workflows':'Access — public URL to run the workflows'}</h3>
+      <a class="wfbtn" href="${url}" target="_blank" rel="noopener">${lang==='es'?'Abrir workflows ↗':'Open workflows ↗'}</a>
+      <div class="muted" style="margin-top:8px;"><a href="${url}" target="_blank" rel="noopener">${url}</a></div>
+    </div>
+    <div class="wfrow">
+      <h3>${lang==='es'?'Máquinas (AnyDesk) — las 3 sirven para cualquier workflow':'Machines (AnyDesk) — all 3 work for any workflow'}</h3>
+      <span class="wfmac">1039617912 <small>AnyDesk</small></span>
+      <span class="wfmac">1716372995 <small>AnyDesk</small></span>
+      <span class="wfmac">1836774977 <small>AnyDesk</small></span>
+      <div class="muted" style="margin-top:8px;">${lang==='es'?'Workflows: NIVELES · COSMÉTICOS · IMÁGENES. Cualquiera de las 3 máquinas corre cualquiera de los 3.':'Workflows: LEVELS · COSMETICS · IMAGES. Any of the 3 machines runs any of the 3.'}</div>
+    </div>
+    <div class="wfrow">
+      <h3>${lang==='es'?'Repos (de dónde clonó cada máquina)':'Repos (where each machine cloned from)'}</h3>
+      <div class="muted">
+        <b>NIVELES · COSMÉTICOS</b> → <a href="https://github.com/Eggscape3DAR/avioncito" target="_blank" rel="noopener">github.com/Eggscape3DAR/avioncito</a> ${lang==='es'?'(repo del juego)':'(game repo)'}<br>
+        <b>IMÁGENES</b> → <a href="https://github.com/Eggscape3DAR/rehacer3d" target="_blank" rel="noopener">github.com/Eggscape3DAR/rehacer3d</a> ${lang==='es'?'(repo rehacer 3d)':'(rehacer 3d repo)'}
+      </div>
+    </div>`;
+}
+function renderTrailer(){
+  const target=new Date(2026,10,20); target.setHours(0,0,0,0); // 20 Nov 2026 (submit)
+  const now=new Date(); now.setHours(0,0,0,0);
+  const days=Math.round((target-now)/86400000);
+  const cd=$('#trCountdown');
+  if(cd) cd.textContent = days>1?(lang==='es'?`⏳ Faltan ${days} días para submitear el trailer (20 Nov)`:`⏳ ${days} days to submit the trailer (Nov 20)`):(days===1?(lang==='es'?'⏳ Falta 1 día para submitear el trailer (20 Nov)':'⏳ 1 day to submit the trailer (Nov 20)'):(days===0?(lang==='es'?'⏳ Submit del trailer: HOY':'⏳ Trailer submit: TODAY'):(lang==='es'?'Submit del trailer: 20 Nov (pasó)':'Trailer submit: Nov 20 (past)')));
+  const sl=$('#trSlice');
+  if(sl){
+    const DOWt={es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']};
+    const MOt={es:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']};
+    let h=`<div class="trslbl">${lang==='es'?'Días para trabajar (hoy → submit)':'Days to work (today → submit)'}</div><div class="trdays">`;
+    const n=Math.max(0,Math.min(45,days));
+    for(let i=0;i<=n;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const jd=d.getDay(), we=(jd===0||jd===6), isT=i===0, isS=d.getTime()===target.getTime(); h+=`<div class="trday ${isS?'submit':(isT?'today':(we?'wknd':''))}">${DOWt[lang][jd]}<b>${d.getDate()}</b>${MOt[lang][d.getMonth()]}</div>`; }
+    h+=`</div>`; sl.innerHTML=h;
+  }
+  renderShots();
+}
+function showView(v){
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active', s.id==='view-'+v));
+  document.querySelectorAll('.sbitem').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+  if(v==='trailer') renderTrailer();
+  else if(v==='meetings') renderMeetings();
+  else if(v==='workflows') renderWorkflows();
+  else if(v==='calendar') applyExpanded();
+}
+document.querySelectorAll('.sbitem').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+$('#sbToggle').onclick=()=>{ $('#sidebar').classList.toggle('collapsed'); };
+$('#shotsCollapse').onclick=()=>{ $('#shotsCollapse').classList.toggle('closed'); $('#shotsBody').classList.toggle('hiddenc'); };
+$('#shotsBody').addEventListener('click',(e)=>{
   const cb=e.target.closest('input[type=checkbox]');
-  if(cb){ if(!EDITABLE) return; const id=cb.dataset.id; shotState[id]=shotState[id]||{}; shotState[id].done=cb.checked; saveShots(); renderShots(); return; }
+  if(cb){ if(!EDITABLE){ e.preventDefault(); return; } const id=cb.dataset.id; shotState[id]=shotState[id]||{}; shotState[id].done=cb.checked; saveShots(); renderShots(); return; }
   const lk=e.target.closest('.lk');
   if(lk){ const id=lk.dataset.link, cur=(shotState[id]&&shotState[id].link)||''; const url=prompt(lang==='es'?'Link de la captura (URL):':'Capture link (URL):', cur); if(url!==null){ shotState[id]=shotState[id]||{}; shotState[id].link=url.trim(); saveShots(); renderShots(); } return; }
 });
-$('#meetBtn').onclick=()=>{ renderMeetings(); $('#meetModal').classList.remove('hidden'); };
-$('#meetModal').addEventListener('click',(e)=>{
-  if(e.target.id==='meetModal' || e.target.closest('.mclose')){ $('#meetModal').classList.add('hidden'); return; }
-  const top=e.target.closest('.mctop'); if(top) top.parentElement.classList.toggle('open');
-});
-document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ $('#meetModal').classList.add('hidden'); $('#shotsModal').classList.add('hidden'); } });
+$('#meetBody').addEventListener('click',(e)=>{ const top=e.target.closest('.mctop'); if(top) top.parentElement.classList.toggle('open'); });
 if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
 $('#weeks').addEventListener('click',(e)=>{ const c=e.target.closest('.cell.wk'); if(!c) return; const w=+c.dataset.w; expandedWk.has(w)?expandedWk.delete(w):expandedWk.add(w); render(); });
 $('#rows').addEventListener('click',(e)=>{
@@ -771,7 +883,7 @@ document.addEventListener('keydown',(e)=>{
   if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); } }
   else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); } }
 });
-$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderShots(); };
+$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderWorkflows(); renderTrailer(); };
 $('#themeBtn').onclick=()=>{
   document.body.classList.toggle('dark');
   const d=document.body.classList.contains('dark');
