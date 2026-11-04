@@ -511,6 +511,7 @@ function layoutModeNames(){
 }
 // ---- persistencia / publicación (GitHub) ----
 const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.json'};
+const DATA_URL='https://'+GH.owner+'.github.io/'+GH.repo+'/'+GH.path;
 const EDITABLE = location.protocol==='file:' || location.search.includes('edit') || location.hash.includes('edit');
 let barOverrides={}, lastPublished=null, undoStack=[], redoStack=[];
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
@@ -536,7 +537,7 @@ function renderShots(){
 function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
 async function loadState(){
-  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; shotState=(d&&d.shots)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
+  try{ const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; shotState=(d&&d.shots)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
   try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
   try{ shotState=JSON.parse(localStorage.getItem('banana_shots')||'{}'); }catch(e){}
 }
