@@ -345,6 +345,9 @@
   .magenda>li::before{content:"▸";position:absolute;left:0;color:var(--c-art-a);font-weight:700;}
   .magenda .sub{margin:3px 0 0 2px;padding-left:16px;list-style:disc;}
   .magenda .sub li{font-size:11.5px;font-weight:400;color:var(--muted);margin:2px 0;line-height:1.35;}
+  .mpast summary{cursor:pointer;margin:16px 0 8px;padding:9px 12px;border:1px solid var(--grid);border-radius:10px;background:var(--panel);}
+  .mpast summary:hover{background:var(--grid);}
+  .mpcount{font-weight:500;letter-spacing:0;text-transform:none;margin-left:6px;}
   .hideEN [data-en]{display:none;}
 </style>
 </head>
@@ -522,6 +525,24 @@ const MEETINGS=[
       {t:'Dodge-asteroids gameplay', sub:['Discuss it while seeing the ship in-game.','In space we will ask that the ship can move to dodge asteroids — decided in this meeting.']},
       {t:'Shared mode design plan', sub:['Beginning and end: takeoff and landing.','Passengers request things (only after takeoff).','Same natural disasters for now.']},
       {t:'Open topic to think about: serve different things in each mode?', sub:['Not just bananas (coffee, soda…) — left open.']},
+    ]},
+ ]},
+ {date:'2026-11-05', dlabel_es:'Jueves 5 de noviembre', dlabel_en:'Thursday, November 5', items:[
+   {time:'17:30', es:'Revisión de layouts actualizados: nave · submarino · avión de lujo', en:'Updated layouts review: ship · submarine · luxury jet',
+    req:['Lautaro Schpizza','Valentín Frare','Federico Carlini','Germán Heller'], opt:['Jorge Tereso','Fernando Maldonado'],
+    agenda_es:[
+      {t:'Ver los layouts actualizados de la nave, el submarino y el avión de lujo', sub:[]},
+      {t:'Nave — comentarios de la reunión del 4 Nov', sub:['Las barandas no suman: que no haya que pararse al lado de los que están sentados; que estén amurados a la pared en un asiento.','Tiene muchas escaleras: repensar.','Elevar un poco el centro de control.','Tablero más cerca del asiento.','¿Qué hacer arriba de todo en la nave? Un arma para destruir meteoritos o algo.','Para salir: ¿quizás un tubo que te catapulta afuera?','Cuando estés en el espacio: jetpack, matafuegos.','Sumar la bodega abajo: horno con leña y poder salir por ahí.','Puerta que se abre cuando te acercás.','En el medio del viaje, poder parar en un asteroide a cargar nafta.']},
+      {t:'Submarino — comentarios de la reunión del 4 Nov', sub:['Variar dónde se sienta la gente.','Mesa de planeamiento con un mapa.','Pasajeros más en roles de submarino.','Que tenga piso con rejas.','Que los cartelitos tengan oclusión.','Pantallas que iluminen con verde, alarmas en rojo.']},
+      {t:'Avión de lujo — comentarios de la reunión del 4 Nov', sub:['Dance floor, guardaespaldas, VIP, bola de espejos.','Jacuzzi.','Masajes.','Escaleras: que luzcan más ostentosas.','Sector con citas sucediendo, con velas.']},
+      {t:'Botones — comentarios de la reunión del 4 Nov', sub:['Distribución: ponerlos donde está el avión.','Que haya una pantalla solo de mapa. Cuando hay un botón que se rompe, que cambie al avión.','Cuando mirás al tablero, que te haga zoom automáticamente para que nada te tape.','Cuando estás mirando, que te resalte el botón para que sepas cuál vas a apretar.','Quitar el botón que habilita los mandos: que quede solamente el botón del mic.','Limpiaparabrisas: sumar uno al medio.']},
+    ],
+    agenda_en:[
+      {t:'See the updated layouts of the ship, the submarine and the luxury jet', sub:[]},
+      {t:'Ship — comments from the Nov 4 meeting', sub:['Railings add nothing: you shouldn\'t have to stand next to the seated passengers; they should be fixed to the wall in a seat.','Too many stairs: rethink.','Raise the control center a little.','Dashboard closer to the seat.','What to do at the very top of the ship? A weapon to destroy meteorites or something.','To exit: maybe a tube that catapults you outside?','When you\'re in space: jetpack, fire extinguishers.','Add the hold below: wood-burning oven and being able to exit through there.','Door that opens when you get close.','Mid-trip, being able to stop at an asteroid to refuel.']},
+      {t:'Submarine — comments from the Nov 4 meeting', sub:['Vary where people sit.','Planning table with a map.','Passengers more in submarine roles.','Grated floor.','Signs should have occlusion.','Screens that light up green, alarms in red.']},
+      {t:'Luxury jet — comments from the Nov 4 meeting', sub:['Dance floor, bodyguards, VIP, mirror ball.','Jacuzzi.','Massages.','Stairs: make them look more ostentatious.','Area with dates happening, with candles.']},
+      {t:'Buttons — comments from the Nov 4 meeting', sub:['Layout: place them where the plane is.','Have a map-only screen. When a button breaks, it switches to the plane.','When you look at the dashboard, zoom in automatically so nothing blocks your view.','While you\'re looking, highlight the button so you know which one you\'re about to press.','Remove the button that enables the controls: keep only the mic button.','Windshield wipers: add one in the middle.']},
     ]},
  ]},
 ];
@@ -816,9 +837,10 @@ $('#filterbar').addEventListener('click',(e)=>{ const b=e.target.closest('.fchip
 function renderMeetings(){
   const body=$('#meetBody'); if(!body) return;
   const optLbl=lang==='es'?'Opcionales (no imprescindible)':'Optional (not required)';
-  let h='';
-  MEETINGS.forEach(d=>{
-    h+=`<div class="mdate">${lang==='es'?d.dlabel_es:d.dlabel_en}</div>`;
+  // un día pasa a "pasado" una hora después de que empezó su última reunión
+  const dayDone=(d)=>d.items.every(m=>new Date(d.date+'T'+m.time+':00').getTime()+3600000<Date.now());
+  const dayCards=(d)=>{
+    let h='';
     d.items.forEach((m,mi)=>{
       const title=lang==='es'?m.es:m.en, agenda=lang==='es'?m.agenda_es:m.agenda_en;
       const hasOpt=m.opt&&m.opt.length;
@@ -830,7 +852,15 @@ function renderMeetings(){
       const ag=`<ul class="magenda">`+agenda.map(it=>`<li>${it.t}${it.sub&&it.sub.length?`<ul class="sub">`+it.sub.map(s=>`<li>${s}</li>`).join('')+`</ul>`:''}</li>`).join('')+`</ul>`;
       h+=`<div class="mcard"><div class="mctop"><span class="mtime">${m.time}</span><span class="mtitle">${title}</span><span class="mcaret">▸</span></div><div class="mdetail">${att}${ag}</div></div>`;
     });
-  });
+    return h;
+  };
+  // próximas arriba (la más cercana primero); los días pasados quedan colapsados abajo (el más reciente primero)
+  const label=(d)=>lang==='es'?d.dlabel_es:d.dlabel_en;
+  const next=MEETINGS.filter(d=>!dayDone(d)).sort((a,b)=>a.date<b.date?-1:1);
+  const past=MEETINGS.filter(dayDone).sort((a,b)=>a.date<b.date?1:-1);
+  let h=next.map(d=>`<div class="mdate">${label(d)}</div>`+dayCards(d)).join('');
+  h+=past.map(d=>{ const n=d.items.length, cnt=lang==='es'?`${n} ${n===1?'reunión':'reuniones'}`:`${n} ${n===1?'meeting':'meetings'}`;
+    return `<details class="mpast"><summary class="mdate">${label(d)} <span class="mpcount">${cnt}</span></summary>${dayCards(d)}</details>`; }).join('');
   body.innerHTML=h;
 }
 // ===== navegación de vistas (menú lateral) =====
