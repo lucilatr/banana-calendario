@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Banana Airways — Plan de Producción a Lanzamiento (31 Mar 2027)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600&display=swap" rel="stylesheet">
 <style>
   :root{
     --label-w: 296px;
@@ -252,20 +255,45 @@
   .shotitem .lk:hover{opacity:1;}
   /* ===== layout con menú lateral ===== */
   .layout{display:flex;align-items:stretch;min-height:100vh;}
-  .sidebar{flex:none;width:212px;background:var(--panel);border-right:1px solid var(--grid);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .18s;z-index:40;}
-  .sidebar.collapsed{width:54px;}
-  .sbbrand{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:15px 12px;border-bottom:1px solid var(--grid);}
-  .sbtitle{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;}
-  .sidebar.collapsed .sbtitle{display:none;}
-  .sbToggle{cursor:pointer;border:1px solid var(--gridStrong);background:var(--bg);color:var(--text);border-radius:8px;width:28px;height:26px;flex:none;}
-  .sbnav{display:flex;flex-direction:column;gap:3px;padding:10px 8px;flex:1;}
-  .sbitem{display:flex;align-items:center;gap:11px;padding:10px;border:none;background:transparent;color:var(--text);border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;text-align:left;white-space:nowrap;overflow:hidden;}
-  .sbitem .ic{font-size:16px;flex:none;width:18px;text-align:center;}
-  .sbitem:hover{background:var(--grid);}
-  .sbitem.active{background:var(--c-dev-a);color:#fff;}
-  .sidebar.collapsed .sbitem .lb{display:none;}
-  .sbfoot{display:flex;flex-wrap:wrap;gap:6px;padding:10px;border-top:1px solid var(--grid);}
-  .sidebar.collapsed .sbfoot{flex-direction:column;align-items:stretch;}
+  .sidebar{--sb-bg:#1b150d;--sb-text:#e6ddcd;--sb-muted:#9b8e7a;--sb-yellow:#f6c445;--sb-line:rgba(255,255,255,.1);flex:none;width:264px;background:var(--sb-bg);color:var(--sb-text);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .18s;z-index:40;overflow-y:auto;}
+  .sidebar.collapsed{width:64px;}
+  .sbbrand{display:flex;align-items:center;gap:10px;padding:20px 12px 16px 20px;}
+  .sblogo{display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:var(--sb-yellow);color:#1b150d;flex:none;}
+  .sblogo svg{width:22px;height:22px;fill:currentColor;}
+  .sbtitle{flex:1;min-width:0;font-family:'Teko','Arial Narrow',sans-serif;font-size:23px;font-weight:600;line-height:.95;letter-spacing:.6px;color:#f6efe2;white-space:nowrap;text-transform:uppercase;}
+  .sbtitle small{display:block;font-size:17px;font-weight:600;letter-spacing:1.4px;color:var(--sb-yellow);margin-top:2px;}
+  .sbToggle{cursor:pointer;border:none;background:transparent;color:var(--sb-muted);border-radius:6px;width:24px;height:28px;flex:none;font-size:18px;line-height:1;padding:0;}
+  .sbToggle:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .sidebar.collapsed .sbbrand{flex-direction:column;padding:16px 0 10px;}
+  .sidebar.collapsed .sbtitle,.sidebar.collapsed .sbsec,.sidebar.collapsed .sbitem .lb,.sidebar.collapsed .sbfoot{display:none;}
+  .sidebar.collapsed .sbToggle{transform:rotate(180deg);}
+  .sbnav{display:flex;flex-direction:column;gap:3px;padding:2px 14px 14px;flex:1;}
+  .sbsec{font-size:12.5px;font-weight:700;color:var(--sb-muted);padding:14px 10px 6px;letter-spacing:.2px;}
+  .sbitem{display:flex;align-items:center;gap:13px;padding:10px 11px;border:none;background:transparent;color:var(--sb-text);border-radius:9px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;text-align:left;white-space:nowrap;overflow:hidden;}
+  .sbitem svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .sbitem:hover{background:rgba(255,255,255,.07);}
+  .sbitem.active,.sbitem.active:hover{background:rgba(246,196,69,.17);color:#fff;font-weight:700;}
+  .sbitem.active svg{color:var(--sb-yellow);}
+  .sbitem:focus-visible,.sbToggle:focus-visible,.sbfoot .btn:focus-visible{outline:2px solid var(--sb-yellow);outline-offset:1px;}
+  .sidebar.collapsed .sbnav{padding-inline:10px;}
+  .sidebar.collapsed .sbitem{justify-content:center;padding-inline:0;}
+  .sbfoot{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px 14px;border-top:1px solid var(--sb-line);}
+  .sbfoot .btn{background:rgba(255,255,255,.07);border:1px solid var(--sb-line);color:var(--sb-text);}
+  .sbfoot .btn:hover{background:rgba(255,255,255,.13);border-color:var(--sb-line);}
+  .sbfoot #pubBtn{width:100%;background:var(--sb-yellow);border-color:var(--sb-yellow);color:#1b150d;font-weight:700;}
+  #pubStatus{width:100%;font-size:11px;font-weight:600;color:var(--sb-muted);}
+  @media (max-width:760px){
+    .layout{flex-direction:column;}
+    .sidebar,.sidebar.collapsed{width:100%;height:auto;position:relative;}
+    .sbToggle{display:none;}
+    .sbbrand,.sidebar.collapsed .sbbrand{flex-direction:row;padding:12px 16px 6px;}
+    .sidebar.collapsed .sbtitle,.sidebar.collapsed .sbitem .lb{display:block;}
+    .sbsec{display:none;}
+    .sbnav,.sidebar.collapsed .sbnav{flex-direction:row;padding:4px 8px 8px;}
+    .sbitem,.sidebar.collapsed .sbitem{flex:1;flex-direction:column;gap:3px;font-size:12px;padding:8px 2px;justify-content:center;}
+    .sbfoot,.sidebar.collapsed .sbfoot{display:flex;padding:8px 16px;}
+    .sbfoot #pubBtn{width:auto;}
+  }
   .main{flex:1;min-width:0;}
   .view{display:none;}
   .view.active{display:block;}
@@ -288,7 +316,8 @@
   .collapser .cv{transition:transform .15s;display:inline-block;}
   .collapser.closed .cv{transform:rotate(-90deg);}
   .collapsebody.hiddenc{display:none;}
-  #view-meetings .mbody,#view-trailer .mbody{max-height:none;padding:8px 0 8px;}
+  #view-trailer .mbody{max-height:none;padding:8px 0 8px;}
+  #view-meetings .mbody{max-height:none;padding:8px 24px 36px;}
   .wf{padding:8px 24px 36px;max-width:780px;}
   .wfrow{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel);}
   .wfrow h3{margin:0 0 8px;font-size:13px;letter-spacing:.3px;}
@@ -322,16 +351,18 @@
 <body>
 <div class="layout" id="layout">
   <aside class="sidebar" id="sidebar">
-    <div class="sbbrand"><span class="sbtitle">Banana Airways</span><button class="sbToggle" id="sbToggle" title="Colapsar/expandir">⟨</button></div>
+    <div class="sbbrand"><span class="sblogo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></span><span class="sbtitle">Banana Airways<small data-es="· Producción" data-en="· Production">· Producción</small></span><button class="sbToggle" id="sbToggle" title="Colapsar/expandir" aria-label="Colapsar o expandir el menú">‹</button></div>
     <nav class="sbnav">
-      <button class="sbitem" data-view="trailer"><span class="ic">🎬</span><span class="lb">Trailer</span></button>
-      <button class="sbitem active" data-view="calendar"><span class="ic">📅</span><span class="lb">Calendar</span></button>
-      <button class="sbitem" data-view="meetings"><span class="ic">🗓️</span><span class="lb" data-es="Reuniones" data-en="Meetings">Reuniones</span></button>
-      <button class="sbitem" data-view="workflows"><span class="ic">⚙️</span><span class="lb">Workflows</span></button>
+      <div class="sbsec" data-es="Plan" data-en="Plan">Plan</div>
+      <button class="sbitem" data-view="trailer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M3 7.5h4M3 12h18M3 16.5h4M17 3v18M17 7.5h4M17 16.5h4"/></svg><span class="lb">Trailer</span></button>
+      <button class="sbitem active" data-view="calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg><span class="lb">Calendar</span></button>
+      <div class="sbsec" data-es="Equipo" data-en="Team">Equipo</div>
+      <button class="sbitem" data-view="meetings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="lb" data-es="Reuniones" data-en="Meetings">Reuniones</span></button>
+      <button class="sbitem" data-view="workflows"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span class="lb">Workflows</span></button>
     </nav>
     <div class="sbfoot">
-      <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
-      <span id="pubStatus" style="display:none;font-size:11px;color:var(--c-dev-a);font-weight:700;"></span>
+      <button class="btn" id="pubBtn" style="display:none;">⬆️ Publicar</button>
+      <span id="pubStatus" style="display:none;"></span>
       <button class="btn" id="langBtn">EN</button>
       <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
     </div>
