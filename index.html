@@ -240,6 +240,16 @@
   .mmodal .mhead h2{margin:0;font-size:16px;letter-spacing:.2px;}
   .mmodal .mclose{cursor:pointer;border:1px solid var(--gridStrong);background:var(--bg);color:var(--text);font-size:14px;width:30px;height:30px;border-radius:8px;line-height:1;}
   .mmodal .mbody{padding:6px 20px 20px;max-height:72vh;overflow:auto;}
+  .shotprog{font-size:12px;font-weight:700;color:var(--c-dev-a);margin:8px 0 2px;}
+  .shotcat{font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--muted);margin:16px 0 6px;}
+  .shotitem{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--grid);}
+  .shotitem input[type=checkbox]{margin-top:2px;width:16px;height:16px;cursor:pointer;flex:none;accent-color:var(--c-dev-a);}
+  .shotitem .txt{flex:1;font-size:13px;line-height:1.3;}
+  .shotitem.done .txt{text-decoration:line-through;color:var(--muted);}
+  .shotitem a.txt{color:var(--c-sys-a);}
+  .shotitem .lk{cursor:pointer;font-size:14px;opacity:.55;flex:none;}
+  .shotitem .lk.has{opacity:1;}
+  .shotitem .lk:hover{opacity:1;}
   .mdate{font-size:12px;font-weight:800;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;}
   .mcard{border:1px solid var(--grid);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--panel);}
   .mcard .mctop{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer;}
@@ -275,6 +285,7 @@
       <button class="btn" id="pubBtn" style="display:none;border-color:var(--c-dev-a);color:var(--c-dev-a);font-weight:700;">⬆️ Publicar</button>
       <span id="pubStatus" style="display:none;font-size:11px;color:var(--c-dev-a);font-weight:700;align-self:center;white-space:nowrap;"></span>
       <button class="btn" id="meetBtn" data-es="🗓️ Reuniones" data-en="🗓️ Meetings">🗓️ Reuniones</button>
+      <button class="btn" id="shotsBtn" data-es="📸 Tomas trailer" data-en="📸 Trailer shots">📸 Tomas trailer</button>
       <button class="btn" id="langBtn">EN</button>
       <button class="btn" id="themeBtn" data-es="🌙 Oscuro" data-en="🌙 Dark">🌙 Oscuro</button>
     </div>
@@ -297,6 +308,13 @@
     <div class="mpanel">
       <div class="mhead"><h2 data-es="🗓️ Reuniones de Banana" data-en="🗓️ Banana meetings">🗓️ Reuniones de Banana</h2><button class="mclose" aria-label="Cerrar">✕</button></div>
       <div class="mbody" id="meetBody"></div>
+    </div>
+  </div>
+
+  <div id="shotsModal" class="mmodal hidden">
+    <div class="mpanel">
+      <div class="mhead"><h2 data-es="📸 Tomas / Capturas para trailer" data-en="📸 Trailer shots / captures">📸 Tomas / Capturas para trailer</h2><button class="mclose" aria-label="Cerrar">✕</button></div>
+      <div class="mbody" id="shotsBody"></div>
     </div>
   </div>
 
@@ -496,18 +514,38 @@ const GH={owner:'lucilatr', repo:'banana-calendario', branch:'main', path:'data.
 const EDITABLE = location.protocol==='file:' || location.search.includes('edit') || location.hash.includes('edit');
 let barOverrides={}, lastPublished=null, undoStack=[], redoStack=[];
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
+// ---- checklist de tomas/capturas para el trailer ----
+let shotState={};
+function saveShots(){ try{ localStorage.setItem('banana_shots',JSON.stringify(shotState)); }catch(e){} }
+const SHOTS=[
+  {cat:'AVIÓN ACTUAL', items:['Pilotaje: palanca','Botones para activar cosas: alarmas, carteles, cinturones, máscaras','Cartel "Everything is OK"','Limpiaparabrisas limpian a quien esté parado ahí','Máscaras de gas','Skins','Diferentes niveles (diferentes aviones)','Agarrar y tirar a los pasajeros']},
+  {cat:'SUBMARINO', items:['Jugador nadando con scuba','Submarino que se llena de agua','Pasillo y un jugador viene en un botecito adentro del submarino inundado']},
+  {cat:'NAVE ESPACIAL', items:['Flotación en el espacio con una cafetera']},
+];
+function renderShots(){
+  let done=0,total=0,h='';
+  SHOTS.forEach((c,ci)=>{ h+=`<div class="shotcat">${c.cat}</div>`;
+    c.items.forEach((it,ii)=>{ const id='s_'+ci+'_'+ii, st=shotState[id]||{}; total++; if(st.done)done++;
+      const txt = st.link?`<a class="txt" href="${st.link}" target="_blank" rel="noopener">${it}</a>`:`<span class="txt">${it}</span>`;
+      h+=`<div class="shotitem ${st.done?'done':''}"><input type="checkbox" data-id="${id}" ${st.done?'checked':''} ${EDITABLE?'':'disabled'}>`+txt+(EDITABLE?`<span class="lk ${st.link?'has':''}" data-link="${id}" title="Agregar/editar link">🔗</span>`:'')+`</div>`;
+    });
+  });
+  const body=$('#shotsBody'); if(!body) return;
+  body.innerHTML=`<div class="shotprog">${done}/${total}${lang==='es'?' hechas':' done'}</div>`+h;
+}
 function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
 async function loadState(){
-  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
+  try{ const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; shotState=(d&&d.shots)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
   try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
+  try{ shotState=JSON.parse(localStorage.getItem('banana_shots')||'{}'); }catch(e){}
 }
 async function publish(){
   let token=localStorage.getItem('banana_gh_token');
   if(!token){ token=prompt('Pegá tu token de GitHub (con permiso de repo). Solo queda en este navegador:'); if(!token) return; localStorage.setItem('banana_gh_token',token); }
   const btn=$('#pubBtn'), old=btn?btn.textContent:'';
   if(btn) btn.textContent='Publicando…';
-  const state={version:1, updated:new Date().toISOString(), barOverrides};
+  const state={version:1, updated:new Date().toISOString(), barOverrides, shots:shotState};
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(state,null,2))));
   const api=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
   try{
@@ -697,12 +735,20 @@ function renderMeetings(){
   });
   body.innerHTML=h;
 }
+$('#shotsBtn').onclick=()=>{ renderShots(); $('#shotsModal').classList.remove('hidden'); };
+$('#shotsModal').addEventListener('click',(e)=>{
+  if(e.target.id==='shotsModal' || e.target.closest('.mclose')){ $('#shotsModal').classList.add('hidden'); return; }
+  const cb=e.target.closest('input[type=checkbox]');
+  if(cb){ if(!EDITABLE) return; const id=cb.dataset.id; shotState[id]=shotState[id]||{}; shotState[id].done=cb.checked; saveShots(); renderShots(); return; }
+  const lk=e.target.closest('.lk');
+  if(lk){ const id=lk.dataset.link, cur=(shotState[id]&&shotState[id].link)||''; const url=prompt(lang==='es'?'Link de la captura (URL):':'Capture link (URL):', cur); if(url!==null){ shotState[id]=shotState[id]||{}; shotState[id].link=url.trim(); saveShots(); renderShots(); } return; }
+});
 $('#meetBtn').onclick=()=>{ renderMeetings(); $('#meetModal').classList.remove('hidden'); };
 $('#meetModal').addEventListener('click',(e)=>{
   if(e.target.id==='meetModal' || e.target.closest('.mclose')){ $('#meetModal').classList.add('hidden'); return; }
   const top=e.target.closest('.mctop'); if(top) top.parentElement.classList.toggle('open');
 });
-document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') $('#meetModal').classList.add('hidden'); });
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ $('#meetModal').classList.add('hidden'); $('#shotsModal').classList.add('hidden'); } });
 if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
 $('#weeks').addEventListener('click',(e)=>{ const c=e.target.closest('.cell.wk'); if(!c) return; const w=+c.dataset.w; expandedWk.has(w)?expandedWk.delete(w):expandedWk.add(w); render(); });
 $('#rows').addEventListener('click',(e)=>{
@@ -724,7 +770,7 @@ document.addEventListener('keydown',(e)=>{
   if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); } }
   else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); } }
 });
-$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); };
+$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderShots(); };
 $('#themeBtn').onclick=()=>{
   document.body.classList.toggle('dark');
   const d=document.body.classList.contains('dark');
