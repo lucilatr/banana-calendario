@@ -348,6 +348,7 @@
   .sumtitle{font-weight:700;font-size:15px;line-height:1.35;}
   .sumcard ul{margin:0;padding-left:18px;font-size:13px;line-height:1.5;}
   .sumsub{margin-top:-8px;font-size:13px;color:var(--muted);}
+  .sumnote{padding-left:10px;border-left:3px solid var(--grid);font-size:13px;line-height:1.45;color:var(--muted);}
   .sumlink{margin-top:auto;padding:0;border:none;background:none;color:var(--c-sys-a);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;}
   body.dark .sumlink{color:var(--c-sys-b);}
   .wf{padding:8px 24px 36px;max-width:780px;}
@@ -384,6 +385,11 @@
   .mfold summary:hover{color:var(--c-art-a);}
   .mfnote{font-size:11.5px;font-weight:400;color:var(--muted);margin:5px 0 2px;}
   .mfgroup{font-size:12px;font-weight:600;margin:8px 0 0;}
+  .mdectitle{font-size:13px;font-weight:700;margin:14px 0 4px;}
+  .mdecided{margin-top:12px;padding:2px 14px 12px;border:1px solid var(--grid);border-radius:10px;}
+  .mdecided .mfgroup{font-size:13px;margin-top:12px;}
+  .mdecided .sub{margin:3px 0 0;padding-left:18px;list-style:disc;}
+  .mdecided .sub li{font-size:12.5px;margin:3px 0;line-height:1.45;}
   .magenda .sub{margin:3px 0 0 2px;padding-left:16px;list-style:disc;}
   .magenda .sub li{font-size:11.5px;font-weight:400;color:var(--muted);margin:2px 0;line-height:1.35;}
   .mpast summary{cursor:pointer;margin:16px 0 8px;padding:9px 12px;border:1px solid var(--grid);border-radius:10px;background:var(--panel);}
@@ -480,7 +486,7 @@ const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['
 // kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
-   {d:'2026-11-06', icon:'🎮', es:'Update demo', en:'Demo update', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','1 banana y 1 jeringa'], goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','1 banana and 1 syringe']},
+   {d:'2026-11-06', icon:'🎮', es:'Update demo', en:'Demo update', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', note_es:'No incluye el botón de tirar máscaras ni el botón de hablar con la torre de control.', note_en:'Does not include the mask drop button or the button to talk to the control tower.', goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','3 bananas = 3 jeringas','Actualización de la encuesta: dúos con Sushi, Burgers, Clogged toilet, Fat passengers, Being a monkey, Ability to skate, Slime, Weapons, Farts, Slapping, Ghosts, Octopus'], goal_en:['Piloting options','Buttons that trigger alarms, signs and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','3 bananas = 3 syringes','Survey update: duos with Sushi, Burgers, Clogged toilet, Fat passengers, Being a monkey, Ability to skate, Slime, Weapons, Farts, Slapping, Ghosts, Octopus']},
    {d:'2026-11-12', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 1 día', sub_en:'Thu Nov 12 · 1 day'},
    {d:'2026-11-16', icon:'💡', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'lun 16 Nov', sub_en:'Mon Nov 16', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
    {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
@@ -549,6 +555,8 @@ const NOTES=[
 ];
 
 // Reuniones (agenda por fecha): temática + horario, asistentes (imprescindibles/opcionales) y temas a debatir
+// la agenda del chequeo del build sale de la misma lista que la tarjeta Update demo de Resumen
+const DEMO_UPDATE=GROUPS.filter(g=>g.kind==='mile').flatMap(g=>g.tasks).find(t=>t.d==='2026-11-06'&&t.es==='Update demo');
 const MEETINGS=[
  {date:'2026-11-04', dlabel_es:'Miércoles 4 de noviembre', dlabel_en:'Wednesday, November 4', items:[
    {time:'11:00', es:'Sync', en:'Sync',
@@ -580,6 +588,22 @@ const MEETINGS=[
  ]},
  {date:'2026-11-05', dlabel_es:'Jueves 5 de noviembre', dlabel_en:'Thursday, November 5', items:[
    {time:'18:00', es:'Revisión de layouts actualizados: nave · submarino · avión de lujo', en:'Updated layouts review: ship · submarine · luxury jet',
+    decided_es:[
+      {t:'Nave espacial', sub:['Despejar el centro: mover paneles y objetos contra las paredes de la esfera.','Comandante: queda en el medio y elevado, con el tablero más abajo.','Tablero: más plano y horizontal, sin bloquear la vista. Puede ser una bandeja no del todo opaca.','Pasajeros: sacar las hileras de abajo y dejar las de arriba. Abajo queda libre para los jugadores.','Escaleras: sin barandas cuadradas (como mucho, una mini). Para bajar, usar una escalera vertical como la de los aviones.','Sala de calderas: objetos contra las paredes y centro transitable, con cosas para agarrar o que se incendien.','Salidas al exterior: combinarlas con las de la nave de Federico y resolver el agujero que sale a la nada.','Luna: Federico termina el terreno y las cornisas. Sumar objetos fuera de lugar, como basura espacial o el monolito de 2001.','Jetpack: agregar feedback visual al usarlo, por ejemplo un fueguito.','Máquina expendedora: botones más grandes.','Zona de vuelo en el espacio: ampliar el rango antes de morir, para poder hacer capturas.','Sin definir: si el jetpack se equipa con clic o con una tecla, y si propulsa en cualquier dirección.']},
+      {t:'Submarino', sub:['Sacar del centro el periscopio y la mesa: la mesa va a un costado.','Piso: todo de rejilla, con una alfombra en el medio.','Salida al agua: por abajo, con una fosa o escotilla en el piso un poco más grande.','Junto a la fosa: equipos de buceo colgados y un cartel que avise que no se puede bajar sin equipo.','Oxígeno: sin equipo de buceo morís a los pocos minutos, con un mensaje de muerte por falta de oxígeno.','Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Nado: que Espacio impulse al personaje hacia arriba.','Agua: un poco de transparencia vista desde arriba y mejorar las cáusticas.','Inundado: más oscuro, para que resalten las luces de alarma y las pantallas.','Sumar objetos para apretar sin sentido, como un Simón.']},
+      {t:'Avión de lujo', sub:['Escaleras de lujo, estilo mansión o Titanic: primer escalón más ancho, abiertas abajo y con baranda liviana.','Humo: que no esté todo el tiempo. Reservarlo para catástrofes o para momentos con luz más oscura.','Comida: dar sushi en la zona premium.']},
+      {t:'Opciones de pilotaje (update de mañana)', sub:['Collider: agrandarlo en todos los botones.','Tablero: al ir al tablero siempre se agarra un botón. Si estás mirando uno y no hay otro objeto para agarrar, el clic lo aprieta.','Palanca: que se pueda usar con clic, además del teclado.','Botones de arriba: cuatro del mismo tamaño y más bien grandes.','Botones de adelante: más inclinados o frontales para que se vea el ícono, con el tablero un poco más parado.','Texto al apretar: un textito chico que diga qué activaste, por ejemplo "Everything is okay activated", sin el emoji.','Cartel "Everything is okay": fijo arriba de la puerta de la cabina, para los pasajeros. Puede titilar y cambiar de frase, sin moverse como marquesina.','Cinturones: sumar el botón para que se los pongan.','Máscaras: ocultar el botón; todo lo demás queda.','Sin definir: si para mañana se suma un botón de alerta más violento.']},
+      {t:'Encuesta', sub:['Se actualiza mañana junto con la demo y pasa de 10 a 12 temas.','Salen: Baby Bottles, Trouble Maker, Gra, Flying Gas Station, Pirates, Pets, Jetpacks y High Shakers.','Entran o quedan: Sushi, Burgers, Clogged toilet, Fat passengers, Being a monkey, Ability to skate, Slime, Weapons, Farts, Slapping, Ghosts y Octopus.','Métricas: marcar un corte desde este update para ver si suben "I like it" y "I love it", con más jeringas, menos radiación y menos turbulencia.','Sin definir: si Piloting Options sale de la encuesta porque ya entra en el update.']},
+      {t:'Audios absurdos de la torre de control', sub:['Por ahora el botón usa las frases de prueba que puso Valen. Hay que reemplazarlas por las definitivas.','Propuesta de Germán 1: "Se ha comunicado con la torre de control de Banana Airways. Nuestros operadores están ocupados, en un momento lo atenderemos."','Propuesta de Germán 2: anuncian la fecha de lanzamiento del juego y mueren antes de decirla.','Propuesta de Germán 3: van a decir un código de descuento para el juego y mueren antes de decirlo.','Sin definir: las frases finales. No se eligieron en la reunión.']},
+    ],
+    decided_en:[
+      {t:'Spaceship', sub:['Clear the center: move panels and objects against the sphere walls.','Commander: stays in the middle and raised, with the console lower down.','Console: flatter and horizontal, without blocking the view. It can be a tray that isn\'t fully opaque.','Passengers: remove the lower rows and keep the upper ones. The lower level stays free for players.','Stairs: no square railings (a mini one at most). To go down, use a vertical ladder like the planes have.','Boiler room: objects against the walls and a walkable center, with things to grab or set on fire.','Exits to the outside: combine them with the ones on Federico\'s ship and fix the hole that leads nowhere.','Moon: Federico finishes the terrain and ledges. Add out-of-place objects, like space junk or the 2001 monolith.','Jetpack: add visual feedback when using it, for example a small flame.','Vending machine: bigger buttons.','Space flight zone: extend the range before you die, so captures can be taken.','Undecided: whether the jetpack is equipped with a click or a key, and whether it propels in any direction.']},
+      {t:'Submarine', sub:['Move the periscope and table out of the center: the table goes to one side.','Floor: all grating, with a carpet down the middle.','Way out to the water: from below, through a slightly bigger pit or hatch in the floor.','Next to the pit: hanging diving gear and a sign warning not to go down without it.','Oxygen: without diving gear you die within a few minutes, with a death message about lack of oxygen.','Fix the giant interior collider, which makes it very hard to get back in from the water.','Swimming: Space pushes the character upward.','Water: a little transparency when seen from above, and better caustics.','Flooded: darker, so alarm lights and screens stand out.','Add pointless things to press, like a Simon game.']},
+      {t:'Luxury jet', sub:['Luxury stairs, mansion or Titanic style: wider first step, open at the bottom, with a light railing.','Smoke: not there all the time. Save it for disasters or moments with darker lighting.','Food: serve sushi in the premium area.']},
+      {t:'Piloting options (tomorrow\'s update)', sub:['Collider: make it bigger on all buttons.','Console: going to the console always grabs a button. If you\'re looking at one and there\'s nothing else to grab, the click presses it.','Lever: usable with a click, as well as the keyboard.','Top buttons: four of the same size, fairly large.','Front buttons: more tilted or facing forward so the icon is visible, with the console standing a bit more upright.','Text on press: small text saying what you activated, for example "Everything is okay activated", without the emoji.','"Everything is okay" sign: fixed above the cockpit door, for passengers. It can blink and change phrases, without scrolling like a marquee.','Seat belts: add the button that tells passengers to put them on.','Masks: hide the button; everything else stays.','Undecided: whether a more violent alert button is added for tomorrow.']},
+      {t:'Survey', sub:['Updated tomorrow along with the demo, going from 10 to 12 topics.','Out: Baby Bottles, Trouble Maker, Gra, Flying Gas Station, Pirates, Pets, Jetpacks and High Shakers.','In or staying: Sushi, Burgers, Clogged toilet, Fat passengers, Being a monkey, Ability to skate, Slime, Weapons, Farts, Slapping, Ghosts and Octopus.','Metrics: mark a cutoff from this update to see whether "I like it" and "I love it" go up, with more syringes, less radiation and less turbulence.','Undecided: whether Piloting Options leaves the survey since it ships in the update.']},
+      {t:'Absurd control tower audio', sub:['For now the button uses Valen\'s test lines. They need to be replaced with the final ones.','Germán\'s proposal 1: "You have reached the Banana Airways control tower. Our operators are busy, we\'ll be with you shortly."','Germán\'s proposal 2: they announce the game\'s release date and die before saying it.','Germán\'s proposal 3: they\'re about to give a discount code for the game and die before saying it.','Undecided: the final lines. They weren\'t chosen in the meeting.']},
+    ],
     goal_es:['Llegar con los layouts de la nave, el submarino y el avión de lujo actualizados, con los comentarios del 4 Nov.','Definir qué frases absurdas pregrabadas sumar al botón de Radio con la torre de control.','Hablar sobre la encuesta.'],
     goal_en:['Have the ship, submarine and luxury jet layouts updated, with the Nov 4 comments applied.','Decide which absurd pre-recorded lines to add to the Radio button with the control tower.','Talk about the survey.'],
     req:['Lautaro Schpizza','Valentín Frare','Federico Carlini','Germán Heller'], opt:['Jorge Tereso','Fernando Maldonado'],
@@ -603,6 +627,12 @@ const MEETINGS=[
       {t:'Decide which absurd pre-recorded lines to add to the Radio button with the control tower', sub:[]},
       {t:'Talk about the survey', fold:true, sub:['Ideas for the duels: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
     ]},
+ ]},
+ {date:'2026-11-06', dlabel_es:'Viernes 6 de noviembre', dlabel_en:'Friday, November 6', items:[
+   {time:'16:00', es:'Chequeo del build para el update de la demo', en:'Build check for the demo update',
+    goal_es:['Chequear el build antes de subir el update de la demo.'], goal_en:['Check the build before shipping the demo update.'],
+    agenda_es:[...DEMO_UPDATE.goal_es.map(t=>({t})),{t:DEMO_UPDATE.note_es}],
+    agenda_en:[...DEMO_UPDATE.goal_en.map(t=>({t})),{t:DEMO_UPDATE.note_en}]}
  ]},
 ];
 
@@ -957,7 +987,10 @@ function renderMeetings(){
       const ag=`<ul class="magenda ${agenda.some(it=>it.fold)?'hasfold':''}">`+agenda.map(it=>it.fold
         ?`<li class="mfold"><details><summary>${it.t}</summary>${it.note?`<div class="mfnote">${it.note}</div>`:''}${(it.groups||[]).map(g=>`<div class="mfgroup">${g.t}</div>`+subs(g.sub)).join('')}${subs(it.sub)}</details></li>`
         :`<li>${it.t}${subs(it.sub)}</li>`).join('')+`</ul>`;
-      h+=`<div class="mcard"><div class="mctop"><span class="mtime">${m.time}</span><span class="mtitle">${title}</span><span class="mcaret">▸</span></div><div class="mdetail">${att}${ag}</div></div>`;
+      // lo que se decidió va antes de la agenda original
+      const decided=lang==='es'?m.decided_es:m.decided_en;
+      const dec=decided?`<div class="mdecided"><div class="mdectitle">${lang==='es'?'Qué se decidió':'What was decided'}</div>${decided.map(g=>`<div class="mfgroup">${g.t}</div>`+subs(g.sub)).join('')}</div><div class="mdectitle">${lang==='es'?'Agenda de la reunión':'Meeting agenda'}</div>`:'';
+      h+=`<div class="mcard"><div class="mctop"><span class="mtime">${m.time}</span><span class="mtitle">${title}</span><span class="mcaret">▸</span></div><div class="mdetail">${att}${dec}${ag}</div></div>`;
     });
     return h;
   };
@@ -974,8 +1007,8 @@ function renderMeetings(){
 // tareas que solo van en el resumen (no aparecen en el Gantt)
 const SUM_TASKS=[
   {d:'2026-11-06', es:'Anuncio update demo', en:'Demo update announcement', subtitle_es:'(anuncio Steam y Discord)', subtitle_en:'(Steam and Discord announcement)',
-    goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','1 banana y 1 jeringa','Mejoras en la performance','Menús en chino arreglados','Radiación balanceada: easy 2 infectados / medium 4','Modo no shake','Agarrar y tirar partes de los cuerpos de los pasajeros con E'],
-    goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','1 banana and 1 syringe','Performance improvements','Chinese menus fixed','Balanced radiation: easy 2 infected / medium 4','No-shake mode','Grab and throw passengers\' body parts with E']},
+    goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','3 bananas = 3 jeringas','Mejoras en la performance','Menús en chino arreglados','Radiación balanceada: easy 2 infectados / medium 4','Modo no shake','Agarrar y tirar partes de los cuerpos de los pasajeros con E'],
+    goal_en:['Piloting options','Buttons that trigger alarms, signs and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','3 bananas = 3 syringes','Performance improvements','Chinese menus fixed','Balanced radiation: easy 2 infected / medium 4','No-shake mode','Grab and throw passengers\' body parts with E']},
 ];
 function renderSummary(){
   const body=$('#sumBody'); if(!body) return;
@@ -985,8 +1018,8 @@ function renderSummary(){
   // próximos: reuniones (salen una hora después de empezar, como en Reuniones) e hitos del calendario
   const up=[];
   MEETINGS.forEach(d=>d.items.forEach(m=>{ if(new Date(d.date+'T'+m.time+':00').getTime()+3600000>=now.getTime()) up.push({date:d.date,time:m.time,title:es?m.es:m.en,goal:es?m.goal_es:m.goal_en,meeting:true}); }));
-  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',mile:t.d,title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en}); }));
-  SUM_TASKS.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,subtitle:es?t.subtitle_es:t.subtitle_en,goal:es?t.goal_es:t.goal_en}); });
+  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',mile:t.d,title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en,note:es?t.note_es:t.note_en}); }));
+  SUM_TASKS.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,subtitle:es?t.subtitle_es:t.subtitle_en,goal:es?t.goal_es:t.goal_en,note:es?t.note_es:t.note_en}); });
   up.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   // esta semana (hasta el domingo) va en la fila de arriba; "lo que viene" es la semana siguiente, o lo próximo si está vacía
   const weekLeft=(7-now.getDay())%7;
@@ -995,6 +1028,7 @@ function renderSummary(){
   if(!next.length) next=later.slice(0,1);
   const card=(u)=>`<div class="sumcard" ${u.mile?`data-mile="${u.mile}"`:''}><span class="sumwhen ${u.date===todayIso?'now':''}">${relDay(u.date)}${u.time?' · '+u.time:''}</span><span class="sumtitle">${u.title}</span>${u.subtitle?`<span class="sumsub">${u.subtitle}</span>`:''}`
     +(u.goal&&u.goal.length?`<ul>${u.goal.map(x=>`<li>${x}</li>`).join('')}</ul>`:'')
+    +(u.note?`<div class="sumnote">${u.note}</div>`:'')
     +(u.meeting?`<button class="sumlink" data-goto="meetings">${es?'Ver agenda':'See agenda'}</button>`:'')+`</div>`;
   // en curso: etapas de los modos que incluyen hoy; los modos con la misma etapa y fin van en una tarjeta
   const until=(off)=>{ const n=off-todayOff; return n===0?(es?'Termina hoy':'Ends today'):`${es?'Hasta '+fmtDay(offToIso(off)).toLowerCase():'Until '+fmtDay(offToIso(off))} · ${es?(n===1?'falta 1 día':`faltan ${n} días`):(n===1?'1 day left':`${n} days left`)}`; };
