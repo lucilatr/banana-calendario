@@ -367,6 +367,15 @@
   .magenda{margin:10px 0 0;padding:0;list-style:none;}
   .magenda>li{font-size:12.5px;font-weight:600;margin:9px 0 3px;padding-left:16px;position:relative;line-height:1.35;}
   .magenda>li::before{content:"▸";position:absolute;left:0;color:var(--c-art-a);font-weight:700;}
+  .magenda.hasfold>li:not(.mfold)::before{content:"•";}
+  .magenda>li.mfold::before{content:none;}
+  .mfold summary{cursor:pointer;list-style:none;}
+  .mfold summary::-webkit-details-marker{display:none;}
+  .mfold summary::before{content:"▸";position:absolute;left:-1px;top:-1px;font-size:16px;line-height:1;color:var(--c-art-a);font-weight:700;transition:transform .12s;}
+  .mfold details[open]>summary::before{transform:rotate(90deg);}
+  .mfold summary:hover{color:var(--c-art-a);}
+  .mfnote{font-size:11.5px;font-weight:400;color:var(--muted);margin:5px 0 2px;}
+  .mfgroup{font-size:12px;font-weight:600;margin:8px 0 0;}
   .magenda .sub{margin:3px 0 0 2px;padding-left:16px;list-style:disc;}
   .magenda .sub li{font-size:11.5px;font-weight:400;color:var(--muted);margin:2px 0;line-height:1.35;}
   .mpast summary{cursor:pointer;margin:16px 0 8px;padding:9px 12px;border:1px solid var(--grid);border-radius:10px;background:var(--panel);}
@@ -566,22 +575,24 @@ const MEETINGS=[
     goal_en:['Have the ship, submarine and luxury jet layouts updated, with the Nov 4 comments applied.','Decide which absurd pre-recorded lines to add to the Radio button with the control tower.','Talk about the survey.'],
     req:['Lautaro Schpizza','Valentín Frare','Federico Carlini','Germán Heller'], opt:['Jorge Tereso','Fernando Maldonado'],
     agenda_es:[
-      {t:'Ver los layouts actualizados de la nave, el submarino y el avión de lujo', sub:[]},
-      {t:'Nave — comentarios de la reunión del 4 Nov', sub:['Las barandas no suman: que no haya que pararse al lado de los que están sentados; que estén amurados a la pared en un asiento.','Tiene muchas escaleras: repensar.','Elevar un poco el centro de control.','Tablero más cerca del asiento.','¿Qué hacer arriba de todo en la nave? Un arma para destruir meteoritos o algo.','Para salir: ¿quizás un tubo que te catapulta afuera?','Cuando estés en el espacio: jetpack, matafuegos.','Sumar la bodega abajo: horno con leña y poder salir por ahí.','Puerta que se abre cuando te acercás.','En el medio del viaje, poder parar en un asteroide a cargar nafta.']},
-      {t:'Submarino — comentarios de la reunión del 4 Nov', sub:['Variar dónde se sienta la gente.','Mesa de planeamiento con un mapa.','Pasajeros más en roles de submarino.','Que tenga piso con rejas.','Que los cartelitos tengan oclusión.','Pantallas que iluminen con verde, alarmas en rojo.']},
-      {t:'Avión de lujo — comentarios de la reunión del 4 Nov', sub:['Dance floor, guardaespaldas, VIP, bola de espejos.','Jacuzzi.','Masajes.','Escaleras: que luzcan más ostentosas.','Sector con citas sucediendo, con velas.']},
-      {t:'Botones — comentarios de la reunión del 4 Nov', sub:['Distribución: ponerlos donde está el avión.','Que haya una pantalla solo de mapa. Cuando hay un botón que se rompe, que cambie al avión.','Cuando mirás al tablero, que te haga zoom automáticamente para que nada te tape.','Cuando estás mirando, que te resalte el botón para que sepas cuál vas a apretar.','Quitar el botón que habilita los mandos: que quede solamente el botón del mic.','Limpiaparabrisas: sumar uno al medio.']},
+      {t:'Ver los layouts actualizados de la nave, el submarino y el avión de lujo', fold:true, note:'Comentarios de la reunión del 4 Nov', groups:[
+        {t:'Nave', sub:['Las barandas no suman: que no haya que pararse al lado de los que están sentados; que estén amurados a la pared en un asiento.','Tiene muchas escaleras: repensar.','Elevar un poco el centro de control.','Tablero más cerca del asiento.','¿Qué hacer arriba de todo en la nave? Un arma para destruir meteoritos o algo.','Para salir: ¿quizás un tubo que te catapulta afuera?','Cuando estés en el espacio: jetpack, matafuegos.','Sumar la bodega abajo: horno con leña y poder salir por ahí.','Puerta que se abre cuando te acercás.','En el medio del viaje, poder parar en un asteroide a cargar nafta.']},
+        {t:'Submarino', sub:['Variar dónde se sienta la gente.','Mesa de planeamiento con un mapa.','Pasajeros más en roles de submarino.','Que tenga piso con rejas.','Que los cartelitos tengan oclusión.','Pantallas que iluminen con verde, alarmas en rojo.']},
+        {t:'Avión de lujo', sub:['Dance floor, guardaespaldas, VIP, bola de espejos.','Jacuzzi.','Masajes.','Escaleras: que luzcan más ostentosas.','Sector con citas sucediendo, con velas.']},
+        {t:'Botones', sub:['Distribución: ponerlos donde está el avión.','Que haya una pantalla solo de mapa. Cuando hay un botón que se rompe, que cambie al avión.','Cuando mirás al tablero, que te haga zoom automáticamente para que nada te tape.','Cuando estás mirando, que te resalte el botón para que sepas cuál vas a apretar.','Quitar el botón que habilita los mandos: que quede solamente el botón del mic.','Limpiaparabrisas: sumar uno al medio.']},
+      ]},
       {t:'Definir qué frases absurdas pregrabadas sumar al botón de Radio con la torre de control', sub:[]},
-      {t:'Hablar sobre la encuesta', sub:['Ideas para los duelos: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
+      {t:'Hablar sobre la encuesta', fold:true, sub:['Ideas para los duelos: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
     ],
     agenda_en:[
-      {t:'See the updated layouts of the ship, the submarine and the luxury jet', sub:[]},
-      {t:'Ship — comments from the Nov 4 meeting', sub:['Railings add nothing: you shouldn\'t have to stand next to the seated passengers; they should be fixed to the wall in a seat.','Too many stairs: rethink.','Raise the control center a little.','Dashboard closer to the seat.','What to do at the very top of the ship? A weapon to destroy meteorites or something.','To exit: maybe a tube that catapults you outside?','When you\'re in space: jetpack, fire extinguishers.','Add the hold below: wood-burning oven and being able to exit through there.','Door that opens when you get close.','Mid-trip, being able to stop at an asteroid to refuel.']},
-      {t:'Submarine — comments from the Nov 4 meeting', sub:['Vary where people sit.','Planning table with a map.','Passengers more in submarine roles.','Grated floor.','Signs should have occlusion.','Screens that light up green, alarms in red.']},
-      {t:'Luxury jet — comments from the Nov 4 meeting', sub:['Dance floor, bodyguards, VIP, mirror ball.','Jacuzzi.','Massages.','Stairs: make them look more ostentatious.','Area with dates happening, with candles.']},
-      {t:'Buttons — comments from the Nov 4 meeting', sub:['Layout: place them where the plane is.','Have a map-only screen. When a button breaks, it switches to the plane.','When you look at the dashboard, zoom in automatically so nothing blocks your view.','While you\'re looking, highlight the button so you know which one you\'re about to press.','Remove the button that enables the controls: keep only the mic button.','Windshield wipers: add one in the middle.']},
+      {t:'See the updated layouts of the ship, the submarine and the luxury jet', fold:true, note:'Comments from the Nov 4 meeting', groups:[
+        {t:'Ship', sub:['Railings add nothing: you shouldn\'t have to stand next to the seated passengers; they should be fixed to the wall in a seat.','Too many stairs: rethink.','Raise the control center a little.','Dashboard closer to the seat.','What to do at the very top of the ship? A weapon to destroy meteorites or something.','To exit: maybe a tube that catapults you outside?','When you\'re in space: jetpack, fire extinguishers.','Add the hold below: wood-burning oven and being able to exit through there.','Door that opens when you get close.','Mid-trip, being able to stop at an asteroid to refuel.']},
+        {t:'Submarine', sub:['Vary where people sit.','Planning table with a map.','Passengers more in submarine roles.','Grated floor.','Signs should have occlusion.','Screens that light up green, alarms in red.']},
+        {t:'Luxury jet', sub:['Dance floor, bodyguards, VIP, mirror ball.','Jacuzzi.','Massages.','Stairs: make them look more ostentatious.','Area with dates happening, with candles.']},
+        {t:'Buttons', sub:['Layout: place them where the plane is.','Have a map-only screen. When a button breaks, it switches to the plane.','When you look at the dashboard, zoom in automatically so nothing blocks your view.','While you\'re looking, highlight the button so you know which one you\'re about to press.','Remove the button that enables the controls: keep only the mic button.','Windshield wipers: add one in the middle.']},
+      ]},
       {t:'Decide which absurd pre-recorded lines to add to the Radio button with the control tower', sub:[]},
-      {t:'Talk about the survey', sub:['Ideas for the duels: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
+      {t:'Talk about the survey', fold:true, sub:['Ideas for the duels: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
     ]},
  ]},
 ];
@@ -923,7 +934,11 @@ function renderMeetings(){
       if(m.req&&m.req.length){ att+=`<span class="attlbl">${reqLbl}</span>`+m.req.map(p=>`<span class="pill req">${p}</span>`).join(''); }
       if(m.opt&&m.opt.length){ att+=`<span class="attlbl">${optLbl}</span>`+m.opt.map(p=>`<span class="pill">${p}</span>`).join(''); }
       att+=`</div>`;
-      const ag=`<ul class="magenda">`+agenda.map(it=>`<li>${it.t}${it.sub&&it.sub.length?`<ul class="sub">`+it.sub.map(s=>`<li>${s}</li>`).join('')+`</ul>`:''}</li>`).join('')+`</ul>`;
+      const subs=(a)=>a&&a.length?`<ul class="sub">`+a.map(s=>`<li>${s}</li>`).join('')+`</ul>`:'';
+      // un punto con fold se abre con su flecha; adentro puede tener una nota y grupos con título
+      const ag=`<ul class="magenda ${agenda.some(it=>it.fold)?'hasfold':''}">`+agenda.map(it=>it.fold
+        ?`<li class="mfold"><details><summary>${it.t}</summary>${it.note?`<div class="mfnote">${it.note}</div>`:''}${(it.groups||[]).map(g=>`<div class="mfgroup">${g.t}</div>`+subs(g.sub)).join('')}${subs(it.sub)}</details></li>`
+        :`<li>${it.t}${subs(it.sub)}</li>`).join('')+`</ul>`;
       h+=`<div class="mcard"><div class="mctop"><span class="mtime">${m.time}</span><span class="mtitle">${title}</span><span class="mcaret">▸</span></div><div class="mdetail">${att}${ag}</div></div>`;
     });
     return h;
