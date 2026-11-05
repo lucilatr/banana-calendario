@@ -253,6 +253,14 @@
   .shotitem .lk{cursor:pointer;font-size:14px;opacity:.55;flex:none;}
   .shotitem .lk.has{opacity:1;}
   .shotitem .lk:hover{opacity:1;}
+  .shotspecs{margin:6px 0 12px;padding:12px 14px;border-left:4px solid var(--c-art-a);border-radius:0 8px 8px 0;background:rgba(91,91,214,.10);font-size:13px;}
+  .shotspecs ul{margin:6px 0 0;padding-left:18px;line-height:1.5;}
+  .shotlist{font-size:14px;font-weight:800;color:var(--c-art-a);margin:14px 0 6px;}
+  body.dark .shotlist{color:var(--c-art-b);}
+  .shotlist.lu,body.dark .shotlist.lu{color:var(--text);margin-top:26px;}
+  .shotitem.german{padding-left:10px;padding-right:8px;border-left:4px solid var(--c-art-a);background:rgba(91,91,214,.10);}
+  .shotitem.german input[type=checkbox]{accent-color:var(--c-art-a);}
+  .shotnote{font-size:12px;line-height:1.4;color:var(--muted);margin:8px 0 0;}
   /* ===== layout con menú lateral ===== */
   .layout{display:flex;align-items:stretch;min-height:100vh;}
   .sidebar{--sb-bg:#1b150d;--sb-text:#e6ddcd;--sb-muted:#9b8e7a;--sb-yellow:#f6c445;--sb-line:rgba(255,255,255,.1);flex:none;width:264px;background:var(--sb-bg);color:var(--sb-text);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .18s;z-index:40;overflow-y:auto;}
@@ -641,16 +649,51 @@ const SHOTS=[
   {cat:'SUBMARINO', items:['Jugador nadando con scuba','Submarino que se llena de agua','Pasillo y un jugador viene en un botecito adentro del submarino inundado']},
   {cat:'NAVE ESPACIAL', items:['Flotación en el espacio con una cafetera']},
 ];
+// lista que pidió Germán por mail: solo lo que no estaba en SHOTS (ids g_N, no pisan los s_N_N ya guardados)
+const SHOT_SPECS=[
+  {es:'Todas las tomas con compañía de otro/s jugador/es',en:'All shots with at least one other player'},
+  {es:'Segmento bien elegido',en:'Well-chosen segment'},
+  {es:'Sin música',en:'No music'},
+  {es:'Solo efectos de sonido en el video',en:'Only sound effects in the video'},
+  {es:'Voces grabadas en otro canal',en:'Voices recorded on a separate channel'},
+  {es:'UI y highlights de objetos y cosas apagados',en:'UI and highlights on objects and things turned off'},
+];
+const SHOTS_GERMAN=[
+  {es:'Tomas de lanzamiento de persona y que vuelve a su asiento',en:'Person launch shots, returning to their seat'},
+  {es:'Apretar botones de despegue, probar todos',en:'Pressing the takeoff buttons, trying them all'},
+  {es:'Toma de avión de dos pisos',en:'Two-story plane shot'},
+  {es:'Toma de jacuzzi',en:'Jacuzzi shot'},
+  {es:'Toma del espacio',en:'Space shot'},
+  {es:'Toma de submarino',en:'Submarine shot'},
+  {es:'Inyección de pasajero',en:'Injecting a passenger'},
+  {es:'Inyección de amigo',en:'Injecting a friend'},
+  {es:'Lanzamiento de jeringa',en:'Syringe launch'},
+  {es:'Lanzamiento de café',en:'Coffee launch'},
+  {es:'Arreglo de motor afuera',en:'Fixing the engine outside'},
+  {es:'Bebé llorando',en:'Crying baby'},
+  {es:'Bebé flying the plane',en:'Baby flying the plane'},
+  {es:'Lanzamiento de bebé',en:'Baby launch'},
+  {es:'Lanzamiento de bebé en antigravedad',en:'Antigravity baby launch'},
+  {es:'Tomas de 6-7',en:'6-7 shots'},
+];
+// tomas de SHOTS que Germán también pidió: "Everything is OK" y "Tomas de nadar"
+const SHOTS_ALSO_GERMAN=['s_0_2','s_1_0'];
 function renderShots(){
   let done=0,total=0,h='';
+  const row=(id,it,german)=>{ const st=shotState[id]||{}; total++; if(st.done)done++;
+    const txt = st.link?`<a class="txt" href="${st.link}" target="_blank" rel="noopener">${it}</a>`:`<span class="txt">${it}</span>`;
+    return `<div class="shotitem ${german?'german':''} ${st.done?'done':''}"><input type="checkbox" data-id="${id}" ${st.done?'checked':''} ${EDITABLE?'':'disabled'}>`+txt+(EDITABLE?`<span class="lk ${st.link?'has':''}" data-link="${id}" title="Agregar/editar link">🔗</span>`:'')+`</div>`;
+  };
+  h+=`<div class="shotlist">${lang==='es'?'Lista de Germán (pedida por mail)':'Germán’s list (requested by email)'}</div>`;
+  SHOTS_GERMAN.forEach((it,i)=>{ h+=row('g_'+i,it[lang],true); });
+  h+=`<div class="shotnote">${lang==='es'?'Germán también pidió “Everything is OK” y “Tomas de nadar”: ya estaban en la lista de Lu y quedan marcadas ahí en este color.':'Germán also asked for “Everything is OK” and swimming shots: they were already on Lu’s list and are marked there in this color.'}</div>`;
+  h+=`<div class="shotlist lu">${lang==='es'?'Lista de Lu':'Lu’s list'}</div>`;
   SHOTS.forEach((c,ci)=>{ h+=`<div class="shotcat">${c.cat}</div>`;
-    c.items.forEach((it,ii)=>{ const id='s_'+ci+'_'+ii, st=shotState[id]||{}; total++; if(st.done)done++;
-      const txt = st.link?`<a class="txt" href="${st.link}" target="_blank" rel="noopener">${it}</a>`:`<span class="txt">${it}</span>`;
-      h+=`<div class="shotitem ${st.done?'done':''}"><input type="checkbox" data-id="${id}" ${st.done?'checked':''} ${EDITABLE?'':'disabled'}>`+txt+(EDITABLE?`<span class="lk ${st.link?'has':''}" data-link="${id}" title="Agregar/editar link">🔗</span>`:'')+`</div>`;
-    });
+    c.items.forEach((it,ii)=>{ const id='s_'+ci+'_'+ii; h+=row(id,it,SHOTS_ALSO_GERMAN.includes(id)); });
   });
   const body=$('#shotsBody'); if(!body) return;
-  body.innerHTML=`<div class="shotprog">${done}/${total}${lang==='es'?' hechas':' done'}</div>`+h;
+  const specs=`<div class="shotspecs"><b>${lang==='es'?'Cómo tienen que ser todas las capturas':'How all captures must be'}</b><ul>${SHOT_SPECS.map(s=>`<li>${s[lang]}</li>`).join('')}</ul></div>`;
+  body.innerHTML=specs+`<div class="shotprog">${done}/${total}${lang==='es'?' hechas':' done'}</div>`+h;
 }
 function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
