@@ -480,7 +480,7 @@ const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['
 // kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
-   {d:'2026-11-06', icon:'🎮', es:'Update demo', en:'Demo update', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos'], goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them']},
+   {d:'2026-11-06', icon:'🎮', es:'Update demo', en:'Demo update', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','1 banana y 1 jeringa'], goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','1 banana and 1 syringe']},
    {d:'2026-11-12', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 1 día', sub_en:'Thu Nov 12 · 1 day'},
    {d:'2026-11-16', icon:'💡', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'lun 16 Nov', sub_en:'Mon Nov 16', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
    {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
@@ -974,8 +974,8 @@ function renderMeetings(){
 // tareas que solo van en el resumen (no aparecen en el Gantt)
 const SUM_TASKS=[
   {d:'2026-11-06', es:'Anuncio update demo', en:'Demo update announcement', subtitle_es:'(anuncio Steam y Discord)', subtitle_en:'(Steam and Discord announcement)',
-    goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','Mejoras en la performance','Menús en chino arreglados','Radiación balanceada: easy 2 infectados / medium 4','Modo no shake','Agarrar y tirar partes de los cuerpos de los pasajeros con E'],
-    goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','Performance improvements','Chinese menus fixed','Balanced radiation: easy 2 infected / medium 4','No-shake mode','Grab and throw passengers\' body parts with E']},
+    goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','1 banana y 1 jeringa','Mejoras en la performance','Menús en chino arreglados','Radiación balanceada: easy 2 infectados / medium 4','Modo no shake','Agarrar y tirar partes de los cuerpos de los pasajeros con E'],
+    goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','1 banana and 1 syringe','Performance improvements','Chinese menus fixed','Balanced radiation: easy 2 infected / medium 4','No-shake mode','Grab and throw passengers\' body parts with E']},
 ];
 function renderSummary(){
   const body=$('#sumBody'); if(!body) return;
