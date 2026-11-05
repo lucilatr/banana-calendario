@@ -279,6 +279,9 @@
   .sbsec{font-size:12.5px;font-weight:700;color:var(--sb-muted);padding:14px 10px 6px;letter-spacing:.2px;}
   .sbitem{display:flex;align-items:center;gap:13px;padding:10px 11px;border:none;background:transparent;color:var(--sb-text);border-radius:9px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;text-align:left;white-space:nowrap;overflow:hidden;}
   .sbitem svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  a.sbitem{text-decoration:none;}
+  .sbitem svg.sbext{width:14px;height:14px;margin-left:auto;color:var(--sb-muted);}
+  .sidebar.collapsed .sbext{display:none;}
   .sbitem:hover{background:rgba(255,255,255,.07);}
   .sbitem.active,.sbitem.active:hover{background:rgba(246,196,69,.17);color:#fff;font-weight:700;}
   .sbitem.active svg{color:var(--sb-yellow);}
@@ -296,7 +299,7 @@
     .sbToggle{display:none;}
     .sbbrand,.sidebar.collapsed .sbbrand{flex-direction:row;padding:12px 16px 6px;}
     .sidebar.collapsed .sbtitle,.sidebar.collapsed .sbitem .lb{display:block;}
-    .sbsec{display:none;}
+    .sbsec,.sbext{display:none;}
     .sbnav,.sidebar.collapsed .sbnav{flex-direction:row;padding:4px 8px 8px;}
     .sbitem,.sidebar.collapsed .sbitem{flex:1;flex-direction:column;gap:3px;font-size:12px;padding:8px 2px;justify-content:center;}
     .sbfoot,.sidebar.collapsed .sbfoot{display:flex;padding:8px 16px;}
@@ -326,6 +329,18 @@
   .collapsebody.hiddenc{display:none;}
   #view-trailer .mbody{max-height:none;padding:8px 0 8px;}
   #view-meetings .mbody{max-height:none;padding:8px 24px 36px;}
+  .sum{padding:0 24px 36px;max-width:1160px;}
+  .sumtoday{font-size:13px;color:var(--muted);margin:2px 0 0;}
+  .sumh{font-size:15px;font-weight:800;margin:22px 0 12px;}
+  .sumgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px;}
+  .sumcard{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:16px;border:1px solid var(--grid);border-radius:14px;background:var(--panel);box-shadow:0 2px 8px rgba(29,35,48,.07);}
+  .sumwhen{font-weight:800;font-size:12.5px;color:#fff;background:var(--c-sys-a);padding:3px 9px;border-radius:7px;}
+  .sumwhen.now{background:var(--todayLine);color:#1d2330;}
+  .sumwhen.run{background:var(--c-dev-a);}
+  .sumtitle{font-weight:700;font-size:15px;line-height:1.35;}
+  .sumcard ul{margin:0;padding-left:18px;font-size:13px;line-height:1.5;}
+  .sumlink{margin-top:auto;padding:0;border:none;background:none;color:var(--c-sys-a);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;}
+  body.dark .sumlink{color:var(--c-sys-b);}
   .wf{padding:8px 24px 36px;max-width:780px;}
   .wfrow{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel);}
   .wfrow h3{margin:0 0 8px;font-size:13px;letter-spacing:.3px;}
@@ -365,11 +380,14 @@
     <div class="sbbrand"><span class="sblogo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></span><span class="sbtitle">Banana Airways<small data-es="· Producción" data-en="· Production">· Producción</small></span><button class="sbToggle" id="sbToggle" title="Colapsar/expandir" aria-label="Colapsar o expandir el menú">‹</button></div>
     <nav class="sbnav">
       <div class="sbsec" data-es="Plan" data-en="Plan">Plan</div>
+      <button class="sbitem" data-view="summary"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 13 2 2 4-4"/></svg><span class="lb" data-es="Resumen" data-en="Summary">Resumen</span></button>
       <button class="sbitem" data-view="trailer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M3 7.5h4M3 12h18M3 16.5h4M17 3v18M17 7.5h4M17 16.5h4"/></svg><span class="lb">Trailer</span></button>
       <button class="sbitem active" data-view="calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg><span class="lb">Calendar</span></button>
       <div class="sbsec" data-es="Equipo" data-en="Team">Equipo</div>
       <button class="sbitem" data-view="meetings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="lb" data-es="Reuniones" data-en="Meetings">Reuniones</span></button>
       <button class="sbitem" data-view="workflows"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span class="lb">Workflows</span></button>
+      <div class="sbsec" data-es="Datos" data-en="Data">Datos</div>
+      <a class="sbitem" href="https://3d.ar/banana-stats/#/resumen" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17v-5M13 17V7M18 17v-8"/></svg><span class="lb">Stats</span><svg class="sbext" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-9 9M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg></a>
     </nav>
     <div class="sbfoot">
       <button class="btn" id="pubBtn" style="display:none;">⬆️ Publicar</button>
@@ -379,6 +397,11 @@
     </div>
   </aside>
   <main class="main">
+
+    <section class="view" id="view-summary">
+      <div class="vhead"><h1 data-es="📋 Resumen" data-en="📋 Summary">📋 Resumen</h1></div>
+      <div class="sum" id="sumBody"></div>
+    </section>
 
     <section class="view" id="view-trailer">
       <div class="vhead"><h1 data-es="🎬 Trailer" data-en="🎬 Trailer">🎬 Trailer</h1></div>
@@ -438,6 +461,7 @@ const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['
 // kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
+   {d:'2026-11-06', icon:'🎮', es:'Versión demo con features nuevos', en:'Demo build with new features', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', goal_es:['Botones','Opciones de pilotaje','Agarrar y tirar pasajeros'], goal_en:['Buttons','Piloting options','Grabbing and throwing passengers']},
    {d:'2026-11-12', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 1 día', sub_en:'Thu Nov 12 · 1 day'},
    {d:'2026-11-16', icon:'💡', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'lun 16 Nov', sub_en:'Mon Nov 16', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
    {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
@@ -536,7 +560,9 @@ const MEETINGS=[
     ]},
  ]},
  {date:'2026-11-05', dlabel_es:'Jueves 5 de noviembre', dlabel_en:'Thursday, November 5', items:[
-   {time:'17:30', es:'Revisión de layouts actualizados: nave · submarino · avión de lujo', en:'Updated layouts review: ship · submarine · luxury jet',
+   {time:'18:00', es:'Revisión de layouts actualizados: nave · submarino · avión de lujo', en:'Updated layouts review: ship · submarine · luxury jet',
+    goal_es:['Llegar con los layouts de la nave, el submarino y el avión de lujo actualizados, con los comentarios del 4 Nov.','Definir qué frases absurdas pregrabadas sumar al botón de Radio con la torre de control.'],
+    goal_en:['Have the ship, submarine and luxury jet layouts updated, with the Nov 4 comments applied.','Decide which absurd pre-recorded lines to add to the Radio button with the control tower.'],
     req:['Lautaro Schpizza','Valentín Frare','Federico Carlini','Germán Heller'], opt:['Jorge Tereso','Fernando Maldonado'],
     agenda_es:[
       {t:'Ver los layouts actualizados de la nave, el submarino y el avión de lujo', sub:[]},
@@ -544,6 +570,7 @@ const MEETINGS=[
       {t:'Submarino — comentarios de la reunión del 4 Nov', sub:['Variar dónde se sienta la gente.','Mesa de planeamiento con un mapa.','Pasajeros más en roles de submarino.','Que tenga piso con rejas.','Que los cartelitos tengan oclusión.','Pantallas que iluminen con verde, alarmas en rojo.']},
       {t:'Avión de lujo — comentarios de la reunión del 4 Nov', sub:['Dance floor, guardaespaldas, VIP, bola de espejos.','Jacuzzi.','Masajes.','Escaleras: que luzcan más ostentosas.','Sector con citas sucediendo, con velas.']},
       {t:'Botones — comentarios de la reunión del 4 Nov', sub:['Distribución: ponerlos donde está el avión.','Que haya una pantalla solo de mapa. Cuando hay un botón que se rompe, que cambie al avión.','Cuando mirás al tablero, que te haga zoom automáticamente para que nada te tape.','Cuando estás mirando, que te resalte el botón para que sepas cuál vas a apretar.','Quitar el botón que habilita los mandos: que quede solamente el botón del mic.','Limpiaparabrisas: sumar uno al medio.']},
+      {t:'Botón de Radio con la torre de control: qué frases sumar', sub:['Frases pregrabadas absurdas.']},
     ],
     agenda_en:[
       {t:'See the updated layouts of the ship, the submarine and the luxury jet', sub:[]},
@@ -551,6 +578,7 @@ const MEETINGS=[
       {t:'Submarine — comments from the Nov 4 meeting', sub:['Vary where people sit.','Planning table with a map.','Passengers more in submarine roles.','Grated floor.','Signs should have occlusion.','Screens that light up green, alarms in red.']},
       {t:'Luxury jet — comments from the Nov 4 meeting', sub:['Dance floor, bodyguards, VIP, mirror ball.','Jacuzzi.','Massages.','Stairs: make them look more ostentatious.','Area with dates happening, with candles.']},
       {t:'Buttons — comments from the Nov 4 meeting', sub:['Layout: place them where the plane is.','Have a map-only screen. When a button breaks, it switches to the plane.','When you look at the dashboard, zoom in automatically so nothing blocks your view.','While you\'re looking, highlight the button so you know which one you\'re about to press.','Remove the button that enables the controls: keep only the mic button.','Windshield wipers: add one in the middle.']},
+      {t:'Radio button with the control tower: which lines to add', sub:['Absurd pre-recorded lines.']},
     ]},
  ]},
 ];
@@ -906,6 +934,38 @@ function renderMeetings(){
     return `<details class="mpast"><summary class="mdate">${label(d)} <span class="mpcount">${cnt}</span></summary>${dayCards(d)}</details>`; }).join('');
   body.innerHTML=h;
 }
+// ===== resumen: sale de MEETINGS y GROUPS (con las fechas arrastradas), se recalcula con la fecha de hoy =====
+const SUM_HORIZON=7; // días hacia adelante
+function renderSummary(){
+  const body=$('#sumBody'); if(!body) return;
+  const es=lang==='es', now=new Date(), todayIso=iso(now), todayOff=dOff(todayIso);
+  const fmtDay=(i)=>{ const d=new Date(i+'T00:00:00'); return es?`${DOW.es[(d.getDay()+6)%7]} ${d.getDate()} ${MO3.es[d.getMonth()]}`:`${DOW.en[(d.getDay()+6)%7]} ${MO3.en[d.getMonth()]} ${d.getDate()}`; };
+  const relDay=(i)=>{ const n=dOff(i)-todayOff; return n===0?(es?'Hoy':'Today'):(n===1?(es?'Mañana':'Tomorrow'):fmtDay(i)); };
+  // próximos: reuniones (salen una hora después de empezar, como en Reuniones) e hitos del calendario
+  const up=[];
+  MEETINGS.forEach(d=>d.items.forEach(m=>{ if(new Date(d.date+'T'+m.time+':00').getTime()+3600000>=now.getTime()) up.push({date:d.date,time:m.time,title:es?m.es:m.en,goal:es?m.goal_es:m.goal_en,meeting:true}); }));
+  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en}); }));
+  up.sort((a,b)=>(a.date+a.time)<(b.date+b.time)?-1:1);
+  let soon=up.filter(u=>dOff(u.date)-todayOff<=SUM_HORIZON);
+  if(!soon.length) soon=up.slice(0,1); // sin nada cerca: mostrar lo próximo
+  const card=(u)=>`<div class="sumcard"><span class="sumwhen ${u.date===todayIso?'now':''}">${relDay(u.date)}${u.time?' · '+u.time:''}</span><span class="sumtitle">${u.title}</span>`
+    +(u.goal&&u.goal.length?`<ul>${u.goal.map(x=>`<li>${x}</li>`).join('')}</ul>`:'')
+    +(u.meeting?`<button class="sumlink" data-goto="meetings">${es?'Ver agenda':'See agenda'}</button>`:'')+`</div>`;
+  // en curso: etapas de los modos que incluyen hoy; los modos con la misma etapa y fin van en una tarjeta
+  const until=(off)=>{ const n=off-todayOff; return n===0?(es?'Termina hoy':'Ends today'):`${es?'Hasta '+fmtDay(offToIso(off)).toLowerCase():'Until '+fmtDay(offToIso(off))} · ${es?(n===1?'falta 1 día':`faltan ${n} días`):(n===1?'1 day left':`${n} days left`)}`; };
+  const byStage={};
+  GROUPS.filter(g=>g.kind==='levels').forEach(g=>g.tasks.forEach(t=>{ if(t.blocked) return;
+    const stages=[{k:'exp_'+t.key,lbl:es?'Layout (base jugable)':'Layout (playable base)',ds:dOff(t.aStart),de:dOff(t.aEnd)}];
+    t.ph.forEach((win,i)=>stages.push({k:PHASES[i].k+'_'+t.key,lbl:es?PHASES[i].es:PHASES[i].en,ds:(win[0]-1)*7,de:(win[1]-1)*7+4}));
+    stages.forEach(st=>{ const [a,b]=curOff(st.k,st.ds,st.de); if(a<=todayOff&&todayOff<=b){ const id=st.lbl+b; (byStage[id]=byStage[id]||{lbl:st.lbl,end:b,modes:[]}).modes.push(es?t.es:t.en); } });
+  }));
+  const running=Object.values(byStage).map(x=>`<div class="sumcard"><span class="sumwhen run">${until(x.end)}</span><span class="sumtitle">${x.lbl}</span><ul>${x.modes.map(m=>`<li>${m}</li>`).join('')}</ul></div>`).join('');
+  const todayLbl=now.toLocaleDateString(es?'es-AR':'en-US',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const cards=soon.map(card).join('')+running;
+  body.innerHTML=`<div class="sumtoday">${todayLbl.charAt(0).toUpperCase()+todayLbl.slice(1)}</div>`
+    +`<h2 class="sumh">${es?'En qué tenemos que estar trabajando':'What we should be working on'}</h2>`
+    +(cards?`<div class="sumgrid">${cards}</div>`:`<div class="sumtoday">${es?'No hay reuniones, hitos ni etapas activas.':'No meetings, milestones or active stages.'}</div>`);
+}
 // ===== navegación de vistas (menú lateral) =====
 function renderWorkflows(){
   const b=$('#wfBody'); if(!b) return;
@@ -951,12 +1011,13 @@ function renderTrailer(){
 function showView(v){
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active', s.id==='view-'+v));
   document.querySelectorAll('.sbitem').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
-  if(v==='trailer') renderTrailer();
+  if(v==='summary') renderSummary();
+  else if(v==='trailer') renderTrailer();
   else if(v==='meetings') renderMeetings();
   else if(v==='workflows') renderWorkflows();
   else if(v==='calendar') applyExpanded();
 }
-document.querySelectorAll('.sbitem').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+document.querySelectorAll('.sbitem[data-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
 $('#sbToggle').onclick=()=>{ $('#sidebar').classList.toggle('collapsed'); };
 $('#shotsCollapse').onclick=()=>{ $('#shotsCollapse').classList.toggle('closed'); $('#shotsBody').classList.toggle('hiddenc'); };
 $('#shotsBody').addEventListener('click',(e)=>{
@@ -965,6 +1026,7 @@ $('#shotsBody').addEventListener('click',(e)=>{
   const lk=e.target.closest('.lk');
   if(lk){ const id=lk.dataset.link, cur=(shotState[id]&&shotState[id].link)||''; const url=prompt(lang==='es'?'Link de la captura (URL):':'Capture link (URL):', cur); if(url!==null){ shotState[id]=shotState[id]||{}; shotState[id].link=url.trim(); saveShots(); renderShots(); } return; }
 });
+$('#sumBody').addEventListener('click',(e)=>{ const b=e.target.closest('[data-goto]'); if(b) showView(b.dataset.goto); });
 $('#meetBody').addEventListener('click',(e)=>{ const top=e.target.closest('.mctop'); if(top) top.parentElement.classList.toggle('open'); });
 if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
 $('#weeks').addEventListener('click',(e)=>{ const c=e.target.closest('.cell.wk'); if(!c) return; const w=+c.dataset.w; expandedWk.has(w)?expandedWk.delete(w):expandedWk.add(w); render(); });
@@ -987,7 +1049,7 @@ document.addEventListener('keydown',(e)=>{
   if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); } }
   else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); } }
 });
-$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderWorkflows(); renderTrailer(); };
+$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderWorkflows(); renderTrailer(); renderSummary(); };
 $('#themeBtn').onclick=()=>{
   document.body.classList.toggle('dark');
   const d=document.body.classList.contains('dark');
