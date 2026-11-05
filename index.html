@@ -48,6 +48,12 @@
   .title .sub{color:var(--muted);font-size:13px;}
   .title .chip{display:inline-block;margin-top:8px;margin-right:6px;font-size:12px;font-weight:600;color:#fff;background:var(--c-launch);padding:3px 10px;border-radius:999px;}
   .title .chip.cd{background:var(--c-dev-a);}
+  .milealert{display:flex;flex-direction:column;align-items:flex-end;gap:6px;margin-left:auto;align-self:flex-end;}
+  .milealert:empty{display:none;}
+  .milealert button{border:none;cursor:pointer;font:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--c-port-a);padding:7px 14px;border-radius:10px;line-height:1.3;text-align:left;}
+  .milealert button:hover{filter:brightness(1.1);}
+  .milealert button:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+  .sumcard.flash{border-color:var(--c-port-a);box-shadow:0 0 0 3px var(--c-port-a);}
   .legend.hidden{display:none;}
   .filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px;}
   .filterbar .flabel{font-size:12px;font-weight:700;color:var(--muted);}
@@ -329,10 +335,12 @@
   .collapsebody.hiddenc{display:none;}
   #view-trailer .mbody{max-height:none;padding:8px 0 8px;}
   #view-meetings .mbody{max-height:none;padding:8px 24px 36px;}
-  .sum{padding:0 24px 36px;max-width:1160px;}
+  .sum{padding:0 24px 36px;}
   .sumtoday{font-size:13px;color:var(--muted);margin:2px 0 0;}
   .sumh{font-size:15px;font-weight:800;margin:22px 0 12px;}
-  .sumgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px;}
+  .sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;}
+  .sumstage{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:14px 16px;margin-bottom:14px;border:1px solid var(--grid);border-left:5px solid var(--c-dev-a);border-radius:14px;background:var(--panel);box-shadow:0 2px 8px rgba(29,35,48,.07);}
+  .sumstage .modes{font-size:13px;color:var(--muted);}
   .sumcard{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:16px;border:1px solid var(--grid);border-radius:14px;background:var(--panel);box-shadow:0 2px 8px rgba(29,35,48,.07);}
   .sumwhen{font-weight:800;font-size:12.5px;color:#fff;background:var(--c-sys-a);padding:3px 9px;border-radius:7px;}
   .sumwhen.now{background:var(--todayLine);color:#1d2330;}
@@ -431,6 +439,7 @@
       <div class="sub" data-es="Proyección octubre 2026 al 31 de marzo de 2027" data-en="Projection October 2026 to March 31, 2027">Proyección octubre 2026 al 31 de marzo de 2027</div>
       <span class="chip" data-es="🚀 Lanzamiento 31 de marzo de 2027" data-en="🚀 Launch March 31, 2027">🚀 Lanzamiento 31 de marzo de 2027</span>
     </div>
+    <div class="milealert" id="mileAlert"></div>
   </header>
 
   <div class="legend hidden" id="legend"></div>
@@ -773,6 +782,14 @@ function drawBar(key,defS,defE,grad,title,labelHtml,noDrag,inlbl){
   return h;
 }
 
+// avisa en Calendar cuando faltan 1 o 2 días para un milestone
+function updateMileAlert(){
+  const el=$('#mileAlert'); if(!el) return;
+  const todayOff=dOff(iso(new Date())), es=lang==='es', items=[];
+  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ const n=dOff(t.d)-todayOff; if(n===1||n===2) items.push({n,d:t.d,name:es?t.es:t.en}); }));
+  items.sort((a,b)=>a.n-b.n);
+  el.innerHTML=items.map(x=>`<button data-mile="${x.d}" title="${es?'Ver en Resumen':'See in Summary'}">⏳ ${es?(x.n===1?'Falta 1 día':'Faltan 2 días')+' para':(x.n===1?'1 day':'2 days')+' to'} ${x.name} ›</button>`).join('');
+}
 function updateCountdown(){
   const el=$('#countdown'); if(!el) return;
   const target=new Date(2026,10,13); target.setHours(0,0,0,0); // 13 Nov 2026 (1 sem antes del submit)
@@ -912,6 +929,7 @@ function render(){
   renderFilter();
   applyExpanded();
   updateCountdown();
+  updateMileAlert();
 }
 
 $('#filterbar').addEventListener('click',(e)=>{ const b=e.target.closest('.fchip'); if(!b) return; const s=b.dataset.stage;
@@ -953,7 +971,6 @@ function renderMeetings(){
   body.innerHTML=h;
 }
 // ===== resumen: sale de MEETINGS y GROUPS (con las fechas arrastradas), se recalcula con la fecha de hoy =====
-const SUM_HORIZON=7; // días hacia adelante
 // tareas que solo van en el resumen (no aparecen en el Gantt)
 const SUM_TASKS=[
   {d:'2026-11-06', es:'Anuncio update demo', en:'Demo update announcement', subtitle_es:'(anuncio Steam y Discord)', subtitle_en:'(Steam and Discord announcement)',
@@ -968,12 +985,15 @@ function renderSummary(){
   // próximos: reuniones (salen una hora después de empezar, como en Reuniones) e hitos del calendario
   const up=[];
   MEETINGS.forEach(d=>d.items.forEach(m=>{ if(new Date(d.date+'T'+m.time+':00').getTime()+3600000>=now.getTime()) up.push({date:d.date,time:m.time,title:es?m.es:m.en,goal:es?m.goal_es:m.goal_en,meeting:true}); }));
-  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en}); }));
+  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',mile:t.d,title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en}); }));
   SUM_TASKS.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,subtitle:es?t.subtitle_es:t.subtitle_en,goal:es?t.goal_es:t.goal_en}); });
   up.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
-  let soon=up.filter(u=>dOff(u.date)-todayOff<=SUM_HORIZON);
-  if(!soon.length) soon=up.slice(0,1); // sin nada cerca: mostrar lo próximo
-  const card=(u)=>`<div class="sumcard"><span class="sumwhen ${u.date===todayIso?'now':''}">${relDay(u.date)}${u.time?' · '+u.time:''}</span><span class="sumtitle">${u.title}</span>${u.subtitle?`<span class="sumsub">${u.subtitle}</span>`:''}`
+  // esta semana (hasta el domingo) va en la fila de arriba; "lo que viene" es la semana siguiente, o lo próximo si está vacía
+  const weekLeft=(7-now.getDay())%7;
+  const week=up.filter(u=>dOff(u.date)-todayOff<=weekLeft), later=up.filter(u=>dOff(u.date)-todayOff>weekLeft);
+  let next=later.filter(u=>dOff(u.date)-todayOff<=weekLeft+7);
+  if(!next.length) next=later.slice(0,1);
+  const card=(u)=>`<div class="sumcard" ${u.mile?`data-mile="${u.mile}"`:''}><span class="sumwhen ${u.date===todayIso?'now':''}">${relDay(u.date)}${u.time?' · '+u.time:''}</span><span class="sumtitle">${u.title}</span>${u.subtitle?`<span class="sumsub">${u.subtitle}</span>`:''}`
     +(u.goal&&u.goal.length?`<ul>${u.goal.map(x=>`<li>${x}</li>`).join('')}</ul>`:'')
     +(u.meeting?`<button class="sumlink" data-goto="meetings">${es?'Ver agenda':'See agenda'}</button>`:'')+`</div>`;
   // en curso: etapas de los modos que incluyen hoy; los modos con la misma etapa y fin van en una tarjeta
@@ -984,12 +1004,15 @@ function renderSummary(){
     t.ph.forEach((win,i)=>stages.push({k:PHASES[i].k+'_'+t.key,lbl:es?PHASES[i].es:PHASES[i].en,ds:(win[0]-1)*7,de:(win[1]-1)*7+4}));
     stages.forEach(st=>{ const [a,b]=curOff(st.k,st.ds,st.de); if(a<=todayOff&&todayOff<=b){ const id=st.lbl+b; (byStage[id]=byStage[id]||{lbl:st.lbl,end:b,modes:[]}).modes.push(es?t.es:t.en); } });
   }));
-  const running=Object.values(byStage).map(x=>`<div class="sumcard"><span class="sumwhen run">${until(x.end)}</span><span class="sumtitle">${x.lbl}</span><ul>${x.modes.map(m=>`<li>${m}</li>`).join('')}</ul></div>`).join('');
+  const running=Object.values(byStage).map(x=>`<div class="sumstage"><span class="sumwhen run">${until(x.end)}</span><span class="sumtitle">${x.lbl}</span><span class="modes">${x.modes.join(', ')}</span></div>`).join('');
   const todayLbl=now.toLocaleDateString(es?'es-AR':'en-US',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const cards=soon.map(card).join('')+running;
+  const grid=(list,empty)=>list.length?`<div class="sumgrid">${list.map(card).join('')}</div>`:`<div class="sumtoday">${empty}</div>`;
   body.innerHTML=`<div class="sumtoday">${todayLbl.charAt(0).toUpperCase()+todayLbl.slice(1)}</div>`
     +`<h2 class="sumh">${es?'En qué tenemos que estar trabajando':'What we should be working on'}</h2>`
-    +(cards?`<div class="sumgrid">${cards}</div>`:`<div class="sumtoday">${es?'No hay reuniones, hitos ni etapas activas.':'No meetings, milestones or active stages.'}</div>`);
+    +running
+    +grid(week,es?'No hay reuniones ni hitos esta semana.':'No meetings or milestones this week.')
+    +`<h2 class="sumh">${es?'Lo que viene':'What’s next'}</h2>`
+    +grid(next,es?'No hay reuniones ni hitos próximos.':'No upcoming meetings or milestones.');
 }
 // ===== navegación de vistas (menú lateral) =====
 function renderWorkflows(){
@@ -1051,6 +1074,10 @@ $('#shotsBody').addEventListener('click',(e)=>{
   const lk=e.target.closest('.lk');
   if(lk){ const id=lk.dataset.link, cur=(shotState[id]&&shotState[id].link)||''; const url=prompt(lang==='es'?'Link de la captura (URL):':'Capture link (URL):', cur); if(url!==null){ shotState[id]=shotState[id]||{}; shotState[id].link=url.trim(); saveShots(); renderShots(); } return; }
 });
+// clic en el aviso de un milestone: lleva a su tarjeta del resumen y la resalta
+$('#mileAlert').addEventListener('click',(e)=>{ const b=e.target.closest('[data-mile]'); if(!b) return; showView('summary');
+  const c=document.querySelector(`#sumBody .sumcard[data-mile="${b.dataset.mile}"]`); if(!c) return;
+  c.scrollIntoView({block:'nearest',behavior:'smooth'}); c.classList.add('flash'); setTimeout(()=>c.classList.remove('flash'),2500); });
 $('#sumBody').addEventListener('click',(e)=>{ const b=e.target.closest('[data-goto]'); if(b) showView(b.dataset.goto); });
 $('#meetBody').addEventListener('click',(e)=>{ const top=e.target.closest('.mctop'); if(top) top.parentElement.classList.toggle('open'); });
 if(EDITABLE && $('#pubBtn')){ $('#pubBtn').style.display=''; $('#pubBtn').onclick=publish; }
