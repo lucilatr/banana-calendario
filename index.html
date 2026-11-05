@@ -339,6 +339,7 @@
   .sumwhen.run{background:var(--c-dev-a);}
   .sumtitle{font-weight:700;font-size:15px;line-height:1.35;}
   .sumcard ul{margin:0;padding-left:18px;font-size:13px;line-height:1.5;}
+  .sumsub{margin-top:-8px;font-size:13px;color:var(--muted);}
   .sumlink{margin-top:auto;padding:0;border:none;background:none;color:var(--c-sys-a);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;}
   body.dark .sumlink{color:var(--c-sys-b);}
   .wf{padding:8px 24px 36px;max-width:780px;}
@@ -461,7 +462,7 @@ const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['
 // kinds: 'mile' (milestones) · 'levels' (2 fases) · 'bars' (barras). task.cls override opcional.
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
-   {d:'2026-11-06', icon:'🎮', es:'Versión demo con features nuevos', en:'Demo build with new features', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', goal_es:['Botones','Opciones de pilotaje','Agarrar y tirar pasajeros'], goal_en:['Buttons','Piloting options','Grabbing and throwing passengers']},
+   {d:'2026-11-06', icon:'🎮', es:'Update demo', en:'Demo update', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos'], goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them']},
    {d:'2026-11-12', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 1 día', sub_en:'Thu Nov 12 · 1 day'},
    {d:'2026-11-16', icon:'💡', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'lun 16 Nov', sub_en:'Mon Nov 16', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
    {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
@@ -561,8 +562,8 @@ const MEETINGS=[
  ]},
  {date:'2026-11-05', dlabel_es:'Jueves 5 de noviembre', dlabel_en:'Thursday, November 5', items:[
    {time:'18:00', es:'Revisión de layouts actualizados: nave · submarino · avión de lujo', en:'Updated layouts review: ship · submarine · luxury jet',
-    goal_es:['Llegar con los layouts de la nave, el submarino y el avión de lujo actualizados, con los comentarios del 4 Nov.','Definir qué frases absurdas pregrabadas sumar al botón de Radio con la torre de control.'],
-    goal_en:['Have the ship, submarine and luxury jet layouts updated, with the Nov 4 comments applied.','Decide which absurd pre-recorded lines to add to the Radio button with the control tower.'],
+    goal_es:['Llegar con los layouts de la nave, el submarino y el avión de lujo actualizados, con los comentarios del 4 Nov.','Definir qué frases absurdas pregrabadas sumar al botón de Radio con la torre de control.','Hablar sobre la encuesta.'],
+    goal_en:['Have the ship, submarine and luxury jet layouts updated, with the Nov 4 comments applied.','Decide which absurd pre-recorded lines to add to the Radio button with the control tower.','Talk about the survey.'],
     req:['Lautaro Schpizza','Valentín Frare','Federico Carlini','Germán Heller'], opt:['Jorge Tereso','Fernando Maldonado'],
     agenda_es:[
       {t:'Ver los layouts actualizados de la nave, el submarino y el avión de lujo', sub:[]},
@@ -570,7 +571,8 @@ const MEETINGS=[
       {t:'Submarino — comentarios de la reunión del 4 Nov', sub:['Variar dónde se sienta la gente.','Mesa de planeamiento con un mapa.','Pasajeros más en roles de submarino.','Que tenga piso con rejas.','Que los cartelitos tengan oclusión.','Pantallas que iluminen con verde, alarmas en rojo.']},
       {t:'Avión de lujo — comentarios de la reunión del 4 Nov', sub:['Dance floor, guardaespaldas, VIP, bola de espejos.','Jacuzzi.','Masajes.','Escaleras: que luzcan más ostentosas.','Sector con citas sucediendo, con velas.']},
       {t:'Botones — comentarios de la reunión del 4 Nov', sub:['Distribución: ponerlos donde está el avión.','Que haya una pantalla solo de mapa. Cuando hay un botón que se rompe, que cambie al avión.','Cuando mirás al tablero, que te haga zoom automáticamente para que nada te tape.','Cuando estás mirando, que te resalte el botón para que sepas cuál vas a apretar.','Quitar el botón que habilita los mandos: que quede solamente el botón del mic.','Limpiaparabrisas: sumar uno al medio.']},
-      {t:'Botón de Radio con la torre de control: qué frases sumar', sub:['Frases pregrabadas absurdas.']},
+      {t:'Definir qué frases absurdas pregrabadas sumar al botón de Radio con la torre de control', sub:[]},
+      {t:'Hablar sobre la encuesta', sub:['Ideas para los duelos: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
     ],
     agenda_en:[
       {t:'See the updated layouts of the ship, the submarine and the luxury jet', sub:[]},
@@ -578,7 +580,8 @@ const MEETINGS=[
       {t:'Submarine — comments from the Nov 4 meeting', sub:['Vary where people sit.','Planning table with a map.','Passengers more in submarine roles.','Grated floor.','Signs should have occlusion.','Screens that light up green, alarms in red.']},
       {t:'Luxury jet — comments from the Nov 4 meeting', sub:['Dance floor, bodyguards, VIP, mirror ball.','Jacuzzi.','Massages.','Stairs: make them look more ostentatious.','Area with dates happening, with candles.']},
       {t:'Buttons — comments from the Nov 4 meeting', sub:['Layout: place them where the plane is.','Have a map-only screen. When a button breaks, it switches to the plane.','When you look at the dashboard, zoom in automatically so nothing blocks your view.','While you\'re looking, highlight the button so you know which one you\'re about to press.','Remove the button that enables the controls: keep only the mic button.','Windshield wipers: add one in the middle.']},
-      {t:'Radio button with the control tower: which lines to add', sub:['Absurd pre-recorded lines.']},
+      {t:'Decide which absurd pre-recorded lines to add to the Radio button with the control tower', sub:[]},
+      {t:'Talk about the survey', sub:['Ideas for the duels: Duck tape, rats, being a monkey, scuba diving, aliens, meteorites, fat passengers, farts, slime, skates, different routes, long flights, burgers and fries.']},
     ]},
  ]},
 ];
@@ -936,6 +939,12 @@ function renderMeetings(){
 }
 // ===== resumen: sale de MEETINGS y GROUPS (con las fechas arrastradas), se recalcula con la fecha de hoy =====
 const SUM_HORIZON=7; // días hacia adelante
+// tareas que solo van en el resumen (no aparecen en el Gantt)
+const SUM_TASKS=[
+  {d:'2026-11-06', es:'Anuncio update demo', en:'Demo update announcement', subtitle_es:'(anuncio Steam y Discord)', subtitle_en:'(Steam and Discord announcement)',
+    goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles, máscaras y música','Botón para hablar por altoparlante','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','Mejoras en la performance','Menús en chino arreglados','Radiación balanceada: easy 2 infectados / medium 4','Modo no shake','Agarrar y tirar partes de los cuerpos de los pasajeros con E'],
+    goal_en:['Piloting options','Buttons that trigger alarms, signs, masks and music','Button to speak over the PA','Windshield wipers','Grab passengers and carry them elsewhere or throw them','Performance improvements','Chinese menus fixed','Balanced radiation: easy 2 infected / medium 4','No-shake mode','Grab and throw passengers\' body parts with E']},
+];
 function renderSummary(){
   const body=$('#sumBody'); if(!body) return;
   const es=lang==='es', now=new Date(), todayIso=iso(now), todayOff=dOff(todayIso);
@@ -945,10 +954,11 @@ function renderSummary(){
   const up=[];
   MEETINGS.forEach(d=>d.items.forEach(m=>{ if(new Date(d.date+'T'+m.time+':00').getTime()+3600000>=now.getTime()) up.push({date:d.date,time:m.time,title:es?m.es:m.en,goal:es?m.goal_es:m.goal_en,meeting:true}); }));
   GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en}); }));
-  up.sort((a,b)=>(a.date+a.time)<(b.date+b.time)?-1:1);
+  SUM_TASKS.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,subtitle:es?t.subtitle_es:t.subtitle_en,goal:es?t.goal_es:t.goal_en}); });
+  up.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   let soon=up.filter(u=>dOff(u.date)-todayOff<=SUM_HORIZON);
   if(!soon.length) soon=up.slice(0,1); // sin nada cerca: mostrar lo próximo
-  const card=(u)=>`<div class="sumcard"><span class="sumwhen ${u.date===todayIso?'now':''}">${relDay(u.date)}${u.time?' · '+u.time:''}</span><span class="sumtitle">${u.title}</span>`
+  const card=(u)=>`<div class="sumcard"><span class="sumwhen ${u.date===todayIso?'now':''}">${relDay(u.date)}${u.time?' · '+u.time:''}</span><span class="sumtitle">${u.title}</span>${u.subtitle?`<span class="sumsub">${u.subtitle}</span>`:''}`
     +(u.goal&&u.goal.length?`<ul>${u.goal.map(x=>`<li>${x}</li>`).join('')}</ul>`:'')
     +(u.meeting?`<button class="sumlink" data-goto="meetings">${es?'Ver agenda':'See agenda'}</button>`:'')+`</div>`;
   // en curso: etapas de los modos que incluyen hoy; los modos con la misma etapa y fin van en una tarjeta
