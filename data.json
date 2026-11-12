@@ -1,5 +1,55 @@
 {
   "version": 1,
-  "updated": "2026-11-03T20:30:00.000Z",
-  "barOverrides": {}
+  "updated": "2026-11-12T13:49:10.378Z",
+  "barOverrides": {},
+  "shots": {},
+  "tasks": {
+    "t14n083h": {
+      "who": "AGEZMA"
+    },
+    "t1f33nd9": {
+      "who": "VALEN",
+      "done": true
+    },
+    "t126ggz3": {
+      "who": "VALEN",
+      "done": true
+    },
+    "t111d615": {
+      "who": "VALEN"
+    },
+    "t1zwyzf": {
+      "who": "VALEN"
+    },
+    "t1jwvabr": {
+      "who": "AGEZMA"
+    },
+    "t1x941h8": {
+      "who": "AGEZMA"
+    },
+    "tlm7a9z": {
+      "who": "VALEN"
+    },
+    "t1i7326q": {
+      "who": "AGEZMA"
+    },
+    "t1yh3dks": {
+      "who": "AGEZMA"
+    },
+    "t1th0zq0": {
+      "who": "AGEZMA"
+    },
+    "t1ppp9xn": {
+      "who": "VALEN"
+    },
+    "t12x3m9o": {
+      "who": "VALEN"
+    },
+    "t15o650": {
+      "who": "VALEN"
+    },
+    "t1ozuhvz": {
+      "done": true
+    }
+  }
 }
