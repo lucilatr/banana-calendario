@@ -682,6 +682,10 @@ const TASKS={
       ['Zona de vuelo en el espacio: ampliar el rango antes de morir.','Space flight zone: extend the range before you die.','5 Nov'],
       ['Sin definir: qué control queda para el jetpack (clic o tecla, y hacia qué dirección propulsa).','Undecided: which jetpack control stays (click or key, and which way it propels).','6 Nov'],
       ['Jetpack: feedback visual al usarlo, por ejemplo un fueguito.','Jetpack: visual feedback when using it, for example a small flame.','5 Nov','AGEZMA']]},
+    {es:'Nave espacial: propuesta de Valen', en:'Spaceship: Valen\'s proposal', items:[
+      ['Asientos del piloto: que cada uno tenga su función, uno para la dirección y otro para las armas que disparan y rompen objetos.','Pilot seats: each one has its own function, one for steering and one for the weapons that shoot and break objects.','12 Nov'],
+      ['Que la nave pueda dispararles a los asteroides que vienen hacia ella.','The ship can shoot the asteroids coming at it.','12 Nov'],
+      ['Poder direccionar la nave.','Be able to steer the ship.','12 Nov']]},
     {es:'Submarino', en:'Submarine', items:[
       ['Oxígeno: sin equipo de buceo, morir a los pocos minutos con un mensaje de falta de oxígeno.','Oxygen: without diving gear, die within a few minutes with a lack-of-oxygen message.','5 Nov'],
       ['Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Fix the giant interior collider, which makes it very hard to get back in from the water.','5 Nov'],
@@ -693,6 +697,11 @@ const TASKS={
     {es:'Todos los modos', en:'All modes', items:[
       ['Pasajeros gordos: hacer la textura sin abdominales.','Fat passengers: make the texture without abs.','10 Nov']]},
     {es:'Nave espacial', en:'Spaceship', items:[...stepItems('nave',0,11)]},
+    {es:'Nave espacial: propuesta de Valen', en:'Spaceship: Valen\'s proposal', items:[
+      ['Prioritario, para el build del test del vie 13 a las 11:00: lugares para pisar y volver a saltar.','Priority, for the build for the Fri 13, 11:00 test: places to land on and jump again.','12 Nov'],
+      ['Iluminación: un poco más de GI.','Lighting: a bit more GI.','12 Nov'],
+      ['Algo para pararse arriba de todo, abajo de la cúpula, tipo una bandeja.','Something to stand on at the very top, under the dome, like a tray.','12 Nov'],
+      ['Tres asientos para el que maneja.','Three seats for whoever is piloting.','12 Nov']]},
     {es:'Nave espacial: propuesta de Eri y Lauti', en:'Spaceship: Eri and Lauti\'s proposal', items:ERI_SHIP.es.map((t,i)=>[t,ERI_SHIP.en[i],'12 Nov'])},
     {es:'Luna', en:'Moon', items:[
       ['Sumar los objetos para tirar.','Add the objects to throw.','6 Nov'],
@@ -847,6 +856,12 @@ const MEETINGS=[
     agenda_en:[{t:'Capture the shots that aren\'t checked off in the <a href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener">shoot breakdown ↗</a>.'}],
     decided_es:[{t:'Nave de Eri y Lauti', sub:[...ERI_SHIP.es,'Nada de esto entra en el playtest de hoy: se avanza en paralelo.']}],
     decided_en:[{t:'Eri and Lauti\'s ship', sub:[...ERI_SHIP.en,'None of this goes into today\'s playtest: it moves forward in parallel.']}]},
+ ]},
+ {date:'2026-11-13', dlabel_es:'Viernes 13 de noviembre', dlabel_en:'Friday, November 13', items:[
+   {time:'11:00', es:'Test de la nave de Valen', en:'Valen\'s ship test', req:[], opt:[],
+    goal_es:['Probar en build los lugares para pisar y volver a saltar de la nave de Valen.'], goal_en:['Test in a build the places to land on and jump again in Valen\'s ship.'],
+    agenda_es:[{t:'Probar el build con los lugares para pisar y volver a saltar.'},{t:'Ver las sensaciones del espacio.'},{t:'Brainstorming.'},{t:'Pensar qué comida va a haber.'}],
+    agenda_en:[{t:'Test the build with the places to land on and jump again.'},{t:'Look at how space feels.'},{t:'Brainstorming.'},{t:'Think about what food there will be.'}]},
  ]},
  {date:'2026-11-16', dlabel_es:'Lunes 16 de noviembre', dlabel_en:'Monday, November 16', items:[
    {time:'11:00', es:'Sync', en:'Sync', req:[], opt:[],
@@ -1298,7 +1313,7 @@ function renderSummary(){
 }
 // ===== navegación de vistas (menú lateral) =====
 // cada tarea se identifica por su texto en español, así tildarla sobrevive aunque se reordene la lista
-const TASK_WHO={dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN']};
+const TASK_WHO={dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN','VALEN']};
 let taskFilter=''; // '' = todas; '-' = sin asignar; si no, solo las tareas de esa persona
 let tkDoneOpen=false, tkShowSrc=false; // tkShowSrc: mostrar de qué reunión salió cada tarea // si la lista de puntos resueltos está desplegada
 const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
@@ -1327,7 +1342,7 @@ function renderTasks(){
   const doneN=['dev','art'].reduce((n,k)=>n+groupsOf(k,true).reduce((m,g)=>m+g.items.length,0),0);
   const resolved=doneN?`<details class="tkdone" ${tkDoneOpen?'open':''}><summary>${es?'Puntos resueltos':'Resolved items'} (${doneN})</summary>`
     +['dev','art'].map(k=>{ const gs=groupsOf(k,true); return gs.length?`<div class="tkdsec">${titles[k]}</div>`+list(k,gs):''; }).join('')+`</details>`:'';
-  const people=[...TASK_WHO.dev,...TASK_WHO.art];
+  const people=[...new Set([...TASK_WHO.dev,...TASK_WHO.art])];
   const filt=`<div class="tkfilter"><span>${es?'Ver':'Show'}</span>`+[['',es?'Todas':'All'],...people.map(w=>[w,w]),['-',es?'Sin asignar':'Unassigned']].map(([v,l])=>`<button type="button" data-filter="${v}" class="${taskFilter===v?'on':''}">${l}</button>`).join('')
     +`<button type="button" class="tksrcbtn" data-src>${tkShowSrc?(es?'Ocultar fechas':'Hide dates'):(es?'Ver fechas':'Show dates')}</button></div>`;
   b.classList.toggle('showsrc',tkShowSrc);
