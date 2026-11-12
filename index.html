@@ -622,6 +622,34 @@ const NEXT_STEPS={
   en:{nave:['Consoles: redesign the look of the ones near the walls and the main one so they blend with the ship. The layout stays as it is.','Access to the lower level: place it against the wall so it doesn\'t break the round shape.','Carpet: add one more small step.','Throne seat: change it, because it looks lonely and too much like a passenger seat.','Command center: make it bigger and more spectacular.','Middle throne: a bit higher.','Places to jump: add mini ledges on the window frames and next to the seats.','Seats: make the lower ones a bit bigger and narrow them going up, so you can jump without hitting them.','Lower level: hide some shapes that are currently exposed, and uncover the boiler, which ended up behind a corridor and a door.','Undecided: whether the throne has one or two seats.','Undecided: whether the boiler becomes a reactor with the ship\'s look and cheap details, like wood.','Undecided: which jetpack control stays. Valen wasn\'t convinced by the new mode chosen from the activator.'],
     sub:['Lamps: add some with a small grille, so the light isn\'t so flat.','Lights: more contrast and darker, so spot lights carry more weight.','Shiny consoles: fix them before a playtest, because up close they look melted. Federico suggests starting by lowering the specular.'],
     lujo:['Luxury stairs, mansion or Titanic style: wider first step, open at the bottom, with a light railing.','Smoke: not there all the time. Save it for disasters or moments with darker lighting.','Food: serve sushi in the premium area.']}};
+// 12 Nov: qué hacer en la nave de Eri y Lauti (solo esa nave, no la propuesta de Valen). Va en la reunión y en Tareas ARTE-3D.
+const ERI_SHIP={
+  es:['Glow: bajarlo, hoy está zarpado.',
+    'Cables: sacar varios. Tienen demasiado protagonismo, se ven repetidos y no se conectan a ningún lado.',
+    'Centro de comandos: agrandarlo para que tenga tres lugares y más protagonismo; hoy quedó pelado.',
+    'Asientos del centro: el del capitán es muy humilde. Sumar dos al lado, en tridente, como en Star Trek.',
+    'Escotilla: darle diseño e integrarla, contra la pared; hoy es muy básica.',
+    'Elementos repetidos: darles una vuelta creativa para que no sea el mismo objeto cuatro veces, también en la bodega.',
+    'Estética: seguir la del reactor medio chueco. Lo viejo que hoy parece un error tiene que verse barateado a propósito.',
+    'Escalera: reemplazarla por un tubo para bajar, que en gravedad baja se salta. Si queda un agujero en el piso, que sea circular como la alfombra.',
+    'Bóvedas: sacarlas, porque no tienen función y confunden.',
+    'Borde de la alfombra: levantarlo un poco, con un zócalo y más detalle.',
+    'Tablero de herramientas en la pared, como el de Johan.',
+    'Paredes: papel aluminio tipo aislamiento, menos prolijas, con chapas caídas y tubos de aluminio salidos.',
+    'Patas: retraídas, para que en las tomas de afuera se vea volando.'],
+  en:['Glow: tone it down, it is way too much right now.',
+    'Cables: remove several. They take too much attention, look repeated and don\'t connect to anything.',
+    'Command center: make it bigger so it has three spots and more presence; right now it looks bare.',
+    'Center seats: the captain\'s seat is too humble. Add two next to it in a trident, like in Star Trek.',
+    'Hatch: give it some design and blend it in, against the wall; right now it is very basic.',
+    'Repeated elements: rethink them creatively so it isn\'t the same object four times, the cargo hold included.',
+    'Look: follow the slightly crooked reactor. The old parts that now look like a mistake should look cheap on purpose.',
+    'Stairs: replace them with a tube to go down, since in low gravity you just jump. If a hole in the floor stays, make it circular like the carpet.',
+    'Vaults: remove them, since they have no function and are confusing.',
+    'Carpet edge: raise it a bit, with a baseboard and more detail.',
+    'Tool board on the wall, like Johan\'s.',
+    'Walls: aluminum foil insulation, less tidy, with sagging panels and aluminum pipes sticking out.',
+    'Legs: retracted, so it looks like it is flying in outside shots.']};
 // tareas pendientes para que el equipo agarre: [es, en, reunión de donde salió]
 const stepItems=(k,from,to)=>NEXT_STEPS.es[k].slice(from,to).map((t,i)=>[t,NEXT_STEPS.en[k][from+i],'6 Nov']);
 const TASKS={
@@ -651,6 +679,7 @@ const TASKS={
       ['Pasajeros gordos: hacer la textura sin abdominales.','Fat passengers: make the texture without abs.','10 Nov']]},
     {es:'Nave espacial', en:'Spaceship', items:[...stepItems('nave',0,11),
       ['Jetpack: feedback visual al usarlo, por ejemplo un fueguito.','Jetpack: visual feedback when using it, for example a small flame.','5 Nov']]},
+    {es:'Nave espacial: propuesta de Eri y Lauti', en:'Spaceship: Eri and Lauti\'s proposal', items:ERI_SHIP.es.map((t,i)=>[t,ERI_SHIP.en[i],'12 Nov'])},
     {es:'Luna', en:'Moon', items:[
       ['Sumar los objetos para tirar.','Add the objects to throw.','6 Nov'],
       ['Sumar objetos fuera de lugar, como basura espacial o el monolito de 2001.','Add out-of-place objects, like space junk or the 2001 monolith.','5 Nov']]},
@@ -801,11 +830,9 @@ const MEETINGS=[
    {time:'12:30', es:'Rodaje: tomas pendientes del trailer', en:'Shoot: remaining trailer shots', req:['Valentín Frare','Agustín Martínez','Pablo Gioia','Germán Heller','Federico Carlini','Santiago Tereso','Lucila Trobbiani'], opt:[],
     goal_es:['Capturar las tomas que no están tildadas en el desglose del rodaje.'], goal_en:['Capture the shots that aren\'t checked off in the shoot breakdown.'],
     agenda_es:[{t:'Capturar las tomas que no están tildadas en el <a href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener">desglose del rodaje ↗</a>.'}],
-    agenda_en:[{t:'Capture the shots that aren\'t checked off in the <a href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener">shoot breakdown ↗</a>.'}]},
-   {time:'15:00', es:'Sync: capturas y playtest de Space', en:'Sync: captures and Space playtest', req:['Valentín Frare','Agustín Martínez','Pablo Gioia','Germán Heller','Federico Carlini','Santiago Tereso','Lucila Trobbiani'], opt:['Lautaro Schipizza','Fernando Maldonado','Jorge Tereso'],
-    goal_es:['Repasar lo capturado y lo que tenemos para el playtest de Space de las 16:00.'], goal_en:['Go over what\'s been captured and what we have for the 16:00 Space playtest.'],
-    agenda_es:[{t:'Repasar lo que tenemos capturado.'},{t:'Repasar lo que tenemos para el playtest de Space de las 16:00.'}],
-    agenda_en:[{t:'Go over what we\'ve captured.'},{t:'Go over what we have for the 16:00 Space playtest.'}]},
+    agenda_en:[{t:'Capture the shots that aren\'t checked off in the <a href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener">shoot breakdown ↗</a>.'}],
+    decided_es:[{t:'Nave de Eri y Lauti', sub:[...ERI_SHIP.es,'Nada de esto entra en el playtest de hoy: se avanza en paralelo.']}],
+    decided_en:[{t:'Eri and Lauti\'s ship', sub:[...ERI_SHIP.en,'None of this goes into today\'s playtest: it moves forward in parallel.']}]},
  ]},
  {date:'2026-11-16', dlabel_es:'Lunes 16 de noviembre', dlabel_en:'Monday, November 16', items:[
    {time:'11:00', es:'Sync', en:'Sync', req:[], opt:[],
