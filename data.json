@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-12T13:49:10.378Z",
+  "updated": "2026-11-12T20:06:11.709Z",
   "barOverrides": {},
   "shots": {},
   "tasks": {
@@ -22,7 +22,8 @@
       "who": "VALEN"
     },
     "t1jwvabr": {
-      "who": "AGEZMA"
+      "who": "AGEZMA",
+      "done": true
     },
     "t1x941h8": {
       "who": "AGEZMA"
@@ -49,6 +50,60 @@
       "who": "VALEN"
     },
     "t1ozuhvz": {
+      "done": true
+    },
+    "t5d92yx": {
+      "who": "GASTÓN",
+      "done": true
+    },
+    "tm2jal7": {
+      "who": "ERI",
+      "done": true
+    },
+    "tjg4dst": {
+      "who": "ERI",
+      "done": true
+    },
+    "t1jevi1u": {
+      "who": "ERI",
+      "done": true
+    },
+    "t1n15wl0": {
+      "who": "ERI",
+      "done": true
+    },
+    "tr2geai": {
+      "who": "ERI",
+      "done": true
+    },
+    "tq2eanb": {
+      "who": "ERI",
+      "done": true
+    },
+    "t1p9ktz9": {
+      "who": "ERI",
+      "done": true
+    },
+    "t1oeoesa": {
+      "who": "ERI",
+      "done": true
+    },
+    "t1qf3j6a": {
+      "who": "ERI",
+      "done": true
+    },
+    "t17g46rd": {
+      "who": "ERI",
+      "done": true
+    },
+    "t14gz9jd": {
+      "who": "ERI",
+      "done": true
+    },
+    "tniu0hx": {
+      "done": true
+    },
+    "t68k4v3": {
       "done": true
     }
   }
