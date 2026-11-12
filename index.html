@@ -366,6 +366,10 @@
   .tkitem.done .txt{color:#15803d;font-weight:600;}
   body.dark .tkitem.done{background:rgba(34,197,94,.14);}
   body.dark .tkitem.done .txt{color:#4ade80;}
+  .tkfilter{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 0;font-size:12.5px;font-weight:700;color:var(--muted);}
+  .tkfilter span{margin-right:2px;}
+  .tkfilter button{padding:5px 12px;border-radius:8px;border:1px solid var(--gridStrong);background:var(--panel);color:var(--text);font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;}
+  .tkfilter button.on{background:var(--c-dev-a);border-color:var(--c-dev-a);color:#fff;}
   .tkwho{flex:none;display:flex;gap:4px;}
   .tkwho button{padding:1px 7px;border-radius:6px;border:1px solid var(--gridStrong);background:var(--bg);color:var(--muted);font:inherit;font-size:10.5px;font-weight:800;letter-spacing:.3px;cursor:pointer;}
   .tkwho button.on{background:var(--c-dev-a);border-color:var(--c-dev-a);color:#fff;}
@@ -1232,6 +1236,7 @@ function renderSummary(){
 // ===== navegación de vistas (menú lateral) =====
 // cada tarea se identifica por su texto en español, así tildarla sobrevive aunque se reordene la lista
 const DEV_WHO=['AGEZMA','VALEN'];
+let taskFilter=''; // '' = todas; '-' = DEV sin asignar; si no, solo las tareas de DEV de esa persona
 const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
 function renderTasks(){
   const b=$('#tkBody'); if(!b) return;
@@ -1239,16 +1244,21 @@ function renderTasks(){
   // en edición se ven los dos nombres para elegir; en la vista del equipo, solo el asignado
   const whoBtns=(id)=>{ const who=(taskState[id]||{}).who; const list=EDITABLE?DEV_WHO:DEV_WHO.filter(w=>w===who);
     return list.length?`<span class="tkwho">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
-  const sec=(k,title)=>{ const all=TASKS[k].flatMap(g=>g.items), n=all.filter(it=>(taskState[taskId(it[0])]||{}).done).length;
+  const mine=(it)=>{ const who=(taskState[taskId(it[0])]||{}).who||''; return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
+  const sec=(k,title)=>{ const groups=TASKS[k].map(g=>({...g,items:g.items.filter(mine)})).filter(g=>g.items.length);
+    const all=groups.flatMap(g=>g.items), n=all.filter(it=>(taskState[taskId(it[0])]||{}).done).length;
+    if(!all.length) return '';
     return `<div class="tksec ${k}">${title}<span class="tkn">${n}/${all.length} ${es?'hechas':'done'}</span></div>`
-      +TASKS[k].map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>{ const id=taskId(it[0]), done=(taskState[id]||{}).done;
+      +groups.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>{ const id=taskId(it[0]), done=(taskState[id]||{}).done;
         return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${k==='dev'?whoBtns(id):''}<span class="tksrc">${it[2]}</span></label>`; }).join('')).join(''); };
-  b.innerHTML=sec('dev','DEV')+sec('art',es?'ARTE-3D':'ART-3D');
+  const filt=`<div class="tkfilter"><span>${es?'Ver':'Show'}</span>`+[['',es?'Todas':'All'],...DEV_WHO.map(w=>[w,w]),['-',es?'Sin asignar':'Unassigned']].map(([v,l])=>`<button type="button" data-filter="${v}" class="${taskFilter===v?'on':''}">${l}</button>`).join('')+`</div>`;
+  b.innerHTML=filt+sec('dev','DEV')+(taskFilter?'':sec('art',es?'ARTE-3D':'ART-3D'));
 }
 $('#tkBody').addEventListener('change',(e)=>{ const cb=e.target.closest('input[data-task]'); if(!cb) return;
   if(!EDITABLE){ cb.checked=!cb.checked; return; }
   taskState[cb.dataset.task]={...taskState[cb.dataset.task],done:cb.checked}; saveTasks(); renderTasks(); });
-$('#tkBody').addEventListener('click',(e)=>{ const b=e.target.closest('button[data-who]'); if(!b) return; e.preventDefault(); if(!EDITABLE) return;
+$('#tkBody').addEventListener('click',(e)=>{ const f=e.target.closest('button[data-filter]'); if(f){ taskFilter=f.dataset.filter; renderTasks(); return; }
+  const b=e.target.closest('button[data-who]'); if(!b) return; e.preventDefault(); if(!EDITABLE) return;
   const id=b.dataset.tid, st={...taskState[id]}; st.who=st.who===b.dataset.who?'':b.dataset.who; taskState[id]=st; saveTasks(); renderTasks(); });
 function renderWorkflows(){
   const b=$('#wfBody'); if(!b) return;
@@ -1358,7 +1368,7 @@ GROUPS.forEach(g=>{
 });
 // grupos colapsados por defecto (se abren con un clic)
 GROUPS.forEach((g,gi)=>{ if(g.collapsed) collapsedGrp.add(gi); });
-loadState().then(()=>{ render(); if(EDITABLE && lastPublished) showPubStatus('Última publicación: '+fmtTs(lastPublished)); });
+loadState().then(()=>{ render(); renderTasks(); if(EDITABLE && lastPublished) showPubStatus('Última publicación: '+fmtTs(lastPublished)); });
 </script>
 </body>
 </html>
