@@ -674,7 +674,8 @@ const TASKS={
       ['Botón de tirar máscaras: sumarlo cuando funcione bien.','Mask drop button: add it once it works well.','6 Nov']]},
     {es:'Nave espacial', en:'Spaceship', items:[
       ['Zona de vuelo en el espacio: ampliar el rango antes de morir.','Space flight zone: extend the range before you die.','5 Nov'],
-      ['Sin definir: qué control queda para el jetpack (clic o tecla, y hacia qué dirección propulsa).','Undecided: which jetpack control stays (click or key, and which way it propels).','6 Nov']]},
+      ['Sin definir: qué control queda para el jetpack (clic o tecla, y hacia qué dirección propulsa).','Undecided: which jetpack control stays (click or key, and which way it propels).','6 Nov'],
+      ['Jetpack: feedback visual al usarlo, por ejemplo un fueguito.','Jetpack: visual feedback when using it, for example a small flame.','5 Nov','AGEZMA']]},
     {es:'Submarino', en:'Submarine', items:[
       ['Oxígeno: sin equipo de buceo, morir a los pocos minutos con un mensaje de falta de oxígeno.','Oxygen: without diving gear, die within a few minutes with a lack-of-oxygen message.','5 Nov'],
       ['Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Fix the giant interior collider, which makes it very hard to get back in from the water.','5 Nov'],
@@ -685,8 +686,7 @@ const TASKS={
   art:[
     {es:'Todos los modos', en:'All modes', items:[
       ['Pasajeros gordos: hacer la textura sin abdominales.','Fat passengers: make the texture without abs.','10 Nov']]},
-    {es:'Nave espacial', en:'Spaceship', items:[...stepItems('nave',0,11),
-      ['Jetpack: feedback visual al usarlo, por ejemplo un fueguito.','Jetpack: visual feedback when using it, for example a small flame.','5 Nov']]},
+    {es:'Nave espacial', en:'Spaceship', items:[...stepItems('nave',0,11)]},
     {es:'Nave espacial: propuesta de Eri y Lauti', en:'Spaceship: Eri and Lauti\'s proposal', items:ERI_SHIP.es.map((t,i)=>[t,ERI_SHIP.en[i],'12 Nov'])},
     {es:'Luna', en:'Moon', items:[
       ['Sumar los objetos para tirar.','Add the objects to throw.','6 Nov'],
@@ -1297,12 +1297,14 @@ const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0
 function renderTasks(){
   const b=$('#tkBody'); if(!b) return;
   const es=lang==='es', L=es?0:1, st=(it)=>taskState[taskId(it[0])]||{};
+  // 4º elemento opcional: a quién va asignada de entrada, hasta que se cambie desde ?edit
+  const whoOf=(it)=>{ const x=st(it); return 'who' in x ? x.who : (it[3]||''); };
   // en edición se ven todos los nombres para elegir; en la vista del equipo, solo el asignado
-  const whoBtns=(k,id)=>{ const who=(taskState[id]||{}).who; const list=EDITABLE?TASK_WHO[k]:TASK_WHO[k].filter(w=>w===who);
+  const whoBtns=(k,id,who)=>{ const list=EDITABLE?TASK_WHO[k]:TASK_WHO[k].filter(w=>w===who);
     return list.length?`<span class="tkwho ${k}">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
-  const mine=(it)=>{ const who=st(it).who||''; return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
+  const mine=(it)=>{ const who=whoOf(it); return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
   const row=(k,it)=>{ const id=taskId(it[0]), done=st(it).done;
-    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${whoBtns(k,id)}<span class="tksrc">${it[2]}</span></label>`; };
+    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${whoBtns(k,id,whoOf(it))}<span class="tksrc">${it[2]}</span></label>`; };
   // las hechas salen de la lista y van a "Puntos resueltos", al final
   const groupsOf=(k,done)=>TASKS[k].map(g=>({...g,items:g.items.filter(it=>mine(it)&&!!st(it).done===done)})).filter(g=>g.items.length);
   const list=(k,gs)=>gs.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>row(k,it)).join('')).join('');
@@ -1328,7 +1330,7 @@ $('#tkBody').addEventListener('change',(e)=>{ const cb=e.target.closest('input[d
 $('#tkBody').addEventListener('click',(e)=>{ if(e.target.closest('button[data-src]')){ tkShowSrc=!tkShowSrc; renderTasks(); return; }
   const f=e.target.closest('button[data-filter]'); if(f){ taskFilter=f.dataset.filter; renderTasks(); return; }
   const b=e.target.closest('button[data-who]'); if(!b) return; e.preventDefault(); if(!EDITABLE) return;
-  const id=b.dataset.tid, st={...taskState[id]}; st.who=st.who===b.dataset.who?'':b.dataset.who; taskState[id]=st; saveTasks(); renderTasks(); });
+  const id=b.dataset.tid, st={...taskState[id]}; st.who=b.classList.contains('on')?'':b.dataset.who; taskState[id]=st; saveTasks(); renderTasks(); });
 function renderWorkflows(){
   const b=$('#wfBody'); if(!b) return;
   const url='https://pub-1fd1ac33889d4659b8b9205ef2b41f91.r2.dev/comandas.html#inv=inv8ada1f1217e5d1a7ec75';
