@@ -352,6 +352,25 @@
   .sumnote{padding-left:10px;border-left:3px solid var(--grid);font-size:13px;line-height:1.45;color:var(--muted);}
   .sumlink{margin-top:auto;padding:0;border:none;background:none;color:var(--c-sys-a);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;}
   body.dark .sumlink{color:var(--c-sys-b);}
+  .tk{padding:8px 24px 36px;max-width:820px;}
+  .tksec{display:flex;align-items:baseline;gap:10px;font-size:16px;font-weight:800;margin:26px 0 4px;padding-bottom:8px;border-bottom:3px solid var(--c-dev-a);}
+  .tksec.art{border-color:var(--c-art-a);}
+  .tksec .tkn{font-size:12px;font-weight:700;color:var(--muted);}
+  .tkgrp{font-size:12px;font-weight:800;letter-spacing:.4px;color:var(--muted);margin:16px 0 4px;}
+  .tkitem{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;margin:0 -10px;border-bottom:1px solid var(--grid);border-radius:8px;}
+  .tkitem input[type=checkbox]{margin-top:2px;width:16px;height:16px;flex:none;cursor:pointer;accent-color:#16a34a;}
+  .tkitem input[disabled]{cursor:default;}
+  .tkitem .txt{flex:1;font-size:13.5px;line-height:1.45;}
+  .tkitem.open .txt{color:var(--muted);font-style:italic;}
+  .tkitem.done{background:rgba(22,163,74,.12);border-bottom-color:transparent;}
+  .tkitem.done .txt{color:#15803d;font-weight:600;}
+  body.dark .tkitem.done{background:rgba(34,197,94,.14);}
+  body.dark .tkitem.done .txt{color:#4ade80;}
+  .tkwho{flex:none;display:flex;gap:4px;}
+  .tkwho button{padding:1px 7px;border-radius:6px;border:1px solid var(--gridStrong);background:var(--bg);color:var(--muted);font:inherit;font-size:10.5px;font-weight:800;letter-spacing:.3px;cursor:pointer;}
+  .tkwho button.on{background:var(--c-dev-a);border-color:var(--c-dev-a);color:#fff;}
+  .tkwho button:disabled{cursor:default;}
+  .tksrc{flex:none;margin-top:1px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--grid);white-space:nowrap;}
   .wf{padding:8px 24px 36px;max-width:780px;}
   .wfrow{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel);}
   .wfrow h3{margin:0 0 8px;font-size:13px;letter-spacing:.3px;}
@@ -359,6 +378,7 @@
   .wfmac{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gridStrong);border-radius:8px;padding:6px 10px;margin:3px 7px 3px 0;font-size:14px;font-weight:700;background:var(--bg);}
   .wfmac small{font-weight:400;color:var(--muted);}
   .wf .muted{color:var(--muted);font-size:12px;line-height:1.5;}
+  .mcard .mdetail a{color:var(--c-dev-a);font-weight:700;}
   .wfbtn{display:inline-block;background:var(--c-dev-a);color:#fff;font-weight:700;padding:9px 14px;border-radius:9px;text-decoration:none;font-size:13px;}
   .mdate{font-size:12px;font-weight:800;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;}
   .mcard{border:1px solid var(--grid);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--panel);}
@@ -410,6 +430,7 @@
       <button class="sbitem" data-view="trailer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M3 7.5h4M3 12h18M3 16.5h4M17 3v18M17 7.5h4M17 16.5h4"/></svg><span class="lb">Trailer</span></button>
       <button class="sbitem active" data-view="calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg><span class="lb">Calendar</span></button>
       <div class="sbsec" data-es="Equipo" data-en="Team">Equipo</div>
+      <button class="sbitem" data-view="tasks"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></svg><span class="lb" data-es="Tareas" data-en="Tasks">Tareas</span></button>
       <button class="sbitem" data-view="meetings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="lb" data-es="Reuniones" data-en="Meetings">Reuniones</span></button>
       <button class="sbitem" data-view="workflows"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span class="lb">Workflows</span></button>
       <div class="sbsec" data-es="Datos" data-en="Data">Datos</div>
@@ -434,7 +455,8 @@
       <div class="tr-countdown" id="trCountdown"></div>
       <div class="tr-slice" id="trSlice"></div>
       <div class="tr-shots">
-        <a class="wfbtn shotsdrive" href="https://drive.google.com/drive/folders/1BwEUM0KT5HEADK0N34ZKI-v-0oNIjYWo?usp=drive_link" target="_blank" rel="noopener" data-es="Ver capturas en Drive ↗" data-en="See captures in Drive ↗">Ver capturas en Drive ↗</a>
+        <a class="wfbtn shotsdrive" href="https://drive.google.com/drive/folders/1-WEn_0ZVH2DV1z9Yc--KSVJCQm3ZA2Rs?usp=drive_link" target="_blank" rel="noopener" data-es="Ver capturas en Drive ↗" data-en="See captures in Drive ↗">Ver capturas en Drive ↗</a>
+        <a class="wfbtn shotsdrive" href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener" data-es="Desglose de tomas del rodaje ↗" data-en="Shoot breakdown ↗">Desglose de tomas del rodaje ↗</a>
         <button class="collapser closed" id="shotsCollapse"><span class="cv">▾</span> <span data-es="Lista de tomas para trailer" data-en="Trailer shots list">Lista de tomas para trailer</span></button>
         <div class="mbody collapsebody hiddenc" id="shotsBody"></div>
       </div>
@@ -472,6 +494,11 @@
       <div class="mbody" id="meetBody"></div>
     </section>
 
+    <section class="view" id="view-tasks">
+      <div class="vhead"><h1 data-es="✅ Tareas" data-en="✅ Tasks">✅ Tareas</h1></div>
+      <div class="tk" id="tkBody"></div>
+    </section>
+
     <section class="view" id="view-workflows">
       <div class="vhead"><h1>⚙️ Workflows</h1></div>
       <div class="wf" id="wfBody"></div>
@@ -490,7 +517,7 @@ const MONTHS=[['OCT','OCT',1],['NOV','NOV',4],['DIC','DEC',4],['ENE','JAN',5],['
 const GROUPS=[
  {kind:'mile', es:'MILESTONES', en:'MILESTONES', tasks:[
    {d:'2026-11-06', icon:'🎮', es:'Update demo', en:'Demo update', sub_es:'vie 6 Nov', sub_en:'Fri Nov 6', note_es:'No incluye el botón de tirar máscaras.', note_en:'Does not include the mask drop button.', goal_es:['Opciones de pilotaje','Botones que activan alarmas, carteles y música','Botón para hablar por altoparlante','Botón de hablar con la torre de control (las frases se cambian después)','Limpiaparabrisas','Agarrar pasajeros y llevarlos a otro lado o tirarlos','3 bananas = 3 jeringas','Actualización de la encuesta: dúos con Sushi, Burgers, Clogged toilet, Fat passengers, Being a monkey, Ability to skate, Slime, Weapons, Farts, Slapping, Ghosts, Octopus'], goal_en:['Piloting options','Buttons that trigger alarms, signs and music','Button to speak over the PA','Button to talk to the control tower (the lines change later)','Windshield wipers','Grab passengers and carry them elsewhere or throw them','3 bananas = 3 syringes','Survey update: duos with Sushi, Burgers, Clogged toilet, Fat passengers, Being a monkey, Ability to skate, Slime, Weapons, Farts, Slapping, Ghosts, Octopus']},
-   {d:'2026-11-12', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 1 día', sub_en:'Thu Nov 12 · 1 day'},
+   {d:'2026-11-12', time:'16:00', icon:'👥', side:'l', es:'Playtest 1 · comunidad', en:'Playtest 1 · community', sub_es:'jue 12 Nov · 16:00', sub_en:'Thu Nov 12 · 4 pm'},
    {d:'2026-11-16', icon:'💡', es:'Regroup + brainstorm', en:'Regroup + brainstorm', sub_es:'lun 16 Nov', sub_en:'Mon Nov 16', tip_es:'Carlini, Jorge, Fer y Ger', tip_en:'Carlini, Jorge, Fer and Ger'},
    {d:'2026-11-20', side:'r', es:'Submit trailer', en:'Submit trailer', sub_es:'20 Nov', sub_en:'Nov 20'},
    {d:'2026-11-30', icon:'👥', side:'l', es:'Playtest 2 · comunidad', en:'Playtest 2 · community', sub_es:'lun 30 Nov', sub_en:'Mon Nov 30'},
@@ -571,6 +598,43 @@ const NEXT_STEPS={
   en:{nave:['Consoles: redesign the look of the ones near the walls and the main one so they blend with the ship. The layout stays as it is.','Access to the lower level: place it against the wall so it doesn\'t break the round shape.','Carpet: add one more small step.','Throne seat: change it, because it looks lonely and too much like a passenger seat.','Command center: make it bigger and more spectacular.','Middle throne: a bit higher.','Places to jump: add mini ledges on the window frames and next to the seats.','Seats: make the lower ones a bit bigger and narrow them going up, so you can jump without hitting them.','Lower level: hide some shapes that are currently exposed, and uncover the boiler, which ended up behind a corridor and a door.','Undecided: whether the throne has one or two seats.','Undecided: whether the boiler becomes a reactor with the ship\'s look and cheap details, like wood.','Undecided: which jetpack control stays. Valen wasn\'t convinced by the new mode chosen from the activator.'],
     sub:['Lamps: add some with a small grille, so the light isn\'t so flat.','Lights: more contrast and darker, so spot lights carry more weight.','Shiny consoles: fix them before a playtest, because up close they look melted. Federico suggests starting by lowering the specular.'],
     lujo:['Luxury stairs, mansion or Titanic style: wider first step, open at the bottom, with a light railing.','Smoke: not there all the time. Save it for disasters or moments with darker lighting.','Food: serve sushi in the premium area.']}};
+// tareas pendientes para que el equipo agarre: [es, en, reunión de donde salió]
+const stepItems=(k,from,to)=>NEXT_STEPS.es[k].slice(from,to).map((t,i)=>[t,NEXT_STEPS.en[k][from+i],'6 Nov']);
+const TASKS={
+  dev:[
+    {es:'Todos los modos', en:'All modes', items:[
+      ['Que cada modo sea jugable: inicio con despegue, eventos en el medio y final con aterrizaje.','Make every mode playable: start with takeoff, events in the middle and end with landing.','10 Nov'],
+      ['Pasajeros gordos: sumarlos al juego con las mismas mecánicas que un pasajero normal (se levantan y se tiran igual).','Fat passengers: add them to the game with the same mechanics as a regular passenger (picked up and thrown the same way).','10 Nov'],
+      ['Inclinación: que el avión se incline poco si se mueve un pasajero y mucho si se mueven dos.','Tilt: the plane tilts a little if one passenger moves and a lot if two move.','10 Nov'],
+      ['Sin definir: si el equipaje de arriba se cae en las maniobras bruscas.','Undecided: whether the overhead luggage falls during sharp maneuvers.','10 Nov']]},
+    {es:'Demo y controles', en:'Demo and controls', items:[
+      ['Acelerar: en "hold shift" mostrar una sola opción.','Accelerate: "hold shift" should show a single option.','6 Nov'],
+      ['Bebés: que lloren la mitad de lo que lloran ahora.','Babies: they should cry half as much as they do now.','6 Nov'],
+      ['Torre de control: reemplazar las frases de prueba por las definitivas.','Control tower: replace the test lines with the final ones.','5 Nov'],
+      ['Botón de tirar máscaras: sumarlo cuando funcione bien.','Mask drop button: add it once it works well.','6 Nov']]},
+    {es:'Nave espacial', en:'Spaceship', items:[
+      ['Zona de vuelo en el espacio: ampliar el rango antes de morir.','Space flight zone: extend the range before you die.','5 Nov'],
+      ['Sin definir: qué control queda para el jetpack (clic o tecla, y hacia qué dirección propulsa).','Undecided: which jetpack control stays (click or key, and which way it propels).','6 Nov']]},
+    {es:'Submarino', en:'Submarine', items:[
+      ['Oxígeno: sin equipo de buceo, morir a los pocos minutos con un mensaje de falta de oxígeno.','Oxygen: without diving gear, die within a few minutes with a lack-of-oxygen message.','5 Nov'],
+      ['Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Fix the giant interior collider, which makes it very hard to get back in from the water.','5 Nov'],
+      ['Nado: que Espacio impulse al personaje hacia arriba.','Swimming: Space pushes the character upward.','5 Nov'],
+      ['Sumar objetos para apretar sin sentido, como un Simón.','Add pointless things to press, like a Simon game.','5 Nov']]},
+    {es:'Avión de lujo', en:'Luxury jet', items:stepItems('lujo',1)},
+  ],
+  art:[
+    {es:'Todos los modos', en:'All modes', items:[
+      ['Pasajeros gordos: hacer la textura sin abdominales.','Fat passengers: make the texture without abs.','10 Nov']]},
+    {es:'Nave espacial', en:'Spaceship', items:[...stepItems('nave',0,11),
+      ['Jetpack: feedback visual al usarlo, por ejemplo un fueguito.','Jetpack: visual feedback when using it, for example a small flame.','5 Nov']]},
+    {es:'Luna', en:'Moon', items:[
+      ['Sumar los objetos para tirar.','Add the objects to throw.','6 Nov'],
+      ['Sumar objetos fuera de lugar, como basura espacial o el monolito de 2001.','Add out-of-place objects, like space junk or the 2001 monolith.','5 Nov']]},
+    {es:'Submarino', en:'Submarine', items:[...stepItems('sub',0),
+      ['Agua: un poco de transparencia vista desde arriba y mejores cáusticas.','Water: a little transparency when seen from above, and better caustics.','5 Nov'],
+      ['Junto a la fosa: equipos de buceo colgados y un cartel que avise que no se puede bajar sin equipo.','Next to the pit: hanging diving gear and a sign warning not to go down without it.','5 Nov']]},
+    {es:'Avión de lujo', en:'Luxury jet', items:stepItems('lujo',0,1)},
+  ]};
 const MEETINGS=[
  {date:'2026-11-04', dlabel_es:'Miércoles 4 de noviembre', dlabel_en:'Wednesday, November 4', items:[
    {time:'11:00', es:'Sync', en:'Sync',
@@ -709,6 +773,28 @@ const MEETINGS=[
       {t:'Trailer', fold:true, sub:['Plan which views and elements are needed, and test them before generating them.']},
     ]}
  ]},
+ {date:'2026-11-12', dlabel_es:'Jueves 12 de noviembre', dlabel_en:'Thursday, November 12', items:[
+   {time:'12:30', es:'Rodaje: tomas pendientes del trailer', en:'Shoot: remaining trailer shots', req:['Valentín Frare','Agustín Martínez','Pablo Gioia','Germán Heller','Federico Carlini','Santiago Tereso','Lucila Trobbiani'], opt:[],
+    goal_es:['Capturar las tomas que no están tildadas en el desglose del rodaje.'], goal_en:['Capture the shots that aren\'t checked off in the shoot breakdown.'],
+    agenda_es:[{t:'Capturar las tomas que no están tildadas en el <a href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener">desglose del rodaje ↗</a>.'}],
+    agenda_en:[{t:'Capture the shots that aren\'t checked off in the <a href="https://3d.ar/banana-shoot/" target="_blank" rel="noopener">shoot breakdown ↗</a>.'}]},
+   {time:'15:00', es:'Sync: capturas y playtest de Space', en:'Sync: captures and Space playtest', req:['Valentín Frare','Agustín Martínez','Pablo Gioia','Germán Heller','Federico Carlini','Santiago Tereso','Lucila Trobbiani'], opt:['Lautaro Schipizza','Fernando Maldonado','Jorge Tereso'],
+    goal_es:['Repasar lo capturado y lo que tenemos para el playtest de Space de las 16:00.'], goal_en:['Go over what\'s been captured and what we have for the 16:00 Space playtest.'],
+    agenda_es:[{t:'Repasar lo que tenemos capturado.'},{t:'Repasar lo que tenemos para el playtest de Space de las 16:00.'}],
+    agenda_en:[{t:'Go over what we\'ve captured.'},{t:'Go over what we have for the 16:00 Space playtest.'}]},
+ ]},
+ {date:'2026-11-16', dlabel_es:'Lunes 16 de noviembre', dlabel_en:'Monday, November 16', items:[
+   {time:'11:00', es:'Sync', en:'Sync', req:[], opt:[],
+    goal_es:['Definir las nuevas preguntas para la encuesta.'], goal_en:['Decide the new survey questions.'],
+    agenda_es:[{t:'Nuevas preguntas para la encuesta (todos los lunes).'}],
+    agenda_en:[{t:'New survey questions (every Monday).'}]},
+ ]},
+ {date:'2026-11-18', dlabel_es:'Miércoles 18 de noviembre', dlabel_en:'Wednesday, November 18', items:[
+   {time:'11:00', es:'Sync', en:'Sync', req:[], opt:[], agenda_es:[], agenda_en:[]},
+ ]},
+ {date:'2026-11-20', dlabel_es:'Viernes 20 de noviembre', dlabel_en:'Friday, November 20', items:[
+   {time:'11:00', es:'Sync', en:'Sync', req:[], opt:[], agenda_es:[], agenda_en:[]},
+ ]},
 ];
 
 let lang='es';
@@ -813,7 +899,8 @@ const EDITABLE = location.protocol==='file:' || location.search.includes('edit')
 let barOverrides={}, lastPublished=null, undoStack=[], redoStack=[];
 function saveOverrides(){ try{ localStorage.setItem('banana_bars',JSON.stringify(barOverrides)); }catch(e){} }
 // ---- checklist de tomas/capturas para el trailer ----
-let shotState={};
+let shotState={}, taskState={};
+function saveTasks(){ try{ localStorage.setItem('banana_tasks',JSON.stringify(taskState)); }catch(e){} }
 function saveShots(){ try{ localStorage.setItem('banana_shots',JSON.stringify(shotState)); }catch(e){} }
 const SHOTS=[
   {cat:'AVIÓN ACTUAL', items:['Pilotaje: palanca','Botones para activar cosas: alarmas, carteles, cinturones, máscaras','Cartel "Everything is OK"','Limpiaparabrisas limpian a quien esté parado ahí','Máscaras de gas','Skins','Diferentes niveles (diferentes aviones)','Agarrar y tirar a los pasajeros']},
@@ -869,16 +956,17 @@ function renderShots(){
 function fmtTs(iso){ try{ return new Date(iso).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function showPubStatus(txt){ const ps=$('#pubStatus'); if(ps){ ps.style.display=''; ps.textContent=txt; } }
 async function loadState(){
-  try{ const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; shotState=(d&&d.shots)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
+  try{ const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const d=await r.json(); barOverrides=(d&&d.barOverrides)||{}; shotState=(d&&d.shots)||{}; taskState=(d&&d.tasks)||{}; lastPublished=(d&&d.updated)||null; return; } }catch(e){}
   try{ barOverrides=JSON.parse(localStorage.getItem('banana_bars')||'{}'); }catch(e){}
   try{ shotState=JSON.parse(localStorage.getItem('banana_shots')||'{}'); }catch(e){}
+  try{ taskState=JSON.parse(localStorage.getItem('banana_tasks')||'{}'); }catch(e){}
 }
 async function publish(){
   let token=localStorage.getItem('banana_gh_token');
   if(!token){ token=prompt('Pegá tu token de GitHub (con permiso de repo). Solo queda en este navegador:'); if(!token) return; localStorage.setItem('banana_gh_token',token); }
   const btn=$('#pubBtn'), old=btn?btn.textContent:'';
   if(btn) btn.textContent='Publicando…';
-  const state={version:1, updated:new Date().toISOString(), barOverrides, shots:shotState};
+  const state={version:1, updated:new Date().toISOString(), barOverrides, shots:shotState, tasks:taskState};
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(state,null,2))));
   const api=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
   try{
@@ -1111,7 +1199,7 @@ function renderSummary(){
   // próximos: reuniones (salen una hora después de empezar, como en Reuniones) e hitos del calendario
   const up=[];
   MEETINGS.forEach(d=>d.items.forEach(m=>{ if(m.auto&&d.date!==todayIso) return; if(new Date(d.date+'T'+m.time+':00').getTime()+3600000>=now.getTime()) up.push({date:d.date,time:m.time,title:es?m.es:m.en,goal:es?m.goal_es:m.goal_en,meeting:true}); }));
-  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',mile:t.d,title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en,note:es?t.note_es:t.note_en}); }));
+  GROUPS.filter(g=>g.kind==='mile').forEach(g=>g.tasks.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:t.time||'',mile:t.d,title:es?t.es:t.en,goal:es?t.goal_es:t.goal_en,note:es?t.note_es:t.note_en}); }));
   SUM_TASKS.forEach(t=>{ if(t.d>=todayIso) up.push({date:t.d,time:'',title:es?t.es:t.en,subtitle:es?t.subtitle_es:t.subtitle_en,goal:es?t.goal_es:t.goal_en,note:es?t.note_es:t.note_en}); });
   up.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   // esta semana (hasta el domingo) va en la fila de arriba; "lo que viene" es la semana siguiente, o lo próximo si está vacía
@@ -1142,6 +1230,26 @@ function renderSummary(){
     +grid(next,es?'No hay reuniones ni hitos próximos.':'No upcoming meetings or milestones.');
 }
 // ===== navegación de vistas (menú lateral) =====
+// cada tarea se identifica por su texto en español, así tildarla sobrevive aunque se reordene la lista
+const DEV_WHO=['AGEZMA','VALEN'];
+const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
+function renderTasks(){
+  const b=$('#tkBody'); if(!b) return;
+  const es=lang==='es', L=es?0:1;
+  // en edición se ven los dos nombres para elegir; en la vista del equipo, solo el asignado
+  const whoBtns=(id)=>{ const who=(taskState[id]||{}).who; const list=EDITABLE?DEV_WHO:DEV_WHO.filter(w=>w===who);
+    return list.length?`<span class="tkwho">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
+  const sec=(k,title)=>{ const all=TASKS[k].flatMap(g=>g.items), n=all.filter(it=>(taskState[taskId(it[0])]||{}).done).length;
+    return `<div class="tksec ${k}">${title}<span class="tkn">${n}/${all.length} ${es?'hechas':'done'}</span></div>`
+      +TASKS[k].map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>{ const id=taskId(it[0]), done=(taskState[id]||{}).done;
+        return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${k==='dev'?whoBtns(id):''}<span class="tksrc">${it[2]}</span></label>`; }).join('')).join(''); };
+  b.innerHTML=sec('dev','DEV')+sec('art',es?'ARTE-3D':'ART-3D');
+}
+$('#tkBody').addEventListener('change',(e)=>{ const cb=e.target.closest('input[data-task]'); if(!cb) return;
+  if(!EDITABLE){ cb.checked=!cb.checked; return; }
+  taskState[cb.dataset.task]={...taskState[cb.dataset.task],done:cb.checked}; saveTasks(); renderTasks(); });
+$('#tkBody').addEventListener('click',(e)=>{ const b=e.target.closest('button[data-who]'); if(!b) return; e.preventDefault(); if(!EDITABLE) return;
+  const id=b.dataset.tid, st={...taskState[id]}; st.who=st.who===b.dataset.who?'':b.dataset.who; taskState[id]=st; saveTasks(); renderTasks(); });
 function renderWorkflows(){
   const b=$('#wfBody'); if(!b) return;
   const url='https://pub-1fd1ac33889d4659b8b9205ef2b41f91.r2.dev/comandas.html#inv=inv8ada1f1217e5d1a7ec75';
@@ -1190,6 +1298,7 @@ function showView(v){
   else if(v==='trailer') renderTrailer();
   else if(v==='meetings') renderMeetings();
   else if(v==='workflows') renderWorkflows();
+  else if(v==='tasks') renderTasks();
   else if(v==='calendar') applyExpanded();
 }
 document.querySelectorAll('.sbitem[data-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
@@ -1228,7 +1337,7 @@ document.addEventListener('keydown',(e)=>{
   if(e.shiftKey){ if(redoStack.length){ undoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(redoStack.pop()); saveOverrides(); render(); } }
   else { if(undoStack.length){ redoStack.push(JSON.stringify(barOverrides)); barOverrides=JSON.parse(undoStack.pop()); saveOverrides(); render(); } }
 });
-$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderWorkflows(); renderTrailer(); renderSummary(); };
+$('#langBtn').onclick=()=>{ lang = lang==='es'?'en':'es'; render(); renderMeetings(); renderWorkflows(); renderTrailer(); renderSummary(); renderTasks(); };
 $('#themeBtn').onclick=()=>{
   document.body.classList.toggle('dark');
   const d=document.body.classList.contains('dark');
