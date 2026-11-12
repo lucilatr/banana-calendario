@@ -362,6 +362,12 @@
   .tkitem{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;margin:0 -10px;border-bottom:1px solid var(--grid);border-radius:8px;}
   .tkitem input[type=checkbox]{margin-top:2px;width:16px;height:16px;flex:none;cursor:pointer;accent-color:#16a34a;}
   .tkitem input[disabled]{cursor:default;}
+  .tkitem[draggable]{cursor:grab;}
+  .tkitem.dragging{opacity:.4;}
+  .tkitem.over-top{box-shadow:inset 0 3px 0 var(--c-sys-a);}
+  .tkitem.over-bot{box-shadow:inset 0 -3px 0 var(--c-sys-a);}
+  .tkgrip{flex:none;margin:1px -4px 0 -6px;color:var(--muted);font-size:13px;letter-spacing:-2px;opacity:.45;user-select:none;}
+  .tkitem:hover .tkgrip{opacity:1;}
   .tkitem .txt{flex:1;font-size:13.5px;line-height:1.45;}
   .tkitem.open .txt{color:var(--muted);font-style:italic;}
   .tkitem.done{background:rgba(22,163,74,.12);border-bottom-color:transparent;}
@@ -1029,8 +1035,10 @@ async function publish(){
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(state,null,2))));
   const api=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
   try{
-    let sha; const g=await fetch(api+`?ref=${GH.branch}`,{headers:{Authorization:'token '+token}}); if(g.ok) sha=(await g.json()).sha;
-    const res=await fetch(api,{method:'PUT',headers:{Authorization:'token '+token,'Accept':'application/vnd.github+json'},body:JSON.stringify({message:'Publicar calendario',content,sha,branch:GH.branch})});
+    // pedir el sha sin caché: el navegador guarda esta respuesta 1 min y, si se publica dos veces seguidas, GitHub rechaza el sha viejo (409)
+    const put=async()=>{ let sha; const g=await fetch(api+`?ref=${GH.branch}&t=${Date.now()}`,{headers:{Authorization:'token '+token},cache:'no-store'}); if(g.ok) sha=(await g.json()).sha;
+      return fetch(api,{method:'PUT',headers:{Authorization:'token '+token,'Accept':'application/vnd.github+json'},body:JSON.stringify({message:'Publicar calendario',content,sha,branch:GH.branch})}); };
+    let res=await put(); if(res.status===409) res=await put();
     if(res.ok){ if(btn) btn.textContent=old; const t=new Date(); showPubStatus('✅ Publicado '+t.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})+' · visible en ~1 min'); }
     else { const e=await res.json().catch(()=>({})); if(res.status===401) localStorage.removeItem('banana_gh_token'); alert('Error al publicar: '+res.status+' '+(e.message||'')); if(btn) btn.textContent=old; }
   }catch(err){ alert('Error de red al publicar: '+err); if(btn) btn.textContent=old; }
@@ -1294,6 +1302,8 @@ const TASK_WHO={dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN']};
 let taskFilter=''; // '' = todas; '-' = sin asignar; si no, solo las tareas de esa persona
 let tkDoneOpen=false, tkShowSrc=false; // tkShowSrc: mostrar de qué reunión salió cada tarea // si la lista de puntos resueltos está desplegada
 const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
+// orden de un grupo: el que se eligió arrastrando (taskState[id].ord); las que nunca se movieron, en su lugar original
+function taskOrder(items){ return items.map((it,i)=>({it,o:(taskState[taskId(it[0])]||{}).ord??i})).sort((a,b)=>a.o-b.o).map(x=>x.it); }
 function renderTasks(){
   const b=$('#tkBody'); if(!b) return;
   const es=lang==='es', L=es?0:1, st=(it)=>taskState[taskId(it[0])]||{};
@@ -1303,11 +1313,12 @@ function renderTasks(){
   const whoBtns=(k,id,who)=>{ const list=EDITABLE?TASK_WHO[k]:TASK_WHO[k].filter(w=>w===who);
     return list.length?`<span class="tkwho ${k}">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
   const mine=(it)=>{ const who=whoOf(it); return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
-  const row=(k,it)=>{ const id=taskId(it[0]), done=st(it).done;
-    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${whoBtns(k,id,whoOf(it))}<span class="tksrc">${it[2]}</span></label>`; };
+  // en edición, las pendientes se arrastran para ordenarlas dentro de su grupo (data-grp)
+  const row=(k,it,gk)=>{ const id=taskId(it[0]), done=st(it).done, drag=EDITABLE&&!done;
+    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}" data-tid="${id}" data-grp="${gk}" ${drag?'draggable="true"':''}>${drag?'<span class="tkgrip" aria-hidden="true">⋮⋮</span>':''}<input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${whoBtns(k,id,whoOf(it))}<span class="tksrc">${it[2]}</span></label>`; };
   // las hechas salen de la lista y van a "Puntos resueltos", al final
-  const groupsOf=(k,done)=>TASKS[k].map(g=>({...g,items:g.items.filter(it=>mine(it)&&!!st(it).done===done)})).filter(g=>g.items.length);
-  const list=(k,gs)=>gs.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>row(k,it)).join('')).join('');
+  const groupsOf=(k,done)=>TASKS[k].map((g,gi)=>({...g,gk:k+gi,items:taskOrder(g.items).filter(it=>mine(it)&&!!st(it).done===done)})).filter(g=>g.items.length);
+  const list=(k,gs)=>gs.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>row(k,it,g.gk)).join('')).join('');
   const titles={dev:'DEV', art:es?'ARTE-3D':'ART-3D'};
   const sec=(k)=>{ const all=TASKS[k].flatMap(g=>g.items).filter(mine); if(!all.length) return '';
     const n=all.filter(it=>st(it).done).length, gs=groupsOf(k,false);
@@ -1324,6 +1335,18 @@ function renderTasks(){
   b.innerHTML=filt+(body||`<div class="tkempty">${es?'No hay tareas para este filtro.':'No tasks for this filter.'}</div>`);
   const d=b.querySelector('.tkdone'); if(d) d.addEventListener('toggle',()=>{ tkDoneOpen=d.open; });
 }
+let tkDrag=null;
+$('#tkBody').addEventListener('dragstart',(e)=>{ const r=e.target.closest('.tkitem[draggable]'); if(!r) return;
+  tkDrag={id:r.dataset.tid,grp:r.dataset.grp}; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',tkDrag.id); r.classList.add('dragging'); });
+const tkClearMarks=()=>document.querySelectorAll('#tkBody .tkitem.over-top,#tkBody .tkitem.over-bot').forEach(x=>x.classList.remove('over-top','over-bot'));
+$('#tkBody').addEventListener('dragover',(e)=>{ const r=e.target.closest('.tkitem'); if(!tkDrag||!r||r.dataset.grp!==tkDrag.grp||r.dataset.tid===tkDrag.id) return;
+  e.preventDefault(); const top=e.clientY<r.getBoundingClientRect().top+r.offsetHeight/2; tkClearMarks(); r.classList.add(top?'over-top':'over-bot'); });
+$('#tkBody').addEventListener('drop',(e)=>{ const r=e.target.closest('.tkitem'); if(!tkDrag||!r||r.dataset.grp!==tkDrag.grp) return; e.preventDefault();
+  const after=r.classList.contains('over-bot'), k=tkDrag.grp.replace(/\d+$/,''), g=TASKS[k][+tkDrag.grp.slice(k.length)];
+  const ids=taskOrder(g.items).map(it=>taskId(it[0])).filter(id=>id!==tkDrag.id);
+  ids.splice(ids.indexOf(r.dataset.tid)+(after?1:0),0,tkDrag.id);
+  ids.forEach((id,i)=>{ taskState[id]={...taskState[id],ord:i}; }); saveTasks(); renderTasks(); });
+$('#tkBody').addEventListener('dragend',()=>{ tkDrag=null; tkClearMarks(); document.querySelectorAll('#tkBody .dragging').forEach(x=>x.classList.remove('dragging')); });
 $('#tkBody').addEventListener('change',(e)=>{ const cb=e.target.closest('input[data-task]'); if(!cb) return;
   if(!EDITABLE){ cb.checked=!cb.checked; return; }
   taskState[cb.dataset.task]={...taskState[cb.dataset.task],done:cb.checked}; saveTasks(); renderTasks(); });
