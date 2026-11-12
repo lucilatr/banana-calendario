@@ -352,7 +352,9 @@
   .sumnote{padding-left:10px;border-left:3px solid var(--grid);font-size:13px;line-height:1.45;color:var(--muted);}
   .sumlink{margin-top:auto;padding:0;border:none;background:none;color:var(--c-sys-a);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;}
   body.dark .sumlink{color:var(--c-sys-b);}
-  .tk{padding:8px 24px 36px;max-width:820px;}
+  .tk{padding:8px 24px 36px;}
+  .tk:not(.showsrc) .tksrc{display:none;}
+  .tkfilter .tksrcbtn{margin-left:auto;border-style:dashed;font-weight:700;color:var(--muted);}
   .tksec{display:flex;align-items:baseline;gap:10px;font-size:16px;font-weight:800;margin:26px 0 4px;padding-bottom:8px;border-bottom:3px solid var(--c-dev-a);}
   .tksec.art{border-color:var(--c-art-a);}
   .tksec .tkn{font-size:12px;font-weight:700;color:var(--muted);}
@@ -373,6 +375,12 @@
   .tkwho{flex:none;display:flex;gap:4px;}
   .tkwho button{padding:1px 7px;border-radius:6px;border:1px solid var(--gridStrong);background:var(--bg);color:var(--muted);font:inherit;font-size:10.5px;font-weight:800;letter-spacing:.3px;cursor:pointer;}
   .tkwho button.on{background:var(--c-dev-a);border-color:var(--c-dev-a);color:#fff;}
+  .tkwho.art button.on{background:var(--c-art-a);border-color:var(--c-art-a);}
+  .tkempty{padding:10px 0;font-size:13px;color:var(--muted);font-style:italic;}
+  .tkdone{margin-top:30px;padding-top:12px;border-top:1px solid var(--gridStrong);}
+  .tkdone summary{cursor:pointer;font-size:13.5px;font-weight:800;color:var(--c-sys-a);text-decoration:underline;}
+  body.dark .tkdone summary{color:var(--c-sys-b);}
+  .tkdsec{font-size:14px;font-weight:800;margin:18px 0 2px;}
   .tkwho button:disabled{cursor:default;}
   .tksrc{flex:none;margin-top:1px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--grid);white-space:nowrap;}
   .pt{padding:8px 24px 36px;max-width:820px;font-size:14px;line-height:1.5;}
@@ -1282,29 +1290,43 @@ function renderSummary(){
 }
 // ===== navegación de vistas (menú lateral) =====
 // cada tarea se identifica por su texto en español, así tildarla sobrevive aunque se reordene la lista
-const DEV_WHO=['AGEZMA','VALEN'];
-let taskFilter=''; // '' = todas; '-' = DEV sin asignar; si no, solo las tareas de DEV de esa persona
+const TASK_WHO={dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN']};
+let taskFilter=''; // '' = todas; '-' = sin asignar; si no, solo las tareas de esa persona
+let tkDoneOpen=false, tkShowSrc=false; // tkShowSrc: mostrar de qué reunión salió cada tarea // si la lista de puntos resueltos está desplegada
 const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
 function renderTasks(){
   const b=$('#tkBody'); if(!b) return;
-  const es=lang==='es', L=es?0:1;
-  // en edición se ven los dos nombres para elegir; en la vista del equipo, solo el asignado
-  const whoBtns=(id)=>{ const who=(taskState[id]||{}).who; const list=EDITABLE?DEV_WHO:DEV_WHO.filter(w=>w===who);
-    return list.length?`<span class="tkwho">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
-  const mine=(it)=>{ const who=(taskState[taskId(it[0])]||{}).who||''; return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
-  const sec=(k,title)=>{ const groups=TASKS[k].map(g=>({...g,items:g.items.filter(mine)})).filter(g=>g.items.length);
-    const all=groups.flatMap(g=>g.items), n=all.filter(it=>(taskState[taskId(it[0])]||{}).done).length;
-    if(!all.length) return '';
-    return `<div class="tksec ${k}">${title}<span class="tkn">${n}/${all.length} ${es?'hechas':'done'}</span></div>`
-      +groups.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>{ const id=taskId(it[0]), done=(taskState[id]||{}).done;
-        return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${k==='dev'?whoBtns(id):''}<span class="tksrc">${it[2]}</span></label>`; }).join('')).join(''); };
-  const filt=`<div class="tkfilter"><span>${es?'Ver':'Show'}</span>`+[['',es?'Todas':'All'],...DEV_WHO.map(w=>[w,w]),['-',es?'Sin asignar':'Unassigned']].map(([v,l])=>`<button type="button" data-filter="${v}" class="${taskFilter===v?'on':''}">${l}</button>`).join('')+`</div>`;
-  b.innerHTML=filt+sec('dev','DEV')+(taskFilter?'':sec('art',es?'ARTE-3D':'ART-3D'));
+  const es=lang==='es', L=es?0:1, st=(it)=>taskState[taskId(it[0])]||{};
+  // en edición se ven todos los nombres para elegir; en la vista del equipo, solo el asignado
+  const whoBtns=(k,id)=>{ const who=(taskState[id]||{}).who; const list=EDITABLE?TASK_WHO[k]:TASK_WHO[k].filter(w=>w===who);
+    return list.length?`<span class="tkwho ${k}">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
+  const mine=(it)=>{ const who=st(it).who||''; return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
+  const row=(k,it)=>{ const id=taskId(it[0]), done=st(it).done;
+    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}"><input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${whoBtns(k,id)}<span class="tksrc">${it[2]}</span></label>`; };
+  // las hechas salen de la lista y van a "Puntos resueltos", al final
+  const groupsOf=(k,done)=>TASKS[k].map(g=>({...g,items:g.items.filter(it=>mine(it)&&!!st(it).done===done)})).filter(g=>g.items.length);
+  const list=(k,gs)=>gs.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>row(k,it)).join('')).join('');
+  const titles={dev:'DEV', art:es?'ARTE-3D':'ART-3D'};
+  const sec=(k)=>{ const all=TASKS[k].flatMap(g=>g.items).filter(mine); if(!all.length) return '';
+    const n=all.filter(it=>st(it).done).length, gs=groupsOf(k,false);
+    return `<div class="tksec ${k}">${titles[k]}<span class="tkn">${n}/${all.length} ${es?'hechas':'done'}</span></div>`
+      +(gs.length?list(k,gs):`<div class="tkempty">${es?'No quedan tareas pendientes.':'No pending tasks left.'}</div>`); };
+  const doneN=['dev','art'].reduce((n,k)=>n+groupsOf(k,true).reduce((m,g)=>m+g.items.length,0),0);
+  const resolved=doneN?`<details class="tkdone" ${tkDoneOpen?'open':''}><summary>${es?'Puntos resueltos':'Resolved items'} (${doneN})</summary>`
+    +['dev','art'].map(k=>{ const gs=groupsOf(k,true); return gs.length?`<div class="tkdsec">${titles[k]}</div>`+list(k,gs):''; }).join('')+`</details>`:'';
+  const people=[...TASK_WHO.dev,...TASK_WHO.art];
+  const filt=`<div class="tkfilter"><span>${es?'Ver':'Show'}</span>`+[['',es?'Todas':'All'],...people.map(w=>[w,w]),['-',es?'Sin asignar':'Unassigned']].map(([v,l])=>`<button type="button" data-filter="${v}" class="${taskFilter===v?'on':''}">${l}</button>`).join('')
+    +`<button type="button" class="tksrcbtn" data-src>${tkShowSrc?(es?'Ocultar fechas':'Hide dates'):(es?'Ver fechas':'Show dates')}</button></div>`;
+  b.classList.toggle('showsrc',tkShowSrc);
+  const body=sec('dev')+sec('art')+resolved;
+  b.innerHTML=filt+(body||`<div class="tkempty">${es?'No hay tareas para este filtro.':'No tasks for this filter.'}</div>`);
+  const d=b.querySelector('.tkdone'); if(d) d.addEventListener('toggle',()=>{ tkDoneOpen=d.open; });
 }
 $('#tkBody').addEventListener('change',(e)=>{ const cb=e.target.closest('input[data-task]'); if(!cb) return;
   if(!EDITABLE){ cb.checked=!cb.checked; return; }
   taskState[cb.dataset.task]={...taskState[cb.dataset.task],done:cb.checked}; saveTasks(); renderTasks(); });
-$('#tkBody').addEventListener('click',(e)=>{ const f=e.target.closest('button[data-filter]'); if(f){ taskFilter=f.dataset.filter; renderTasks(); return; }
+$('#tkBody').addEventListener('click',(e)=>{ if(e.target.closest('button[data-src]')){ tkShowSrc=!tkShowSrc; renderTasks(); return; }
+  const f=e.target.closest('button[data-filter]'); if(f){ taskFilter=f.dataset.filter; renderTasks(); return; }
   const b=e.target.closest('button[data-who]'); if(!b) return; e.preventDefault(); if(!EDITABLE) return;
   const id=b.dataset.tid, st={...taskState[id]}; st.who=st.who===b.dataset.who?'':b.dataset.who; taskState[id]=st; saveTasks(); renderTasks(); });
 function renderWorkflows(){
