@@ -357,6 +357,11 @@
   .tkfilter .tksrcbtn{margin-left:auto;border-style:dashed;font-weight:700;color:var(--muted);}
   .tksec{display:flex;align-items:baseline;gap:10px;font-size:16px;font-weight:800;margin:26px 0 4px;padding-bottom:8px;border-bottom:3px solid var(--c-dev-a);}
   .tksec.art{border-color:var(--c-art-a);}
+  .tkprio{margin:22px -12px 8px;padding:2px 12px 10px;border:2px solid #f59e0b;border-radius:12px;background:rgba(245,158,11,.08);}
+  .tkprio .tksec{margin-top:12px;border-color:#f59e0b;}
+  .tkpnote{margin:6px 0 0;font-size:12.5px;font-weight:700;color:#b45309;}
+  body.dark .tkpnote{color:#fbbf24;}
+  .tkprio .tkgrp{margin-top:10px;}
   .tksec .tkn{font-size:12px;font-weight:700;color:var(--muted);}
   .tkgrp{font-size:12px;font-weight:800;letter-spacing:.4px;color:var(--muted);margin:16px 0 4px;}
   .tkitem{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;margin:0 -10px;border-bottom:1px solid var(--grid);border-radius:8px;}
@@ -379,6 +384,9 @@
   .tkfilter button{padding:5px 12px;border-radius:8px;border:1px solid var(--gridStrong);background:var(--panel);color:var(--text);font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;}
   .tkfilter button.on{background:var(--c-dev-a);border-color:var(--c-dev-a);color:#fff;}
   .tkwho{flex:none;display:flex;gap:4px;}
+  .tkfire{flex:none;padding:0 5px;border:1px solid var(--gridStrong);border-radius:6px;background:var(--bg);font-size:11px;line-height:18px;cursor:pointer;filter:grayscale(1);opacity:.45;}
+  .tkfire:hover{opacity:.9;}
+  .tkfire.on{filter:none;opacity:1;border-color:#f59e0b;background:rgba(245,158,11,.15);}
   .tkwho button{padding:1px 7px;border-radius:6px;border:1px solid var(--gridStrong);background:var(--bg);color:var(--muted);font:inherit;font-size:10.5px;font-weight:800;letter-spacing:.3px;cursor:pointer;}
   .tkwho button.on{background:var(--c-dev-a);border-color:var(--c-dev-a);color:#fff;}
   .tkwho.art button.on{background:var(--c-art-a);border-color:var(--c-art-a);}
@@ -667,6 +675,18 @@ const ERI_SHIP={
 // tareas pendientes para que el equipo agarre: [es, en, reunión de donde salió]
 const stepItems=(k,from,to)=>NEXT_STEPS.es[k].slice(from,to).map((t,i)=>[t,NEXT_STEPS.en[k][from+i],'6 Nov']);
 const TASKS={
+  // prioridad absoluta de los devs ahora (13 Nov): nave de Valen. Va arriba de todo en Tareas.
+  prio:[
+    {es:'Nave espacial: propuesta de Valen', en:'Spaceship: Valen\'s proposal', items:[
+      ['Iluminación: un poco más de GI.','Lighting: a bit more GI.','12 Nov'],
+      ['Lugares para poder pisar y volver a saltar.','Places to land on and jump again.','12 Nov','VALEN'],
+      ['Algo para pararse arriba de todo, abajo de la cúpula, tipo una bandeja.','Something to stand on at the very top, under the dome, like a tray.','12 Nov'],
+      ['Tres asientos para el que maneja, y que cada uno tenga su función: dirección, y armas para disparar y romper objetos.','Three seats for whoever is piloting, each with its own function: steering, and weapons to shoot and break objects.','12 Nov','VALEN'],
+      ['Filas de pasajeros: solo 3, quitar la cuarta de arriba.','Passenger rows: only 3, remove the fourth one at the top.','13 Nov','VALEN'],
+      ['Que la nave pueda dispararles a los asteroides que vienen hacia ella.','The ship can shoot the asteroids coming at it.','12 Nov'],
+      ['Poder direccionar la nave.','Be able to steer the ship.','12 Nov'],
+      ['Tirar comida volando y apuntando.','Throw food while flying and aiming.','13 Nov','AGEZMA']]},
+  ],
   dev:[
     {es:'Todos los modos', en:'All modes', items:[
       ['Que cada modo sea jugable: inicio con despegue, eventos en el medio y final con aterrizaje.','Make every mode playable: start with takeoff, events in the middle and end with landing.','10 Nov'],
@@ -682,10 +702,6 @@ const TASKS={
       ['Zona de vuelo en el espacio: ampliar el rango antes de morir.','Space flight zone: extend the range before you die.','5 Nov'],
       ['Sin definir: qué control queda para el jetpack (clic o tecla, y hacia qué dirección propulsa).','Undecided: which jetpack control stays (click or key, and which way it propels).','6 Nov'],
       ['Jetpack: feedback visual al usarlo, por ejemplo un fueguito.','Jetpack: visual feedback when using it, for example a small flame.','5 Nov','AGEZMA']]},
-    {es:'Nave espacial: propuesta de Valen', en:'Spaceship: Valen\'s proposal', items:[
-      ['Asientos del piloto: que cada uno tenga su función, uno para la dirección y otro para las armas que disparan y rompen objetos.','Pilot seats: each one has its own function, one for steering and one for the weapons that shoot and break objects.','12 Nov'],
-      ['Que la nave pueda dispararles a los asteroides que vienen hacia ella.','The ship can shoot the asteroids coming at it.','12 Nov'],
-      ['Poder direccionar la nave.','Be able to steer the ship.','12 Nov']]},
     {es:'Submarino', en:'Submarine', items:[
       ['Oxígeno: sin equipo de buceo, morir a los pocos minutos con un mensaje de falta de oxígeno.','Oxygen: without diving gear, die within a few minutes with a lack-of-oxygen message.','5 Nov'],
       ['Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Fix the giant interior collider, which makes it very hard to get back in from the water.','5 Nov'],
@@ -697,11 +713,6 @@ const TASKS={
     {es:'Todos los modos', en:'All modes', items:[
       ['Pasajeros gordos: hacer la textura sin abdominales.','Fat passengers: make the texture without abs.','10 Nov']]},
     {es:'Nave espacial', en:'Spaceship', items:[...stepItems('nave',0,11)]},
-    {es:'Nave espacial: propuesta de Valen', en:'Spaceship: Valen\'s proposal', items:[
-      ['Prioritario, para el build del test del vie 13 a las 11:00: lugares para pisar y volver a saltar.','Priority, for the build for the Fri 13, 11:00 test: places to land on and jump again.','12 Nov'],
-      ['Iluminación: un poco más de GI.','Lighting: a bit more GI.','12 Nov'],
-      ['Algo para pararse arriba de todo, abajo de la cúpula, tipo una bandeja.','Something to stand on at the very top, under the dome, like a tray.','12 Nov'],
-      ['Tres asientos para el que maneja.','Three seats for whoever is piloting.','12 Nov']]},
     {es:'Nave espacial: propuesta de Eri y Lauti', en:'Spaceship: Eri and Lauti\'s proposal', items:ERI_SHIP.es.map((t,i)=>[t,ERI_SHIP.en[i],'12 Nov'])},
     {es:'Luna', en:'Moon', items:[
       ['Sumar los objetos para tirar.','Add the objects to throw.','6 Nov'],
@@ -1313,7 +1324,7 @@ function renderSummary(){
 }
 // ===== navegación de vistas (menú lateral) =====
 // cada tarea se identifica por su texto en español, así tildarla sobrevive aunque se reordene la lista
-const TASK_WHO={dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN','VALEN']};
+const TASK_WHO={prio:['AGEZMA','VALEN'], dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN','VALEN']};
 let taskFilter=''; // '' = todas; '-' = sin asignar; si no, solo las tareas de esa persona
 let tkDoneOpen=false, tkShowSrc=false; // tkShowSrc: mostrar de qué reunión salió cada tarea // si la lista de puntos resueltos está desplegada
 const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
@@ -1324,29 +1335,40 @@ function renderTasks(){
   const es=lang==='es', L=es?0:1, st=(it)=>taskState[taskId(it[0])]||{};
   // 4º elemento opcional: a quién va asignada de entrada, hasta que se cambie desde ?edit
   const whoOf=(it)=>{ const x=st(it); return 'who' in x ? x.who : (it[3]||''); };
+  // prioridad: las de TASKS.prio arrancan marcadas; cualquier tarea se marca o desmarca con 🔥 (taskState[id].prio)
+  const isPrio=(home,it)=>{ const x=st(it); return 'prio' in x ? x.prio : home==='prio'; };
   // en edición se ven todos los nombres para elegir; en la vista del equipo, solo el asignado
-  const whoBtns=(k,id,who)=>{ const list=EDITABLE?TASK_WHO[k]:TASK_WHO[k].filter(w=>w===who);
-    return list.length?`<span class="tkwho ${k}">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
+  const whoBtns=(home,id,who)=>{ const ks=home==='prio'?'dev':home, list=EDITABLE?TASK_WHO[home]:TASK_WHO[home].filter(w=>w===who);
+    return list.length?`<span class="tkwho ${ks}">${list.map(w=>`<button type="button" data-who="${w}" data-tid="${id}" class="${w===who?'on':''}" ${EDITABLE?'':'disabled'}>${w}</button>`).join('')}</span>`:''; };
   const mine=(it)=>{ const who=whoOf(it); return !taskFilter||(taskFilter==='-'?!who:who===taskFilter); };
   // en edición, las pendientes se arrastran para ordenarlas dentro de su grupo (data-grp)
-  const row=(k,it,gk)=>{ const id=taskId(it[0]), done=st(it).done, drag=EDITABLE&&!done;
-    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}" data-tid="${id}" data-grp="${gk}" ${drag?'draggable="true"':''}>${drag?'<span class="tkgrip" aria-hidden="true">⋮⋮</span>':''}<input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${whoBtns(k,id,whoOf(it))}<span class="tksrc">${it[2]}</span></label>`; };
+  const row=(home,it,gk)=>{ const id=taskId(it[0]), done=st(it).done, drag=EDITABLE&&!done, pr=isPrio(home,it);
+    const fire=EDITABLE&&!done?`<button type="button" class="tkfire ${pr?'on':''}" data-prio data-tid="${id}" data-home="${home}" title="${pr?(es?'Sacar de Prioridad':'Remove from Priority'):(es?'Pasar a Prioridad':'Move to Priority')}">🔥</button>`:'';
+    return `<label class="tkitem ${done?'done':''} ${/^(Sin definir|Undecided):/.test(it[L])?'open':''}" data-tid="${id}" data-grp="${gk}" ${drag?'draggable="true"':''}>${drag?'<span class="tkgrip" aria-hidden="true">⋮⋮</span>':''}<input type="checkbox" data-task="${id}" ${done?'checked':''} ${EDITABLE?'':'disabled'}><span class="txt">${it[L]}</span>${fire}${whoBtns(home,id,whoOf(it))}<span class="tksrc">${it[2]}</span></label>`; };
+  const titles={prio:es?'🔥 Prioridad':'🔥 Priority', dev:'DEV', art:es?'ARTE-3D':'ART-3D'};
+  // a qué sección va cada tarea: Prioridad si está marcada; si no, su área (las de TASKS.prio desmarcadas van a DEV)
+  const where=(home,it)=>isPrio(home,it)?'prio':(home==='prio'?'dev':home);
+  const groupsIn=(D,pred)=>['prio','dev','art'].flatMap(home=>TASKS[home].map((g,gi)=>({
+    label:(es?g.es:g.en)+(D==='prio'&&home!=='prio'?` · ${titles[home]}`:''), gk:home+gi, home,
+    items:taskOrder(g.items).filter(it=>mine(it)&&pred(home,it))}))).filter(g=>g.items.length);
+  const list=(gs)=>gs.map(g=>`<div class="tkgrp">${g.label}</div>`+g.items.map(it=>row(g.home,it,g.gk)).join('')).join('');
+  const sec=(D)=>{ const all=groupsIn(D,(h,it)=>where(h,it)===D).flatMap(g=>g.items);
+    if(!all.length) return D==='prio'&&EDITABLE&&!taskFilter?`<div class="tkprio"><div class="tksec prio">${titles.prio}</div><div class="tkempty">${es?'Marcá una tarea con 🔥 para pasarla acá.':'Mark a task with 🔥 to move it here.'}</div></div>`:'';
+    const n=all.filter(it=>st(it).done).length, gs=groupsIn(D,(h,it)=>where(h,it)===D&&!st(it).done);
+    const head=`<div class="tksec ${D}">${titles[D]}<span class="tkn">${n}/${all.length} ${es?'hechas':'done'}</span></div>`;
+    if(D==='prio') return `<div class="tkprio">${head}`
+      +(gs.length?list(gs):`<div class="tkempty">${es?'Prioridades resueltas.':'Priorities done.'}</div>`)+`</div>`;
+    return head+(gs.length?list(gs):`<div class="tkempty">${es?'No quedan tareas pendientes.':'No pending tasks left.'}</div>`); };
   // las hechas salen de la lista y van a "Puntos resueltos", al final
-  const groupsOf=(k,done)=>TASKS[k].map((g,gi)=>({...g,gk:k+gi,items:taskOrder(g.items).filter(it=>mine(it)&&!!st(it).done===done)})).filter(g=>g.items.length);
-  const list=(k,gs)=>gs.map(g=>`<div class="tkgrp">${es?g.es:g.en}</div>`+g.items.map(it=>row(k,it,g.gk)).join('')).join('');
-  const titles={dev:'DEV', art:es?'ARTE-3D':'ART-3D'};
-  const sec=(k)=>{ const all=TASKS[k].flatMap(g=>g.items).filter(mine); if(!all.length) return '';
-    const n=all.filter(it=>st(it).done).length, gs=groupsOf(k,false);
-    return `<div class="tksec ${k}">${titles[k]}<span class="tkn">${n}/${all.length} ${es?'hechas':'done'}</span></div>`
-      +(gs.length?list(k,gs):`<div class="tkempty">${es?'No quedan tareas pendientes.':'No pending tasks left.'}</div>`); };
-  const doneN=['dev','art'].reduce((n,k)=>n+groupsOf(k,true).reduce((m,g)=>m+g.items.length,0),0);
+  const doneIn=(D)=>groupsIn(D,(h,it)=>where(h,it)===D&&!!st(it).done);
+  const doneN=['prio','dev','art'].reduce((n,D)=>n+doneIn(D).reduce((m,g)=>m+g.items.length,0),0);
   const resolved=doneN?`<details class="tkdone" ${tkDoneOpen?'open':''}><summary>${es?'Puntos resueltos':'Resolved items'} (${doneN})</summary>`
-    +['dev','art'].map(k=>{ const gs=groupsOf(k,true); return gs.length?`<div class="tkdsec">${titles[k]}</div>`+list(k,gs):''; }).join('')+`</details>`:'';
+    +['prio','dev','art'].map(D=>{ const gs=doneIn(D); return gs.length?`<div class="tkdsec">${titles[D]}</div>`+list(gs):''; }).join('')+`</details>`:'';
   const people=[...new Set([...TASK_WHO.dev,...TASK_WHO.art])];
   const filt=`<div class="tkfilter"><span>${es?'Ver':'Show'}</span>`+[['',es?'Todas':'All'],...people.map(w=>[w,w]),['-',es?'Sin asignar':'Unassigned']].map(([v,l])=>`<button type="button" data-filter="${v}" class="${taskFilter===v?'on':''}">${l}</button>`).join('')
     +`<button type="button" class="tksrcbtn" data-src>${tkShowSrc?(es?'Ocultar fechas':'Hide dates'):(es?'Ver fechas':'Show dates')}</button></div>`;
   b.classList.toggle('showsrc',tkShowSrc);
-  const body=sec('dev')+sec('art')+resolved;
+  const body=sec('prio')+sec('dev')+sec('art')+resolved;
   b.innerHTML=filt+(body||`<div class="tkempty">${es?'No hay tareas para este filtro.':'No tasks for this filter.'}</div>`);
   const d=b.querySelector('.tkdone'); if(d) d.addEventListener('toggle',()=>{ tkDoneOpen=d.open; });
 }
@@ -1366,6 +1388,8 @@ $('#tkBody').addEventListener('change',(e)=>{ const cb=e.target.closest('input[d
   if(!EDITABLE){ cb.checked=!cb.checked; return; }
   taskState[cb.dataset.task]={...taskState[cb.dataset.task],done:cb.checked}; saveTasks(); renderTasks(); });
 $('#tkBody').addEventListener('click',(e)=>{ if(e.target.closest('button[data-src]')){ tkShowSrc=!tkShowSrc; renderTasks(); return; }
+  const pb=e.target.closest('button[data-prio]'); if(pb){ e.preventDefault(); if(!EDITABLE) return;
+    taskState[pb.dataset.tid]={...taskState[pb.dataset.tid],prio:!pb.classList.contains('on')}; saveTasks(); renderTasks(); return; }
   const f=e.target.closest('button[data-filter]'); if(f){ taskFilter=f.dataset.filter; renderTasks(); return; }
   const b=e.target.closest('button[data-who]'); if(!b) return; e.preventDefault(); if(!EDITABLE) return;
   const id=b.dataset.tid, st={...taskState[id]}; st.who=b.classList.contains('on')?'':b.dataset.who; taskState[id]=st; saveTasks(); renderTasks(); });
