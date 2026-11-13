@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-13T21:38:43.022Z",
+  "updated": "2026-11-13T22:01:08.910Z",
   "barOverrides": {},
   "shots": {},
   "tasks": {
@@ -107,60 +107,76 @@
       "done": true
     },
     "t17009s4": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t1pzlye": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t1nhyixs": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "twiwri": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t7fvqp3": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "tz5c6pn": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t14ir0t5": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t15rgyql": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "tbidvx4": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t1a6hf1x": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t135ixyz": {
-      "done": false,
+      "done": true,
       "who": "ERI"
     },
     "tscyitf": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t4827lb": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "tu8gpyu": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t199kt3j": {
-      "done": false,
+      "done": true,
       "who": "ERI"
     },
     "tlws7p4": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t1bvrmpy": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "td3tem7": {
-      "who": "ERI"
+      "who": "ERI",
+      "done": true
     },
     "t1w5lmkn": {
       "who": "VALEN"
