@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-13T22:13:43.850Z",
+  "updated": "2026-11-13T22:14:07.667Z",
   "barOverrides": {},
   "shots": {},
   "tasks": {
@@ -27,7 +27,8 @@
       "done": true
     },
     "t1x941h8": {
-      "who": "AGEZMA"
+      "who": "AGEZMA",
+      "done": true
     },
     "tlm7a9z": {
       "who": "VALEN"
@@ -212,6 +213,9 @@
       "done": true
     },
     "t1c4hm4m": {
+      "done": true
+    },
+    "t7do21r": {
       "done": true
     }
   }
