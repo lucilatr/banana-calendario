@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-12T20:45:56.167Z",
+  "updated": "2026-11-13T21:38:43.022Z",
   "barOverrides": {},
   "shots": {},
   "tasks": {
@@ -178,10 +178,20 @@
       "who": "VALEN"
     },
     "tmj98vr": {
-      "who": "VALEN"
+      "who": "VALEN",
+      "done": true
     },
     "t2a2j43": {
       "who": "VALEN"
+    },
+    "t100yqyq": {
+      "done": true
+    },
+    "trxdi8w": {
+      "done": true
+    },
+    "t1c4hm4m": {
+      "done": true
     }
   }
 }
