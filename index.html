@@ -1376,7 +1376,7 @@ function renderSummary(){
 }
 // ===== navegación de vistas (menú lateral) =====
 // cada tarea se identifica por su texto en español, así tildarla sobrevive aunque se reordene la lista
-const TASK_WHO={prio:['AGEZMA','VALEN'], dev:['AGEZMA','VALEN'], art:['LAUTI','ERI','GASTÓN','VALEN']};
+const TASK_WHO={prio:['AGEZMA','VALEN','CARLINI','GASTÓN'], dev:['AGEZMA','VALEN','CARLINI','GASTÓN'], art:['LAUTI','ERI','GASTÓN','VALEN','CARLINI']};
 let taskFilter=''; // '' = todas; '-' = sin asignar; si no, solo las tareas de esa persona
 let tkDoneOpen=false, tkShowSrc=false, tkQuery=''; // tkShowSrc: mostrar de qué reunión salió cada tarea // si la lista de puntos resueltos está desplegada
 const taskId=(s)=>{ let x=5381; for(const c of s) x=((x<<5)+x+c.charCodeAt(0))|0; return 't'+(x>>>0).toString(36); };
