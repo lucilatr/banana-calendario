@@ -688,6 +688,16 @@ const NAVE_VALEN_REF='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXh
 const TASKS={
   // prioridad absoluta de los devs ahora (13 Nov): nave de Valen. Va arriba de todo en Tareas.
   prio:[
+    // sync 20 Nov (recap de Santi)
+    {es:"Space: prioridades (sync 20 Nov)", en:"Space: priorities (20 Nov sync)", items:[
+      ["Vuelo con inercia total: si acelerás va cada vez más rápido; para frenar hay que compensar (y hasta podés ir para atrás).", "Full-inertia flight: accelerating keeps speeding up; to stop you must counter-thrust (you can even go backwards).", "20 Nov", "VALEN"],
+      ["Giros (A/D y W/S) también con inercia: si mantenés gira cada vez más y hay que compensar con la tecla opuesta.", "Turning (A/D and W/S) also with inertia: holding keeps spinning faster and you must counter with the opposite key.", "20 Nov", "VALEN"],
+      ["Probar el vuelo con cielo estrellado para que se sienta el movimiento.", "Test flight against a starry sky so the movement is felt.", "20 Nov", "VALEN"],
+      ["Comida: implementar la animación de atajar que envíen de la tool (la mecánica ya anda).", "Food: implement the catch animation coming from the tool (the mechanic already works).", "20 Nov", "VALEN"],
+      ["Asteroides triggereables que haya que atravesar; al chocar, shake de la nave (y que puedan traer problemas después, tipo fuego).", "Triggerable asteroids you have to fly through; on impact the ship shakes (and they can cause trouble later, like fire).", "20 Nov", "VALEN"],
+      ["Disparar a los asteroides mirando la pantalla grande, no la pantallita de abajo (esa solo complementa la info).", "Shoot asteroids while looking at the big screen, not the small screen below (that one only adds info).", "20 Nov", "VALEN"],
+      ["Sacar las armas de arriba (cúpula): aíslan al jugador y ensucian la vista.", "Remove the top weapons (dome): they isolate the player and clutter the view.", "20 Nov", "VALEN"],
+      ["Que un impacto en el espacio no te tire al piso.", "An impact in space should not knock you down.", "20 Nov", "VALEN"]]},
     {es:'Nave espacial: propuesta de Valen', en:'Spaceship: Valen\'s proposal', img:NAVE_VALEN_REF, items:[
       ['Iluminación: un poco más de GI.','Lighting: a bit more GI.','12 Nov'],
       ['Lugares para poder pisar y volver a saltar.','Places to land on and jump again.','12 Nov','VALEN'],
@@ -722,6 +732,45 @@ const TASKS={
       ['Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Fix the giant interior collider, which makes it very hard to get back in from the water.','5 Nov'],
       ['Nado: que Espacio impulse al personaje hacia arriba.','Swimming: Space pushes the character upward.','5 Nov'],
       ['Sumar objetos para apretar sin sentido, como un Simón.','Add pointless things to press, like a Simon game.','5 Nov']]},
+    {es:"Nave espacial: comida (20 Nov)", en:"Spaceship: food (20 Nov)", items:[
+      ["Heladeras quietas y también en altura, para tener que saltar a agarrar cosas.", "Fridges fixed in place and also up high, so you have to jump to grab things.", "20 Nov", "VALEN"],
+      ["Sumar más cosas para tirar (el café no se tira).", "Add more things to throw (coffee can't be thrown).", "20 Nov", "VALEN"]]},
+    {es:"Nave espacial: fixes (20 Nov)", en:"Spaceship: fixes (20 Nov)", items:[
+      ["Ascensores: que bajen al subsuelo está bien, pero sacar la curva rara al descender y pegarlos a la pared.", "Elevators: going down to the basement is fine, but remove the weird curve on the way down and set them against the wall.", "20 Nov", "VALEN"],
+      ["Volver a poner la escotilla al lado del ascensor.", "Put the hatch back next to the elevator.", "20 Nov", "VALEN"],
+      ["Sacar las máscaras de oxígeno tan prominentes.", "Remove the overly prominent oxygen masks.", "20 Nov", "VALEN"],
+      ["Sacar la tele de prueba (por ahora no sumar elementos nuevos).", "Remove the test TV (no new elements for now).", "20 Nov", "VALEN"],
+      ["Highlight solo en la puerta, no en toda la escalera.", "Highlight only the door, not the whole ladder.", "20 Nov", "VALEN"],
+      ["Bajar el bloom (la nave se ve quemada).", "Lower the bloom (the ship looks blown out).", "20 Nov", "VALEN"],
+      ["Sacar el \"+10\" de cada trayecto: solo avisos que sean call to action.", "Remove the \"+10\" on each leg: only notices that are calls to action.", "20 Nov", "VALEN"],
+      ["Spacewalk quedó cerrado por el collider del casco: arreglarlo.", "Spacewalk got blocked by the hull collider: fix it.", "20 Nov", "VALEN"],
+      ["Definir por dónde se sale a reparar los motores (astronauta con cuerda).", "Define where you exit to repair the engines (astronaut on a tether).", "20 Nov", "VALEN"],
+      ["Sacar el piso del segundo nivel.", "Remove the floor on the second level.", "20 Nov", "VALEN"]]},
+    {es:"Luna: exploración (20 Nov)", en:"Moon: exploration (20 Nov)", items:[
+      ["Cargar combustible entre dos: tanque pesado, saltar sincronizados; si se desfasan se cae y explota.", "Carry fuel between two players: heavy tank, jump in sync; if they fall out of sync it drops and explodes.", "20 Nov", "VALEN"],
+      ["Planta petrolera / explotar algo para conseguir combustible.", "Oil plant / blow something up to get fuel.", "20 Nov", "VALEN"],
+      ["Más física afuera: repeler cosas (bate o raqueta), matafuegos, petardos, objetos grandes en cadena.", "More physics outside: bat things away (bat or racket), fire extinguishers, firecrackers, big chain-reaction objects.", "20 Nov", "VALEN"],
+      ["Que los blancos hagan algo al pegarles (por ejemplo, que den plata).", "Targets should do something when hit (for example, give money).", "20 Nov", "VALEN"],
+      ["Bajar y subir pasajeros en la parada.", "Drop off and pick up passengers at the stop.", "20 Nov", "VALEN"]]},
+    {es:"Debugging (20 Nov)", en:"Debugging (20 Nov)", items:[
+      ["Coordinar con Fer para arreglar la pantalla negra al entrar al juego.", "Coordinate with Fer to fix the black screen when joining the game.", "20 Nov", "VALEN"],
+      ["Arranque lento: revisar materiales de las otras naves.", "Slow startup: check the materials of the other ships.", "20 Nov", "VALEN"],
+      ["Sanity checks antes del 8/12: PC de Jorge y la MacBook del pibe de Discord como ejemplos.", "Sanity checks before Dec 8: Jorge's PC and the Discord user's MacBook as examples.", "20 Nov", "VALEN"]]},
+    {es:"Submarino: Agus (20 Nov)", en:"Submarine: Agus (20 Nov)", items:[
+      ["Terminar el agua (la parte rota con cuadrados).", "Finish the water (the broken part with squares).", "20 Nov", "AGEZMA"],
+      ["Redondear el nivel de punta a punta: que se vean claros el inicio y el final.", "Round off the level end to end: clear start and finish.", "20 Nov", "AGEZMA"],
+      ["Llegada a una ciudadcita / puerto submarino donde estacionar.", "Arrival at a small underwater town / port to park in.", "20 Nov", "AGEZMA"],
+      ["Definir cómo se maneja el submarino.", "Define how the submarine is driven.", "20 Nov", "AGEZMA"],
+      ["Subir la build a la branch de Steam.", "Upload the build to the Steam branch.", "20 Nov", "AGEZMA"],
+      ["Play test del submarino el martes.", "Submarine play test on Tuesday.", "20 Nov", "AGEZMA"],
+      ["Nave (en paralelo): probar la dinámica de cargar cosas entre dos.", "Ship (in parallel): test the two-player carrying dynamic.", "20 Nov", "AGEZMA"]]},
+    {es:"Ideas para Space (sin priorizar)", en:"Ideas for Space (not prioritized)", items:[
+      ["Sin definir: eventos — tormentas magnéticas, eléctricas y solares; lluvia de basura espacial; cortocircuito/apagón; fuga de oxígeno (ojos desorbitados); recalentamiento del reactor (fuego + extintor + manivelas); brecha en el casco; rata que come cables.", "Undecided: events — magnetic, electric and solar storms; space junk shower; short circuit/blackout; oxygen leak (bulging eyes); reactor overheating (fire + extinguisher + cranks); hull breach; rat chewing cables.", "20 Nov"],
+      ["Sin definir: agujero negro = planta nuclear → \"space madness\". Cómo calmarlos: sopapa, brazaletes, casco, anteojos relajantes o bañadera.", "Undecided: black hole = nuclear plant → \"space madness\". How to calm them: plunger, bracelets, helmet, relaxing glasses or bathtub.", "20 Nov"],
+      ["Sin definir: aliens — plato volador no hostil; aliens con cara de pollo y tentáculos que hay que sentar y alimentar; pulpo pegado al ventanal.", "Undecided: aliens — non-hostile flying saucer; chicken-faced tentacled aliens you must seat and feed; octopus stuck to the window.", "20 Nov"],
+      ["Sin definir: comida — pasta estilo Ren & Stimpy, píldoras (si le das la equivocada a un alérgico, sarpullido), café flotando.", "Undecided: food — Ren & Stimpy style paste, pills (give the wrong one to an allergic passenger and they get a rash), floating coffee.", "20 Nov"],
+      ["Sin definir: objetos — cepillo de dientes (mal aliento), botón prohibido, robot asistente inútil que hay que apagar, brazo robótico exterior, lentes para tormenta solar o eclipse.", "Undecided: objects — toothbrush (bad breath), forbidden button, useless robot assistant you must switch off, external robotic arm, glasses for solar storm or eclipse.", "20 Nov"],
+      ["Sin definir: despegar desde una base espacial.", "Undecided: take off from a space base.", "20 Nov"]]},
     {es:'Avión de lujo', en:'Luxury jet', items:stepItems('lujo',1)},
   ],
   art:[
