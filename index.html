@@ -688,6 +688,12 @@ const NAVE_VALEN_REF='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXh
 const TASKS={
   // prioridad absoluta de los devs ahora (13 Nov): nave de Valen. Va arriba de todo en Tareas.
   prio:[
+    // sync 24 Nov: prioridad Avión (world map)
+    {es:"Avión: world map y progresión (sync 24 Nov)", en:"Plane: world map and progression (24 Nov sync)", items:[
+      ["Priorizar el world map: hacer una versión simple.", "Prioritize the world map: build a simple version.", "24 Nov"],
+      ["A partir del world map, definir los 2 o 3 vuelos distintos.", "From the world map, define the 2 or 3 different flights.", "24 Nov"],
+      ["Enfocarse en la progresión de los niveles del avión, que van a ser lo más estructural del juego.", "Focus on the plane level progression, which will be the most structural part of the game.", "24 Nov"],
+      ["Sin definir: Space y submarino como variaciones o bonus tracks en vez de niveles con dificultades distintas (charlarlo en la llamada).", "Undecided: Space and submarine as variations or bonus tracks instead of levels with different difficulties (discuss on the call).", "24 Nov"]]},
     // sync 20 Nov (recap de Santi)
     {es:"Space: prioridades (sync 20 Nov)", en:"Space: priorities (20 Nov sync)", items:[
       ["Vuelo con inercia total: si acelerás va cada vez más rápido; para frenar hay que compensar (y hasta podés ir para atrás).", "Full-inertia flight: accelerating keeps speeding up; to stop you must counter-thrust (you can even go backwards).", "20 Nov", "VALEN"],
@@ -732,6 +738,19 @@ const TASKS={
       ['Arreglar el collider gigante del interior, que hace muy difícil volver a entrar desde el agua.','Fix the giant interior collider, which makes it very hard to get back in from the water.','5 Nov'],
       ['Nado: que Espacio impulse al personaje hacia arriba.','Swimming: Space pushes the character upward.','5 Nov'],
       ['Sumar objetos para apretar sin sentido, como un Simón.','Add pointless things to press, like a Simon game.','5 Nov']]},
+    {es:"Space: feedback del playtest (24 Nov, en paralelo al Avión)", en:"Space: playtest feedback (24 Nov, in parallel with the Plane)", items:[
+      ["La inercia al dar muchas vueltas marea: suavizarla.", "Inertia makes you dizzy after many turns: soften it.", "24 Nov", "VALEN"],
+      ["Si la nave se mueve mientras alguien está atado afuera, lo tironea de forma incontrolable: arreglarlo.", "If the ship moves while someone is tethered outside, it yanks them uncontrollably: fix it.", "24 Nov", "VALEN"],
+      ["Que se pueda volver fácil a la nave una vez que salís.", "Make it easy to get back into the ship once you go out.", "24 Nov", "VALEN"],
+      ["Aros: cuesta meter la nave (muchos ejes de rotación); sumar un indicador claro de dirección, una flecha grande.", "Rings: hard to fly the ship through (too many rotation axes); add a clear direction indicator, a big arrow.", "24 Nov", "VALEN"],
+      ["Que las rocas sean un peligro real: hoy están estáticas y no amenazan la trayectoria.", "Make rocks a real threat: today they are static and do not threaten the trajectory.", "24 Nov", "VALEN"],
+      ["Darle más detalle visual al cordón umbilical que te conecta a la nave.", "Add more visual detail to the umbilical cord connecting you to the ship.", "24 Nov", "VALEN"],
+      ["Sin definir: los pasajeros son irrelevantes en el espacio (en el avión una muerte se siente como tragedia; acá no). Para hablar en la próxima meet.", "Undecided: passengers feel irrelevant in space (on the plane a death feels like a tragedy; here it does not). To discuss at the next meeting.", "24 Nov"]]},
+    {es:"Submarino: Agus (24 Nov)", en:"Submarine: Agus (24 Nov)", items:[
+      ["Destino claro: un puerto, muelle o algo que cierre el viaje.", "Clear destination: a port, dock or something that closes the journey.", "24 Nov", "AGEZMA"],
+      ["Resolver problemas de rendimiento y cargas largas.", "Fix performance issues and long loading times.", "24 Nov", "AGEZMA"],
+      ["Recuperar algunas características estéticas del submarino anterior.", "Bring back some aesthetic features from the previous submarine.", "24 Nov", "AGEZMA"],
+      ["Poner anguilas adentro de los tubos.", "Put eels inside the tubes.", "24 Nov", "AGEZMA"]]},
     {es:"Nave espacial: comida (20 Nov)", en:"Spaceship: food (20 Nov)", items:[
       ["Heladeras quietas y también en altura, para tener que saltar a agarrar cosas.", "Fridges fixed in place and also up high, so you have to jump to grab things.", "20 Nov", "VALEN"],
       ["Sumar más cosas para tirar (el café no se tira).", "Add more things to throw (coffee can't be thrown).", "20 Nov", "VALEN"]]},
